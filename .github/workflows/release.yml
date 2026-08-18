@@ -1,0 +1,93 @@
+name: Release
+
+# Publishes the container image to GHCR. That is deliberately where this
+# pipeline stops — it does not deploy.
+#
+# The deployment target is a homelab whose SSH is reachable only over a
+# private tailnet. Pushing from CI would mean handing GitHub either an SSH
+# key plus a route into that network, or a self-hosted runner — and a
+# self-hosted runner on a public repository lets a fork's pull request run
+# arbitrary code inside the network. Neither is acceptable for a private
+# home network.
+#
+# So the model is inverted: CI publishes an artifact, and an agent running
+# *on* the homelab polls the registry and rolls it out (see deploy/agent/).
+# The result is zero inbound exposure — no firewall rule, no credential
+# held by a third party, and nothing to revoke if this repository is
+# compromised.
+on:
+  workflow_run:
+    workflows: ["CI"]
+    branches: [main]
+    types: [completed]
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  publish:
+    name: Publish to GHCR
+    runs-on: ubuntu-latest
+    # workflow_run fires even when the triggering run failed, so the
+    # conclusion has to be checked explicitly or a red build would publish.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          # Issued per-run by Actions; nothing long-lived to rotate or leak.
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Image references must be lowercase; GitHub repository names need not be.
+      - name: Resolve image reference
+        id: meta
+        run: |
+          repo=$(echo "${{ env.REGISTRY }}/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          echo "repo=$repo" >> "$GITHUB_OUTPUT"
+          echo "sha=${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
+
+      # Two tags: an immutable SHA tag so every release traces back to a
+      # commit and a rollback is just pinning an older one, plus :latest,
+      # which is what the homelab agent watches.
+      - name: Build and push
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.repo }}:${{ steps.meta.outputs.sha }}
+            ${{ steps.meta.outputs.repo }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Summary
+        run: |
+          {
+            echo "### Published"
+            echo ""
+            echo '```'
+            echo "${{ steps.meta.outputs.repo }}:${{ steps.meta.outputs.sha }}"
+            echo "${{ steps.meta.outputs.repo }}:latest"
+            echo '```'
+            echo ""
+            echo "Digest: \`${{ steps.push.outputs.digest }}\`"
+            echo ""
+            echo "The homelab agent polls \`:latest\` and rolls this out on its next tick."
+          } >> "$GITHUB_STEP_SUMMARY"
