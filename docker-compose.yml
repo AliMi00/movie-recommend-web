@@ -1,0 +1,48 @@
+# Local development stack. Production deploys are managed by Terraform
+# (see terraform/), which builds the same image from the same Dockerfile —
+# this file exists so the container can be run and debugged without a
+# homelab, not as the deployment mechanism.
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cinejo-web:local
+    container_name: cinejo-web
+    ports:
+      # 8060-8069 is the range reserved for this project on the homelab;
+      # 8060 is the one the public demo is routed to.
+      - "8060:8080"
+    environment:
+      # Values come from .env (gitignored). The defaults after :- keep
+      # `docker compose up` working with no .env at all.
+      CINEJO_API_BASE_URL: ${CINEJO_API_BASE_URL:-https://api.gozaga.xyz/v1}
+      CINEJO_DEMO_EMAIL: ${CINEJO_DEMO_EMAIL:-}
+      CINEJO_DEMO_PASSWORD: ${CINEJO_DEMO_PASSWORD:-}
+      POSTHOG_API_KEY: ${POSTHOG_API_KEY:-}
+      POSTHOG_HOST: ${POSTHOG_HOST:-https://eu.i.posthog.com}
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/healthz"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # Translates nginx's stub_status page into Prometheus metrics. Kept as a
+  # sidecar rather than patching nginx itself so the app image stays a
+  # stock nginx with no third-party modules compiled in.
+  metrics:
+    image: nginx/nginx-prometheus-exporter:1.3.0
+    container_name: cinejo-web-metrics
+    command:
+      - --nginx.scrape-uri=http://web:9113/stub_status
+    ports:
+      - "8062:9113"
+    depends_on:
+      - web
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
