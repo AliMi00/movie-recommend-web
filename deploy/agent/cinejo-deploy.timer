@@ -1,0 +1,20 @@
+[Unit]
+Description=Poll GHCR for new CineJo Web images
+Documentation=https://github.com/AliMi00/cinejo-web
+
+[Timer]
+# First run shortly after boot, so a machine that was off during a release
+# catches up without waiting a full interval.
+OnBootSec=2min
+OnUnitActiveSec=5min
+
+# Without this every homelab running this agent would hit the registry on
+# the same wall-clock boundary; the jitter also avoids racing a release
+# that is still pushing layers.
+RandomizedDelaySec=60
+
+# Run a missed tick on resume rather than skipping it.
+Persistent=true
+
+[Install]
+WantedBy=timers.target

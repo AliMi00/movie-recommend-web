@@ -1,0 +1,32 @@
+[Unit]
+Description=CineJo Web pull-based deployment agent
+Documentation=https://github.com/AliMi00/cinejo-web
+# Both are needed before the agent can do anything useful.
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/cinejo-web/deploy.env
+ExecStart=/usr/local/bin/cinejo-deploy.sh
+
+# A stuck pull or a hung terraform apply should not wedge the timer,
+# and the next tick will retry anyway.
+TimeoutStartSec=900
+
+# Journald captures stdout/stderr: `journalctl -u cinejo-deploy` is the
+# deployment history.
+StandardOutput=journal
+StandardError=journal
+
+# The agent needs the Docker socket and write access to its own checkout,
+# and nothing else.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/cinejo-web
+
+[Install]
+WantedBy=multi-user.target
