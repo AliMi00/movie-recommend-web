@@ -1,0 +1,546 @@
+openapi: 3.0.3
+info:
+  title: Cinejo API
+  version: 0.1.0-draft
+  description: |
+    Draft external API specification for Cinejo (Week 8-9 deliverable)
+    Status: validation constraints + security/performance notes added.
+servers:
+  - url: https://api.cinejo.example.com/v1
+    description: Production (placeholder)
+  - url: https://staging-api.cinejo.example.com/v1
+    description: Staging (placeholder)
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorEnvelope:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code: { type: string }
+            message: { type: string }
+            details: { type: object }
+            traceId: { type: string }
+    MovieSummary:
+      type: object
+      required: [id, title]
+      properties:
+        id: { type: integer, format: int64, minimum: 1 }
+        title: { type: string, minLength: 1, maxLength: 200 }
+        overview: { type: string, maxLength: 5000 }
+        genres:
+          type: array
+          items: { type: string }
+          maxItems: 10
+          description: Up to 10 genre names, canonical casing
+        releaseDate: { type: string, format: date }
+        runtime: { type: integer, minimum: 1, maximum: 600 }
+        posterUrl: { type: string, format: uri }
+        backdropUrl: { type: string, format: uri }
+        voteAverage: { type: number, format: float, minimum: 0, maximum: 10 }
+        voteCount: { type: integer, minimum: 0 }
+    MovieDetails:
+      allOf:
+        - $ref: '#/components/schemas/MovieSummary'
+        - type: object
+          properties:
+            cast:
+              type: array
+              items: { type: string, minLength: 1, maxLength: 120 }
+              maxItems: 30
+            director: { type: string, minLength: 1, maxLength: 120 }
+            trailerKey: { type: string, maxLength: 64 }
+            similarIds:
+              type: array
+              items: { type: integer }
+              maxItems: 20
+            userInteraction:
+              type: string
+              enum: [like, dislike, super_like, none]
+    PaginatedMovies:
+      type: object
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/MovieSummary' }
+        page: { type: integer }
+        pageSize: { type: integer }
+        totalPages: { type: integer }
+        totalItems: { type: integer }
+    SwipeRequest:
+      type: object
+      required: [movieId, action]
+      properties:
+        movieId: { type: integer, minimum: 1 }
+        action:
+          type: string
+          enum: [like, dislike, super_like]
+    SwipeResponse:
+      type: object
+      properties:
+        movieId: { type: integer }
+        action: { type: string }
+        timestamp: { type: string, format: date-time }
+    UserPreferences:
+      type: object
+      properties:
+        preferredGenres:
+          type: array
+          items: { type: string }
+          maxItems: 25
+          uniqueItems: true
+          description: Distinct list of preferred genres (max 25)
+        minRating: { type: number }
+        minRating:
+          type: number
+          minimum: 0
+          maximum: 10
+        language:
+          type: string
+          pattern: '^[a-z]{2}(-[A-Z]{2})?$'
+          description: BCP-47 (e.g., en or en-US)
+        theme: { type: string, enum: [dark, light, system] }
+    UserStats:
+      type: object
+      properties:
+        totalSwipes: { type: integer, minimum: 0 }
+        likes: { type: integer, minimum: 0 }
+        dislikes: { type: integer, minimum: 0 }
+        superLikes: { type: integer, minimum: 0 }
+        watchlistCount: { type: integer, minimum: 0 }
+        historyCount: { type: integer, minimum: 0 }
+        topGenres:
+          type: array
+          items:
+            type: object
+            properties:
+              genre: { type: string }
+              count: { type: integer, minimum: 0 }
+    WatchlistItem:
+      type: object
+      properties:
+        movieId: { type: integer, minimum: 1 }
+        addedAt: { type: string, format: date-time }
+    HistoryEntry:
+      type: object
+      properties:
+        movieId: { type: integer, minimum: 1 }
+        watchedAt: { type: string, format: date-time }
+    PaginatedWatchlist:
+      type: object
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/WatchlistItem' }
+        page: { type: integer }
+        pageSize: { type: integer }
+        totalPages: { type: integer }
+        totalItems: { type: integer }
+    PaginatedHistory:
+      type: object
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/HistoryEntry' }
+        page: { type: integer }
+        pageSize: { type: integer }
+        totalPages: { type: integer }
+        totalItems: { type: integer }
+  headers:
+    X-RateLimit-Limit:
+      description: Total number of allowed requests in window
+      schema: { type: integer }
+    X-RateLimit-Remaining:
+      description: Remaining requests in current window
+      schema: { type: integer }
+    X-RateLimit-Reset:
+      description: Epoch seconds when window resets
+      schema: { type: integer }
+paths:
+  /auth/login:
+    post:
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, format: password }
+      responses:
+        '201':
+          description: Authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      email: { type: string }
+                      preferredGenres:
+                        type: array
+                        items: { type: string }
+                      createdAt: { type: string, format: date-time }
+                  accessToken: { type: string }
+                  refreshToken: { type: string }
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+  /movies:
+    get:
+      summary: List movies
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, default: 1, minimum: 1 }
+        - in: query
+          name: page_size
+          schema: { type: integer, default: 20, minimum: 1, maximum: 100 }
+        - in: query
+          name: genre
+          schema: { type: string }
+        - in: query
+          name: year
+          schema: { type: integer }
+        - in: query
+          name: min_rating
+          schema: { type: number }
+        - in: query
+          name: sort
+          schema: { type: string, enum: [popularity, rating, release_date] }
+      responses:
+        '200':
+          description: Paginated movies
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaginatedMovies' }
+  /movies/{id}:
+    get:
+      summary: Movie details
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Movie details
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MovieDetails' }
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+  /interactions/swipe:
+    post:
+      summary: Record a swipe interaction
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SwipeRequest' }
+      responses:
+        '201':
+          description: Interaction stored
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SwipeResponse' }
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+  /interactions/undo:
+    post:
+      summary: Undo last swipe (time limited)
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: Undo successful }
+        '409': { description: Nothing to undo }
+  /movies/recommendations:
+    get:
+      summary: Personalized recommendations
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, default: 1, minimum: 1 }
+        - in: query
+          name: page_size
+          schema: { type: integer, default: 20, minimum: 1, maximum: 100 }
+        - in: query
+          name: boost_genres
+          schema: { type: string, description: Comma-separated genre boosts }
+      responses:
+        '200':
+          description: Recommendation list
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaginatedMovies' }
+  /movies/{id}/similar:
+    get:
+      summary: Similar movies
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Similar movies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/MovieSummary' }
+        '404': { description: Not found }
+  /movies/search:
+    get:
+      summary: Search movies
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 120 }
+        - in: query
+          name: page
+          schema: { type: integer, default: 1, minimum: 1 }
+        - in: query
+          name: page_size
+          schema: { type: integer, default: 20, minimum: 1, maximum: 50 }
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaginatedMovies' }
+  /users/me:
+    get:
+      summary: Current user profile
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string }
+                  email: { type: string }
+                  createdAt: { type: string, format: date-time }
+                  preferences: { $ref: '#/components/schemas/UserPreferences' }
+  /users/me/preferences:
+    get:
+      summary: Get preferences
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Preferences
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UserPreferences' }
+    put:
+      summary: Update preferences
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UserPreferences' }
+      responses:
+        '200': { description: Updated }
+  /users/me/stats:
+    get:
+      summary: User interaction stats
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Stats
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UserStats' }
+  /users/me/watchlist:
+    get:
+      summary: Watchlist
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, default: 1, minimum: 1 }
+        - in: query
+          name: page_size
+          schema: { type: integer, default: 20, minimum: 1, maximum: 100 }
+      responses:
+        '200':
+          description: Watchlist items
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaginatedWatchlist' }
+    post:
+      summary: Add to watchlist
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [movieId]
+              properties:
+                movieId: { type: integer }
+      responses:
+        '201': { description: Added }
+  /users/me/watchlist/{movieId}:
+    delete:
+      summary: Remove from watchlist
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: movieId
+          required: true
+          schema: { type: integer }
+      responses:
+        '204': { description: Removed }
+  /users/me/history:
+    get:
+      summary: Watch history
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, default: 1, minimum: 1 }
+        - in: query
+          name: page_size
+          schema: { type: integer, default: 20, minimum: 1, maximum: 100 }
+      responses:
+        '200':
+          description: History entries
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaginatedHistory' }
+    post:
+      summary: Add history entry (manual)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [movieId]
+              properties:
+                movieId: { type: integer }
+      responses:
+        '201': { description: Added }
+  /auth/refresh:
+    post:
+      summary: Refresh access token (rotating)
+      description: |
+        Uses HTTP-only Secure SameSite=Lax cookie `refresh_token` for browsers.
+        Non-browser clients MAY send JSON body with `refreshToken` if cookie not present.
+        On success a new rotated refresh token cookie is issued.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken: { type: string, description: Optional when cookie present }
+      responses:
+        '200':
+          description: New tokens
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken: { type: string }
+                  refreshToken: { type: string, description: Returned also in rotated cookie }
+          headers:
+            Set-Cookie:
+              description: New refresh token cookie (HttpOnly; Secure; SameSite=Lax; Path=/auth/refresh)
+              schema: { type: string }
+  /auth/logout:
+    post:
+      summary: Logout and revoke refresh token
+      security: [{ bearerAuth: [] }]
+      responses:
+        '204': { description: Logged out }
+  /health:
+    get:
+      summary: Service health
+      responses:
+        '200':
+          description: Health status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string }
+                  time: { type: string, format: date-time }
+  /config:
+    get:
+      summary: Public runtime config
+      responses:
+        '200':
+          description: Config
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  maxPageSize: { type: integer }
+                  build: { type: string }
+  /rate-limit:
+    get:
+      summary: Current rate limit usage
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Rate info
+          headers:
+            X-RateLimit-Limit: { $ref: '#/components/headers/X-RateLimit-Limit' }
+            X-RateLimit-Remaining: { $ref: '#/components/headers/X-RateLimit-Remaining' }
+            X-RateLimit-Reset: { $ref: '#/components/headers/X-RateLimit-Reset' }
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit: { type: integer }
+                  remaining: { type: integer }
+                  reset: { type: integer }
+  /movies/trending:
+    get:
+      summary: Trending movies
+      responses:
+        '200':
+          description: Trending list
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaginatedMovies' }
+security:
+  - bearerAuth: []
