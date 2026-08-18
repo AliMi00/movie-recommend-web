@@ -1,0 +1,90 @@
+name: CI
+
+# Runs on every push and PR. Deployment lives in a separate workflow so that
+# a red test run can never be the thing that ships — deploy.yml waits on this
+# one completing successfully.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# A newer push to the same ref makes the in-flight run irrelevant.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: "3.32.8"
+
+jobs:
+  analyze-and-test:
+    name: Analyze & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Fails the build on formatting drift. --set-exit-if-changed is what
+      # makes this a check rather than a silent reformat.
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed lib test
+
+      - name: Analyze
+        run: flutter analyze --fatal-infos
+
+      - name: Test
+        run: flutter test
+
+  build-image:
+    name: Build image
+    runs-on: ubuntu-latest
+    needs: analyze-and-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      # Build only — no push and no registry login on pull_request, so a PR
+      # from a fork cannot publish an image or reach repository secrets.
+      # This still proves the Dockerfile builds before merge.
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: cinejo-web:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Smoke-test the artifact that was actually built: start it, then
+      # assert the healthcheck answers and the SPA fallback serves index.html
+      # for a deep link. A build that compiles but 404s on /watchlist is a
+      # broken deploy, and this catches it before the image is published.
+      - name: Smoke test
+        run: |
+          docker run -d --name smoke -p 8080:8080 \
+            -e CINEJO_API_BASE_URL=https://api.gozaga.xyz/v1 \
+            cinejo-web:ci
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:8080/healthz >/dev/null 2>&1; then
+              echo "container is serving"; break
+            fi
+            if [ "$i" = "30" ]; then
+              echo "container did not become healthy"; docker logs smoke; exit 1
+            fi
+            sleep 2
+          done
+          curl -fsS http://localhost:8080/healthz | grep -q '"status":"ok"'
+          curl -fsS http://localhost:8080/watchlist | grep -q '<!DOCTYPE html>'
+          curl -fsS -o /dev/null -w '%{http_code}' http://localhost:8080/ | grep -q 200
+          docker rm -f smoke
