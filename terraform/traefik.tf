@@ -102,8 +102,13 @@ resource "docker_container" "traefik" {
     name = docker_network.cinejo.name
   }
 
+  # Probes /ping over HTTP rather than using `traefik healthcheck`. That
+  # subcommand re-parses the static configuration from its own argv, so it
+  # does not see the entrypoints defined in the running process and exits
+  # with "ping: missing metrics entry point" — reporting the container
+  # unhealthy while it is in fact serving traffic normally.
   healthcheck {
-    test     = ["CMD", "traefik", "healthcheck", "--ping", "--ping.entrypoint=metrics"]
+    test     = ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:8082/ping"]
     interval = "30s"
     timeout  = "5s"
     retries  = 3

@@ -1,0 +1,34 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    stack: cinejo-web
+
+scrape_configs:
+  # Request rate, status codes and latency histograms. Traefik sees every
+  # request at the edge, so it is the source of truth for what users
+  # actually experienced — including requests nginx never received because
+  # the backend was down.
+  - job_name: traefik
+    static_configs:
+      - targets: ["cinejo-traefik:8082"]
+        labels:
+          component: edge
+
+  # Connection-level view from nginx itself: active/waiting connections and
+  # a request counter. stub_status cannot express latency or status codes,
+  # which is why Traefik covers those above rather than this being the only
+  # source.
+  - job_name: nginx
+    static_configs:
+      - targets: ["cinejo-web-metrics:9113"]
+        labels:
+          component: web
+
+  # Self-scrape, so a dashboard showing "no data" can be told apart from
+  # Prometheus itself being down.
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+        labels:
+          component: monitoring
