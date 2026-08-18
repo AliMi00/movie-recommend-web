@@ -8,11 +8,54 @@ resource "docker_image" "traefik" {
   keep_locally = true
 }
 
+# Routing table for Traefik, delivered as a file rather than discovered from
+# Docker labels. Two reasons, in order of importance:
+#
+#   1. The Docker provider requires mounting the daemon socket into the edge
+#      proxy. That socket is root-equivalent on the host, so it turns any
+#      Traefik RCE into a full host compromise. This stack has exactly one
+#      backend whose address is already known at plan time, so label-based
+#      discovery buys nothing that justifies that exposure.
+#   2. Traefik's Docker provider negotiates API version 1.24, which daemons
+#      from Docker 25 onward reject (they require >= 1.40). Setting
+#      DOCKER_API_VERSION does not override it, so on a current daemon the
+#      provider never connects and every route 404s.
+#
+# Traefik reaches the backend by container name over the shared bridge,
+# resolved by Docker's embedded DNS.
+locals {
+  traefik_dynamic_config = yamlencode({
+    http = {
+      routers = {
+        cinejo = {
+          rule        = "Host(`${var.public_domain}`)"
+          entryPoints = ["web"]
+          service     = "cinejo"
+        }
+      }
+      services = {
+        cinejo = {
+          loadBalancer = {
+            servers = [{ url = "http://${docker_container.web.name}:8080" }]
+            # Takes the backend out of rotation when it stops serving,
+            # so a broken rollout returns 503 rather than a blank page.
+            healthCheck = {
+              path     = "/healthz"
+              interval = "30s"
+              timeout  = "3s"
+            }
+          }
+        }
+      }
+    }
+  })
+}
+
 # Edge router for the stack. TLS is deliberately NOT handled here: the VPS
 # in front already terminates HTTPS and forwards over Tailscale, so a second
 # certificate would be redundant and would need the homelab reachable from
-# the public internet. Traefik's job here is service discovery, routing, and
-# the request/latency metrics the nginx stub_status page cannot provide.
+# the public internet. Traefik's job here is routing and the request/latency
+# metrics the nginx stub_status page cannot provide.
 resource "docker_container" "traefik" {
   name     = "cinejo-traefik"
   image    = docker_image.traefik.image_id
@@ -20,18 +63,15 @@ resource "docker_container" "traefik" {
   must_run = true
 
   command = [
-    "--providers.docker=true",
-    # Containers are opted in individually via labels; without this a new
-    # container on this daemon would be published the moment it started.
-    "--providers.docker.exposedbydefault=false",
-    "--providers.docker.network=${docker_network.cinejo.name}",
+    "--providers.file.directory=/etc/traefik/dynamic",
+    "--providers.file.watch=true",
     "--entrypoints.web.address=:80",
     # Metrics ride a separate entrypoint so they are never routable from
     # the public entrypoint.
     "--entrypoints.metrics.address=:8082",
     "--metrics.prometheus=true",
     "--metrics.prometheus.entrypoint=metrics",
-    # Per-path latency histograms; without this only counters are emitted.
+    # Per-router latency histograms; without this only counters are emitted.
     "--metrics.prometheus.addrouterslabels=true",
     "--accesslog=true",
     "--accesslog.format=json",
@@ -39,6 +79,14 @@ resource "docker_container" "traefik" {
     "--ping=true",
     "--ping.entrypoint=metrics",
   ]
+
+  # Written into the container at create time, so there is no host bind
+  # mount to provision separately and the routing table is versioned here
+  # with the rest of the infrastructure.
+  upload {
+    file    = "/etc/traefik/dynamic/cinejo.yml"
+    content = local.traefik_dynamic_config
+  }
 
   ports {
     internal = 80
@@ -48,16 +96,6 @@ resource "docker_container" "traefik" {
   ports {
     internal = 8082
     external = var.traefik_metrics_port
-  }
-
-  # Read-only socket mount: Traefik only needs to watch container events and
-  # read labels, never to create or modify containers. A writable socket
-  # would hand any Traefik compromise full root-equivalent control of the
-  # host, so this is the single most important line in the file.
-  volumes {
-    host_path      = "/var/run/docker.sock"
-    container_path = "/var/run/docker.sock"
-    read_only      = true
   }
 
   networks_advanced {
@@ -70,4 +108,6 @@ resource "docker_container" "traefik" {
     timeout  = "5s"
     retries  = 3
   }
+
+  security_opts = ["no-new-privileges:true"]
 }
