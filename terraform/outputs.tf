@@ -18,6 +18,16 @@ output "traefik_metrics_endpoint" {
   value       = "http://<homelab-host>:${var.traefik_metrics_port}/metrics"
 }
 
+output "prometheus_url" {
+  description = "Prometheus UI, on the private network only."
+  value       = "http://<homelab-host>:${var.prometheus_port}"
+}
+
+output "grafana_url" {
+  description = "Grafana UI (dashboard 'CineJo Web'), on the private network only."
+  value       = "http://<homelab-host>:${var.grafana_port}/d/cinejo-web"
+}
+
 output "deployed_image" {
   description = "Image reference currently deployed."
   value       = var.app_image

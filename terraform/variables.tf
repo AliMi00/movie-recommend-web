@@ -46,6 +46,34 @@ variable "traefik_metrics_port" {
   default     = 8063
 }
 
+variable "prometheus_port" {
+  description = "Host port for Prometheus. Reachable on the private network only."
+  type        = number
+  default     = 8064
+}
+
+variable "grafana_port" {
+  description = "Host port for Grafana. Reachable on the private network only."
+  type        = number
+  default     = 8065
+}
+
+variable "grafana_admin_user" {
+  description = "Grafana admin username."
+  type        = string
+  default     = "admin"
+}
+
+variable "grafana_admin_password" {
+  description = <<-EOT
+    Grafana admin password. Supply via TF_VAR_grafana_admin_password or
+    tfvars; never commit. Only applied when the Grafana data volume is first
+    created — changing it later requires resetting it inside Grafana.
+  EOT
+  type        = string
+  sensitive   = true
+}
+
 variable "api_base_url" {
   description = "Base URL of the CineJo API the browser client calls."
   type        = string

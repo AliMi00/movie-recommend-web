@@ -22,3 +22,7 @@ demo_password = ""
 
 # Optional analytics. Empty disables it.
 posthog_api_key = ""
+
+# Grafana admin password. Required — there is no default, so a deployment
+# cannot accidentally ship with a well-known one.
+grafana_admin_password = ""
