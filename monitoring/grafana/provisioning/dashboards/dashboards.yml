@@ -1,0 +1,16 @@
+apiVersion: 1
+
+providers:
+  - name: cinejo
+    orgId: 1
+    folder: ""
+    type: file
+    # The dashboard is version-controlled in this repository, so edits made
+    # in the Grafana UI are not the source of truth. Deletion is allowed so
+    # that removing the file removes the dashboard.
+    disableDeletion: false
+    allowUiUpdates: false
+    updateIntervalSeconds: 30
+    options:
+      path: /var/lib/grafana/dashboards
+      foldersFromFilesStructure: false
