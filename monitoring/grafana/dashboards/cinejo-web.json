@@ -140,13 +140,13 @@
       "id": 4,
       "type": "stat",
       "title": "5xx error ratio",
-      "description": "Share of responses that were server errors. Deliberately a ratio rather than a count: a raw count looks alarming under high traffic and harmless under low.",
+      "description": "Share of responses that were server errors. Deliberately a ratio rather than a count: a raw count looks alarming under high traffic and harmless under low. The 'or vector(0)' keeps this reading 0% when there are no 5xx at all — without it the selector matches no series and the panel shows 'No data' exactly when the service is healthiest, which is indistinguishable from a broken dashboard.",
       "datasource": { "type": "prometheus", "uid": "cinejo-prometheus" },
       "gridPos": { "h": 5, "w": 6, "x": 18, "y": 1 },
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(rate(traefik_service_requests_total{service=\"$service\",code=~\"5..\"}[5m])) / clamp_min(sum(rate(traefik_service_requests_total{service=\"$service\"}[5m])), 0.001)"
+          "expr": "(sum(rate(traefik_service_requests_total{service=\"$service\",code=~\"5..\"}[5m])) or vector(0)) / clamp_min(sum(rate(traefik_service_requests_total{service=\"$service\"}[5m])), 0.001)"
         }
       ],
       "options": {
