@@ -61,7 +61,7 @@ demo origin instead.
 push to main ──▶ CI ── format, analyze, test, build image, smoke-test it
                   │ on success
                   ▼
-             Release ──▶ ghcr.io/…/cinejo-web:<sha> + :latest
+             Release ──▶ ghcr.io/…/movie-recommend-web:<sha> + :latest
                                     │
                     poll every 5m   │   outbound only — nothing reaches in
                                     ▼

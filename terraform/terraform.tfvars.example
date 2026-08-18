@@ -8,7 +8,7 @@ docker_host = "ssh://your-server-alias"
 
 # Image to deploy. Pin to an immutable tag (a commit SHA) so a rollback is
 # just changing this line back.
-app_image = "ghcr.io/<owner>/cinejo-web:<commit-sha>"
+app_image = "ghcr.io/<owner>/movie-recommend-web:<commit-sha>"
 
 # Hostname the upstream reverse proxy serves this app on.
 public_domain = "demo.example.com"

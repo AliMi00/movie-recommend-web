@@ -1,6 +1,6 @@
 [Unit]
 Description=Poll GHCR for new CineJo Web images
-Documentation=https://github.com/AliMi00/cinejo-web
+Documentation=https://github.com/AliMi00/movie-recommend-web
 
 [Timer]
 # First run shortly after boot, so a machine that was off during a release

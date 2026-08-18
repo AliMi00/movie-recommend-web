@@ -8,7 +8,7 @@ out. Nothing in CI can reach the host.
 push to main ──▶ CI (lint, test, build, smoke)
                      │  on success
                      ▼
-              Release ──▶ ghcr.io/<owner>/cinejo-web:<sha>, :latest
+              Release ──▶ ghcr.io/<owner>/movie-recommend-web:<sha>, :latest
                                         │
                         (poll every 5m) │   outbound only
                                         ▼
