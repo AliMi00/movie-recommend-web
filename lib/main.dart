@@ -8,6 +8,7 @@ import 'core/router/app_router.dart';
 import 'core/constants/app_constants.dart';
 import 'core/analytics/analytics_service.dart';
 import 'shared/widgets/cookie_consent_banner.dart';
+import 'shared/widgets/responsive_shell.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,8 +44,10 @@ class CinejoApp extends ConsumerWidget {
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
       locale: DevicePreview.locale(context),
-      builder: (context, child) => CookieConsentBanner(
-        child: DevicePreview.appBuilder(context, child),
+      builder: (context, child) => ResponsiveShell(
+        child: CookieConsentBanner(
+          child: DevicePreview.appBuilder(context, child),
+        ),
       ),
     );
   }
