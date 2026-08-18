@@ -31,6 +31,7 @@ FROM nginx:1.27-alpine AS runtime
 RUN apk add --no-cache curl
 
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/security-headers.conf /etc/nginx/security-headers.conf
 COPY --from=build /app/build/web /usr/share/nginx/html
 COPY docker-entrypoint.sh /docker-entrypoint.d/cinejo-entrypoint.sh
 

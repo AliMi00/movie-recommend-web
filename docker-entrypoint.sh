@@ -7,7 +7,7 @@
 set -eu
 
 HTML_DIR=/usr/share/nginx/html
-NGINX_CONF=/etc/nginx/nginx.conf
+SECURITY_HEADERS=/etc/nginx/security-headers.conf
 
 CINEJO_API_BASE_URL="${CINEJO_API_BASE_URL:-https://api.gozaga.xyz/v1}"
 CINEJO_DEMO_EMAIL="${CINEJO_DEMO_EMAIL:-}"
@@ -47,7 +47,7 @@ if [ -n "${POSTHOG_API_KEY}" ]; then
   POSTHOG_ORIGIN=$(echo "${POSTHOG_HOST}" | sed -E 's|^(https?://[^/]+).*|\1|')
   CSP_CONNECT="${CSP_CONNECT} ${POSTHOG_ORIGIN}"
 fi
-subst "__CSP_CONNECT_SRC__" "${CSP_CONNECT}" "${NGINX_CONF}"
+subst "__CSP_CONNECT_SRC__" "${CSP_CONNECT}" "${SECURITY_HEADERS}"
 echo "[entrypoint] CSP connect-src: 'self' ${CSP_CONNECT}"
 
 echo "[entrypoint] starting nginx"
