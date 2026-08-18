@@ -9,7 +9,7 @@ data "docker_image" "app" {
 
 resource "docker_container" "web" {
   name     = "cinejo-web"
-  image    = data.docker_image.app.image_id
+  image    = data.docker_image.app.id
   restart  = "unless-stopped"
   must_run = true
 
@@ -79,13 +79,14 @@ resource "docker_container" "web" {
 # Turns nginx's stub_status page into Prometheus metrics. Runs as a sidecar
 # so the app image stays a stock nginx rather than one rebuilt with a
 # third-party metrics module.
-data "docker_image" "nginx_exporter" {
-  name = "nginx/nginx-prometheus-exporter:1.3.0"
+resource "docker_image" "nginx_exporter" {
+  name         = "nginx/nginx-prometheus-exporter:1.3.0"
+  keep_locally = true
 }
 
 resource "docker_container" "metrics" {
   name     = "cinejo-web-metrics"
-  image    = data.docker_image.nginx_exporter.image_id
+  image    = docker_image.nginx_exporter.image_id
   restart  = "unless-stopped"
   must_run = true
 

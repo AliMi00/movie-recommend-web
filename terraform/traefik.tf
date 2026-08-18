@@ -1,5 +1,11 @@
-data "docker_image" "traefik" {
-  name = "traefik:v3.2"
+# Public image, so Terraform pulls it directly — no registry credentials
+# involved. (The app image is handled differently in app.tf: it lives in
+# GHCR behind auth that belongs in CI, not in Terraform state.)
+# keep_locally stops `terraform destroy` from evicting a shared base image
+# that other stacks on this host may also be using.
+resource "docker_image" "traefik" {
+  name         = "traefik:v3.2"
+  keep_locally = true
 }
 
 # Edge router for the stack. TLS is deliberately NOT handled here: the VPS
@@ -9,7 +15,7 @@ data "docker_image" "traefik" {
 # the request/latency metrics the nginx stub_status page cannot provide.
 resource "docker_container" "traefik" {
   name     = "cinejo-traefik"
-  image    = data.docker_image.traefik.image_id
+  image    = docker_image.traefik.image_id
   restart  = "unless-stopped"
   must_run = true
 
