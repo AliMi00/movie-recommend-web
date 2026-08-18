@@ -3,7 +3,8 @@ class AppConstants {
   // App Information
   static const String appName = 'CineJo';
   static const String appVersion = '1.0.0';
-  static const String appDescription = 'A movie recommendation web app — swipe, discover, and get personalized picks';
+  static const String appDescription =
+      'A movie recommendation web app — swipe, discover, and get personalized picks';
 
   // UI Constants
   static const double cardBorderRadius = 16.0;
@@ -87,21 +88,29 @@ class AppConstants {
   static const int maxCachePages = 10;
 
   // Image Placeholder
-  static const String moviePosterPlaceholder = 'assets/images/movie_poster_placeholder.png';
-  static const String movieBackdropPlaceholder = 'assets/images/movie_backdrop_placeholder.png';
-  static const String userAvatarPlaceholder = 'assets/images/user_avatar_placeholder.png';
+  static const String moviePosterPlaceholder =
+      'assets/images/movie_poster_placeholder.png';
+  static const String movieBackdropPlaceholder =
+      'assets/images/movie_backdrop_placeholder.png';
+  static const String userAvatarPlaceholder =
+      'assets/images/user_avatar_placeholder.png';
 
   // Error Messages
-  static const String genericErrorMessage = 'Something went wrong. Please try again.';
-  static const String networkErrorMessage = 'Network connection error. Please check your internet connection.';
-  static const String timeoutErrorMessage = 'Request timeout. Please try again.';
-  static const String noMoviesFoundMessage = 'No movies found matching your preferences.';
+  static const String genericErrorMessage =
+      'Something went wrong. Please try again.';
+  static const String networkErrorMessage =
+      'Network connection error. Please check your internet connection.';
+  static const String timeoutErrorMessage =
+      'Request timeout. Please try again.';
+  static const String noMoviesFoundMessage =
+      'No movies found matching your preferences.';
   static const String loadingMessage = 'Loading amazing movies for you...';
 
   // Success Messages
   static const String movieLikedMessage = 'Movie added to your favorites!';
   static const String movieDislikedMessage = 'Thanks for the feedback!';
-  static const String preferencesUpdatedMessage = 'Preferences updated successfully!';
+  static const String preferencesUpdatedMessage =
+      'Preferences updated successfully!';
 
   // Validation Constants
   static const int minUsernameLength = 3;

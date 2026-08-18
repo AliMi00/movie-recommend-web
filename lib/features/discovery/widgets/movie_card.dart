@@ -34,7 +34,7 @@ class MovieCard extends StatelessWidget {
                   gradient: AppColors.cardOverlayGradient,
                 ),
               ),
-              
+
               // Top Badges
               Positioned(
                 top: 16,
@@ -72,7 +72,9 @@ class MovieCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF001356).withValues(alpha: 0.3), // Dark blue tint shadow
+            color: const Color(
+              0xFF001356,
+            ).withValues(alpha: 0.3), // Dark blue tint shadow
             blurRadius: 40,
             spreadRadius: -10,
             offset: const Offset(0, 20),
@@ -89,10 +91,7 @@ class MovieCard extends StatelessWidget {
     if (scale != null || rotation != null) {
       child = Transform.scale(
         scale: scale ?? 1,
-        child: Transform.rotate(
-          angle: rotation ?? 0,
-          child: card,
-        ),
+        child: Transform.rotate(angle: rotation ?? 0, child: card),
       );
     }
     return child;
@@ -153,11 +152,17 @@ class _BadgeState extends State<_Badge> with SingleTickerProviderStateMixin {
     )..repeat();
     _scale = TweenSequence([
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 1.08).chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 1.0,
+          end: 1.08,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 25,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.08, end: 1.0).chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.08,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 25,
       ),
       TweenSequenceItem(tween: ConstantTween(1.0), weight: 50),
@@ -180,7 +185,10 @@ class _BadgeState extends State<_Badge> with SingleTickerProviderStateMixin {
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           borderRadius: 14,
           opacity: 0.15,
-          border: Border.all(color: widget.color.withValues(alpha: 0.5), width: 1),
+          border: Border.all(
+            color: widget.color.withValues(alpha: 0.5),
+            width: 1,
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -192,7 +200,7 @@ class _BadgeState extends State<_Badge> with SingleTickerProviderStateMixin {
                   color: widget.color,
                   fontSize: 11,
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -209,10 +217,10 @@ class _PosterImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final fallback = Container(color: AppColors.surfaceContainerLowest);
     if (path == null || path!.isEmpty) return fallback;
-    
+
     final p = path!;
     final isNetwork = p.startsWith('http');
-    
+
     return isNetwork
         ? Image.network(
             p,
@@ -225,7 +233,7 @@ class _PosterImage extends StatelessWidget {
                   child: CircularProgressIndicator(
                     value: loadingProgress.expectedTotalBytes != null
                         ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
+                              loadingProgress.expectedTotalBytes!
                         : null,
                     color: AppColors.secondary.withValues(alpha: 0.3),
                     strokeWidth: 2,
@@ -285,7 +293,11 @@ class _Info extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.star_rounded, size: 12, color: AppColors.tertiary),
+                  const Icon(
+                    Icons.star_rounded,
+                    size: 12,
+                    color: AppColors.tertiary,
+                  ),
                   const SizedBox(width: 2),
                   Text(
                     movie.formattedRating,
@@ -322,12 +334,16 @@ class _Skeleton extends StatefulWidget {
   State<_Skeleton> createState() => _SkeletonState();
 }
 
-class _SkeletonState extends State<_Skeleton> with SingleTickerProviderStateMixin {
+class _SkeletonState extends State<_Skeleton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _c;
   @override
   void initState() {
     super.initState();
-    _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 1400))..repeat();
+    _c = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    )..repeat();
   }
 
   @override
@@ -389,7 +405,7 @@ class _SkeletonState extends State<_Skeleton> with SingleTickerProviderStateMixi
                 bar(w: 200),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

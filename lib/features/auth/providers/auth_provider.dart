@@ -85,38 +85,35 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// Check current authentication status
   Future<void> _checkAuthStatus() async {
     state = state.copyWith(isLoading: true, error: null);
-    
+
     try {
       final user = await _repository.getCurrentUser();
       final isAuthenticated = await _repository.isLoggedIn();
-      
+
       state = state.copyWith(
         user: user,
         isAuthenticated: isAuthenticated,
         isFirstTimeUser: user?.isFirstTimeUser ?? true,
         isLoading: false,
       );
-      
+
       if (user != null) {
         // Identify by user ID only — the privacy policy promises PostHog
         // never receives your email, so don't send it as a property here.
         AnalyticsService.identifyUser(user.id);
       }
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
   /// Login user
   Future<bool> login(String email, String password) async {
     state = state.copyWith(isLoading: true, error: null);
-    
+
     try {
       final result = await _repository.login(email, password);
-      
+
       if (result.success && result.user != null) {
         final user = result.user!;
         state = state.copyWith(
@@ -125,38 +122,40 @@ class AuthNotifier extends StateNotifier<AuthState> {
           isFirstTimeUser: user.isFirstTimeUser,
           isLoading: false,
         );
-        
+
         // Identify by user ID only — the privacy policy promises PostHog
         // never receives your email, so don't send it as a property here.
         AnalyticsService.identifyUser(user.id);
-        AnalyticsService.trackEvent('login_success', properties: {
-          'method': 'email',
-          'is_first_time': user.isFirstTimeUser,
-        });
-        
+        AnalyticsService.trackEvent(
+          'login_success',
+          properties: {
+            'method': 'email',
+            'is_first_time': user.isFirstTimeUser,
+          },
+        );
+
         return true;
       } else {
         state = state.copyWith(
           isLoading: false,
           error: result.error ?? 'Login failed',
         );
-        
-        AnalyticsService.trackEvent('login_failed', properties: {
-          'reason': result.error ?? 'Unknown error',
-        });
-        
+
+        AnalyticsService.trackEvent(
+          'login_failed',
+          properties: {'reason': result.error ?? 'Unknown error'},
+        );
+
         return false;
       }
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
+      state = state.copyWith(isLoading: false, error: e.toString());
+
+      AnalyticsService.trackEvent(
+        'login_failed',
+        properties: {'reason': e.toString()},
       );
-      
-      AnalyticsService.trackEvent('login_failed', properties: {
-        'reason': e.toString(),
-      });
-      
+
       return false;
     }
   }
@@ -164,10 +163,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// Register user
   Future<bool> register(String email, String password, String username) async {
     state = state.copyWith(isLoading: true, error: null);
-    
+
     try {
       final result = await _repository.register(email, password, username);
-      
+
       if (result.success && result.user != null) {
         final user = result.user!;
         state = state.copyWith(
@@ -176,37 +175,37 @@ class AuthNotifier extends StateNotifier<AuthState> {
           isFirstTimeUser: true, // New users are always first time
           isLoading: false,
         );
-        
+
         // Identify by user ID only — the privacy policy promises PostHog
         // never receives your email, so don't send it as a property here.
         AnalyticsService.identifyUser(user.id);
-        AnalyticsService.trackEvent('registration_success', properties: {
-          'username': user.username,
-        });
-        
+        AnalyticsService.trackEvent(
+          'registration_success',
+          properties: {'username': user.username},
+        );
+
         return true;
       } else {
         state = state.copyWith(
           isLoading: false,
           error: result.error ?? 'Registration failed',
         );
-        
-        AnalyticsService.trackEvent('registration_failed', properties: {
-          'reason': result.error ?? 'Unknown error',
-        });
-        
+
+        AnalyticsService.trackEvent(
+          'registration_failed',
+          properties: {'reason': result.error ?? 'Unknown error'},
+        );
+
         return false;
       }
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
+      state = state.copyWith(isLoading: false, error: e.toString());
+
+      AnalyticsService.trackEvent(
+        'registration_failed',
+        properties: {'reason': e.toString()},
       );
-      
-      AnalyticsService.trackEvent('registration_failed', properties: {
-        'reason': e.toString(),
-      });
-      
+
       return false;
     }
   }
@@ -214,18 +213,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// Logout user
   Future<void> logout() async {
     state = state.copyWith(isLoading: true, error: null);
-    
+
     try {
       await _repository.logout();
       state = const AuthState(); // Reset to initial state
-      
+
       AnalyticsService.trackEvent('logout');
       AnalyticsService.reset();
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -243,14 +239,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
       }
       state = state.copyWith(
         isLoading: false,
-        error: 'Failed to delete account. Please check your connection and try again.',
+        error:
+            'Failed to delete account. Please check your connection and try again.',
       );
       return false;
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
       return false;
     }
   }
@@ -259,7 +253,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// no session to change yet, the user isn't logged in on this screen —
   /// and deliberately doesn't distinguish "no such account" from "sent":
   /// the backend responds identically either way, so the UI must too.
-  Future<bool> forgotPassword(String email) => _repository.forgotPassword(email);
+  Future<bool> forgotPassword(String email) =>
+      _repository.forgotPassword(email);
 
   /// Requests a fresh verification email for the current account.
   Future<bool> resendVerificationEmail(String email) =>
@@ -268,10 +263,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// Save user preferences (usually after onboarding)
   Future<bool> saveUserPreferences(UserPreferences preferences) async {
     state = state.copyWith(isLoading: true, error: null);
-    
+
     try {
       await _repository.saveUserPreferences(preferences);
-      
+
       // Update user state to reflect completed onboarding
       if (state.user != null) {
         final updatedUser = state.user!.copyWith(
@@ -280,20 +275,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
           isDarkTheme: preferences.isDarkTheme,
           isFirstTimeUser: false,
         );
-        
+
         state = state.copyWith(
           user: updatedUser,
           isFirstTimeUser: false,
           isLoading: false,
         );
       }
-      
+
       return true;
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
       return false;
     }
   }
@@ -305,30 +297,24 @@ class AuthNotifier extends StateNotifier<AuthState> {
     String? avatarUrl,
   }) async {
     if (state.user == null) return false;
-    
+
     state = state.copyWith(isLoading: true, error: null);
-    
+
     try {
       // In a real app, this would make an API call
       await Future.delayed(const Duration(milliseconds: 500));
-      
+
       final updatedUser = state.user!.copyWith(
         fullName: fullName ?? state.user!.fullName,
         username: username ?? state.user!.username,
         avatarUrl: avatarUrl ?? state.user!.avatarUrl,
       );
-      
-      state = state.copyWith(
-        user: updatedUser,
-        isLoading: false,
-      );
-      
+
+      state = state.copyWith(user: updatedUser, isLoading: false);
+
       return true;
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
       return false;
     }
   }

@@ -53,10 +53,7 @@ class ClayContainer extends StatelessWidget {
           : decoration.copyWith(border: border),
       // Transparent Material keeps ink effects working for any tappable
       // children without painting over the clay fill.
-      child: Material(
-        color: Colors.transparent,
-        child: child,
-      ),
+      child: Material(color: Colors.transparent, child: child),
     );
   }
 }

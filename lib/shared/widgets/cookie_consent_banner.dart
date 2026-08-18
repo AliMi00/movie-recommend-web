@@ -50,7 +50,10 @@ class _CookieConsentBannerState extends State<CookieConsentBanner> {
               child: Material(
                 color: AppColors.surface,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
                   child: Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
                     spacing: 16,
@@ -60,7 +63,10 @@ class _CookieConsentBannerState extends State<CookieConsentBanner> {
                         constraints: const BoxConstraints(maxWidth: 480),
                         child: const Text(
                           'We use cookies for basic analytics to improve CineJo. You can accept or decline — this doesn\'t affect core app functionality.',
-                          style: TextStyle(color: AppColors.onSurfaceVariant, fontSize: 13),
+                          style: TextStyle(
+                            color: AppColors.onSurfaceVariant,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                       Row(

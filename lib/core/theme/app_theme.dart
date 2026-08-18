@@ -153,7 +153,10 @@ class AppTheme {
         ),
         prefixIconColor: AppColors.onSurfaceVariant,
         suffixIconColor: AppColors.onSurfaceVariant,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 18,
+          vertical: 16,
+        ),
       ),
 
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -171,9 +174,12 @@ class AppTheme {
         selectedColor: AppColors.tertiary,
         secondarySelectedColor: AppColors.tertiary,
         checkmarkColor: AppColors.onTertiary,
-        labelStyle: AppTextStyles.labelSmall.copyWith(color: AppColors.onSurface),
-        secondaryLabelStyle:
-            AppTextStyles.labelSmall.copyWith(color: AppColors.onTertiary),
+        labelStyle: AppTextStyles.labelSmall.copyWith(
+          color: AppColors.onSurface,
+        ),
+        secondaryLabelStyle: AppTextStyles.labelSmall.copyWith(
+          color: AppColors.onTertiary,
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(pillRadius)),
@@ -188,10 +194,12 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(cardRadius),
         ),
-        titleTextStyle:
-            AppTextStyles.titleMedium.copyWith(color: AppColors.onSurface),
-        contentTextStyle:
-            AppTextStyles.bodyMedium.copyWith(color: AppColors.onSurfaceVariant),
+        titleTextStyle: AppTextStyles.titleMedium.copyWith(
+          color: AppColors.onSurface,
+        ),
+        contentTextStyle: AppTextStyles.bodyMedium.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
       ),
 
       bottomSheetTheme: const BottomSheetThemeData(
@@ -205,8 +213,9 @@ class AppTheme {
 
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.inverseSurface,
-        contentTextStyle: AppTextStyles.bodyMedium
-            .copyWith(color: AppColors.inverseOnSurface),
+        contentTextStyle: AppTextStyles.bodyMedium.copyWith(
+          color: AppColors.inverseOnSurface,
+        ),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(baseRadius),
@@ -214,14 +223,16 @@ class AppTheme {
       ),
 
       switchTheme: SwitchThemeData(
-        thumbColor: WidgetStateProperty.resolveWith((states) =>
-            states.contains(WidgetState.selected)
-                ? AppColors.onTertiary
-                : AppColors.surface),
-        trackColor: WidgetStateProperty.resolveWith((states) =>
-            states.contains(WidgetState.selected)
-                ? AppColors.tertiary
-                : AppColors.surfaceContainerHighest),
+        thumbColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? AppColors.onTertiary
+              : AppColors.surface,
+        ),
+        trackColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? AppColors.tertiary
+              : AppColors.surfaceContainerHighest,
+        ),
         trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
       ),
 
@@ -241,26 +252,24 @@ class AppTheme {
         textColor: AppColors.onSurface,
       ),
 
-      textTheme: const TextTheme(
-        displayLarge: AppTextStyles.displayLarge,
-        displaySmall: AppTextStyles.displaySmall,
-        headlineLarge: AppTextStyles.headlineLarge,
-        headlineMedium: AppTextStyles.headlineMedium,
-        titleLarge: AppTextStyles.titleLarge,
-        titleMedium: AppTextStyles.titleMedium,
-        bodyLarge: AppTextStyles.bodyLarge,
-        bodyMedium: AppTextStyles.bodyMedium,
-        bodySmall: AppTextStyles.bodySmall,
-        labelSmall: AppTextStyles.labelSmall,
-      ).apply(
-        bodyColor: AppColors.onSurface,
-        displayColor: AppColors.onSurface,
-      ),
+      textTheme:
+          const TextTheme(
+            displayLarge: AppTextStyles.displayLarge,
+            displaySmall: AppTextStyles.displaySmall,
+            headlineLarge: AppTextStyles.headlineLarge,
+            headlineMedium: AppTextStyles.headlineMedium,
+            titleLarge: AppTextStyles.titleLarge,
+            titleMedium: AppTextStyles.titleMedium,
+            bodyLarge: AppTextStyles.bodyLarge,
+            bodyMedium: AppTextStyles.bodyMedium,
+            bodySmall: AppTextStyles.bodySmall,
+            labelSmall: AppTextStyles.labelSmall,
+          ).apply(
+            bodyColor: AppColors.onSurface,
+            displayColor: AppColors.onSurface,
+          ),
 
-      iconTheme: const IconThemeData(
-        color: AppColors.onSurface,
-        size: 24,
-      ),
+      iconTheme: const IconThemeData(color: AppColors.onSurface, size: 24),
 
       dividerTheme: const DividerThemeData(
         color: AppColors.outlineVariant,

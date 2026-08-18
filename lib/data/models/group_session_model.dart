@@ -69,7 +69,8 @@ class GroupSession {
       mood: json['mood'] as String?,
       isActive: json['isActive'] as bool,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      members: (json['members'] as List<dynamic>?)
+      members:
+          (json['members'] as List<dynamic>?)
               ?.map((e) => SessionMember.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
@@ -108,7 +109,7 @@ class GroupMovie {
     // Determine where movie fields are. Under 'GroupMovieOut', fields like 'id', 'title', etc are flat on the object.
     // So we can parse the Movie directly from the same JSON object.
     final movie = Movie.fromJson(json);
-    
+
     // Parse userScores
     final scoresMap = <String, double>{};
     if (json['userScores'] is Map<String, dynamic>) {

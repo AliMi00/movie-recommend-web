@@ -7,9 +7,8 @@ import 'package:cinejo_frontend/core/constants/app_constants.dart';
 import 'package:cinejo_frontend/data/services/local_storage_service.dart';
 import 'package:cinejo_frontend/features/settings/screens/settings_screen.dart';
 
-Widget _harness() => const ProviderScope(
-      child: MaterialApp(home: SettingsScreen()),
-    );
+Widget _harness() =>
+    const ProviderScope(child: MaterialApp(home: SettingsScreen()));
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

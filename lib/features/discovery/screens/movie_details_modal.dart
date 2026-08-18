@@ -9,7 +9,10 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../shared/widgets/glass_container.dart';
 
-final movieDetailsProvider = FutureProvider.family<Movie?, int>((ref, id) async {
+final movieDetailsProvider = FutureProvider.family<Movie?, int>((
+  ref,
+  id,
+) async {
   final repo = ref.read(movieRepositoryProvider);
   return repo.getMovieDetails(id);
 });
@@ -41,13 +44,13 @@ class MovieDetailsModal extends ConsumerWidget {
             }
             return _MovieDetailsContent(movie: m);
           },
-          error: (e, _) => SizedBox(
-            height: 300,
-            child: Center(child: Text('Error: $e')),
-          ),
+          error: (e, _) =>
+              SizedBox(height: 300, child: Center(child: Text('Error: $e'))),
           loading: () => const SizedBox(
             height: 300,
-            child: Center(child: CircularProgressIndicator(color: AppColors.secondary)),
+            child: Center(
+              child: CircularProgressIndicator(color: AppColors.secondary),
+            ),
           ),
         ),
       ),
@@ -60,7 +63,8 @@ class _MovieDetailsContent extends ConsumerStatefulWidget {
   const _MovieDetailsContent({required this.movie});
 
   @override
-  ConsumerState<_MovieDetailsContent> createState() => _MovieDetailsContentState();
+  ConsumerState<_MovieDetailsContent> createState() =>
+      _MovieDetailsContentState();
 }
 
 class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
@@ -102,7 +106,9 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
     setState(() => _loadingSimilar = true);
     final repo = ref.read(movieRepositoryProvider);
     try {
-      final futures = widget.movie.similarIds.take(8).map((id) => repo.getMovieDetails(id));
+      final futures = widget.movie.similarIds
+          .take(8)
+          .map((id) => repo.getMovieDetails(id));
       final results = await Future.wait(futures);
       if (mounted) {
         setState(() => _similar = results.whereType<Movie>().toList());
@@ -126,7 +132,9 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
   @override
   Widget build(BuildContext context) {
     final movie = widget.movie;
-    final inWatchlist = ref.watch(watchlistProvider).maybeWhen(
+    final inWatchlist = ref
+        .watch(watchlistProvider)
+        .maybeWhen(
           data: (movies) => movies.any((m) => m.id == movie.id),
           orElse: () => false,
         );
@@ -142,7 +150,8 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
               SizedBox(
                 height: 280,
                 width: double.infinity,
-                child: movie.backdropUrl != null && movie.backdropUrl!.isNotEmpty
+                child:
+                    movie.backdropUrl != null && movie.backdropUrl!.isNotEmpty
                     ? Image.network(movie.fullBackdropPath, fit: BoxFit.cover)
                     : Container(color: AppColors.surfaceContainerLowest),
               ),
@@ -194,16 +203,28 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: const [
-                          BoxShadow(color: Colors.black45, blurRadius: 12, offset: Offset(0, 4)),
+                          BoxShadow(
+                            color: Colors.black45,
+                            blurRadius: 12,
+                            offset: Offset(0, 4),
+                          ),
                         ],
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: movie.posterUrl != null && movie.posterUrl!.isNotEmpty
-                            ? Image.network(movie.fullPosterPath, fit: BoxFit.cover)
+                        child:
+                            movie.posterUrl != null &&
+                                movie.posterUrl!.isNotEmpty
+                            ? Image.network(
+                                movie.fullPosterPath,
+                                fit: BoxFit.cover,
+                              )
                             : Container(color: AppColors.surfaceContainerHigh),
                       ),
-                    ).animate().scale(duration: 350.ms, curve: Curves.easeOutBack),
+                    ).animate().scale(
+                      duration: 350.ms,
+                      curve: Curves.easeOutBack,
+                    ),
                     const SizedBox(width: 16),
                     // Core Title and quick details
                     Expanded(
@@ -233,14 +254,23 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
                               const SizedBox(width: 12),
                               // Vivid Gold Critic chip
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.tertiary.withValues(alpha: 0.15),
+                                  color: AppColors.tertiary.withValues(
+                                    alpha: 0.15,
+                                  ),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.star_rounded, size: 12, color: AppColors.tertiary),
+                                    const Icon(
+                                      Icons.star_rounded,
+                                      size: 12,
+                                      color: AppColors.tertiary,
+                                    ),
                                     const SizedBox(width: 2),
                                     Text(
                                       movie.formattedRating,
@@ -275,14 +305,24 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
                 // Glowing match logic reason badge
                 if (movie.reason != null && movie.reason!.isNotEmpty) ...[
                   GlassContainer(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     borderRadius: 16,
                     opacity: 0.1,
-                    border: Border.all(color: AppColors.secondary.withValues(alpha: 0.3), width: 0.5),
+                    border: Border.all(
+                      color: AppColors.secondary.withValues(alpha: 0.3),
+                      width: 0.5,
+                    ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.auto_awesome, size: 14, color: AppColors.secondary),
+                        const Icon(
+                          Icons.auto_awesome,
+                          size: 14,
+                          color: AppColors.secondary,
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           movie.reason!.toUpperCase(),
@@ -304,20 +344,27 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
                   runSpacing: 6,
                   children: movie.genres
                       .take(4)
-                      .map((g) => Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: AppColors.surfaceContainerHigh.withValues(alpha: 0.5),
-                              borderRadius: BorderRadius.circular(12),
+                      .map(
+                        (g) => Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.surfaceContainerHigh.withValues(
+                              alpha: 0.5,
                             ),
-                            child: Text(
-                              g,
-                              style: AppTextStyles.labelSmall.copyWith(
-                                color: AppColors.onSurface.withValues(alpha: 0.8),
-                                fontSize: 11,
-                              ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            g,
+                            style: AppTextStyles.labelSmall.copyWith(
+                              color: AppColors.onSurface.withValues(alpha: 0.8),
+                              fontSize: 11,
                             ),
-                          ))
+                          ),
+                        ),
+                      )
                       .toList(),
                 ),
 
@@ -332,39 +379,58 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
                         onPressed: movie.hasTrailer
                             ? () {
                                 Navigator.pop(context);
-                                Navigator.of(context).pushNamed('/trailer/${movie.id}');
+                                Navigator.of(
+                                  context,
+                                ).pushNamed('/trailer/${movie.id}');
                               }
                             : null,
-                        icon: const Icon(Icons.play_circle_fill_rounded, size: 20),
+                        icon: const Icon(
+                          Icons.play_circle_fill_rounded,
+                          size: 20,
+                        ),
                         label: const Text('WATCH TRAILER'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.secondaryContainer,
                           foregroundColor: AppColors.onSecondaryContainer,
                           padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 8),
                     // Watchlist toggle button
                     IconButton(
-                      onPressed: () => ref.read(watchlistProvider.notifier).toggleWatchlist(movie),
-                      tooltip: inWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist',
+                      onPressed: () => ref
+                          .read(watchlistProvider.notifier)
+                          .toggleWatchlist(movie),
+                      tooltip: inWatchlist
+                          ? 'Remove from Watchlist'
+                          : 'Add to Watchlist',
                       icon: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: inWatchlist
-                              ? AppColors.secondaryContainer.withValues(alpha: 0.2)
+                              ? AppColors.secondaryContainer.withValues(
+                                  alpha: 0.2,
+                                )
                               : AppColors.surfaceContainerLow,
                           border: Border.all(
-                            color: inWatchlist ? AppColors.secondary : AppColors.glassBorder,
+                            color: inWatchlist
+                                ? AppColors.secondary
+                                : AppColors.glassBorder,
                             width: 1,
                           ),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
-                          inWatchlist ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-                          color: inWatchlist ? AppColors.secondary : AppColors.onSurface,
+                          inWatchlist
+                              ? Icons.bookmark_rounded
+                              : Icons.bookmark_border_rounded,
+                          color: inWatchlist
+                              ? AppColors.secondary
+                              : AppColors.onSurface,
                           size: 20,
                         ),
                       ),
@@ -372,7 +438,9 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
                     // Watch History toggle button
                     IconButton(
                       onPressed: _inHistory ? null : _addToHistory,
-                      tooltip: _inHistory ? 'In Watch History' : 'Mark as Watched',
+                      tooltip: _inHistory
+                          ? 'In Watch History'
+                          : 'Mark as Watched',
                       icon: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
@@ -380,14 +448,20 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
                               ? Colors.orangeAccent.withValues(alpha: 0.2)
                               : AppColors.surfaceContainerLow,
                           border: Border.all(
-                            color: _inHistory ? Colors.orangeAccent : AppColors.glassBorder,
+                            color: _inHistory
+                                ? Colors.orangeAccent
+                                : AppColors.glassBorder,
                             width: 1,
                           ),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
-                          _inHistory ? Icons.history_toggle_off_rounded : Icons.history_rounded,
-                          color: _inHistory ? Colors.orangeAccent : AppColors.onSurface,
+                          _inHistory
+                              ? Icons.history_toggle_off_rounded
+                              : Icons.history_rounded,
+                          color: _inHistory
+                              ? Colors.orangeAccent
+                              : AppColors.onSurface,
                           size: 20,
                         ),
                       ),
@@ -417,7 +491,10 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
                 // Plot summary
                 Text(
                   'Overview',
-                  style: AppTextStyles.titleMedium.copyWith(color: AppColors.onSurface, fontSize: 18),
+                  style: AppTextStyles.titleMedium.copyWith(
+                    color: AppColors.onSurface,
+                    fontSize: 18,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -437,12 +514,16 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
                     children: [
                       Text(
                         'Director:  ',
-                        style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Expanded(
                         child: Text(
                           movie.director,
-                          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.onSurfaceVariant),
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                          ),
                         ),
                       ),
                     ],
@@ -456,12 +537,16 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
                     children: [
                       Text(
                         'Starring:  ',
-                        style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Expanded(
                         child: Text(
                           movie.castString,
-                          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.onSurfaceVariant),
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                          ),
                         ),
                       ),
                     ],
@@ -473,12 +558,19 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
                 if (_loadingSimilar)
                   const SizedBox(
                     height: 120,
-                    child: Center(child: CircularProgressIndicator(color: AppColors.secondary)),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.secondary,
+                      ),
+                    ),
                   )
                 else if (_similar.isNotEmpty) ...[
                   Text(
                     'Similar Recommendations',
-                    style: AppTextStyles.titleMedium.copyWith(color: AppColors.onSurface, fontSize: 18),
+                    style: AppTextStyles.titleMedium.copyWith(
+                      color: AppColors.onSurface,
+                      fontSize: 18,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   SizedBox(
@@ -510,20 +602,35 @@ class _MovieDetailsContentState extends ConsumerState<_MovieDetailsContent> {
                                     children: [
                                       Positioned.fill(
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(8),
-                                          child: m.posterUrl != null && m.posterUrl!.isNotEmpty
-                                              ? Image.network(m.fullPosterPath, fit: BoxFit.cover)
-                                              : Container(color: AppColors.surfaceContainerHigh),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                          child:
+                                              m.posterUrl != null &&
+                                                  m.posterUrl!.isNotEmpty
+                                              ? Image.network(
+                                                  m.fullPosterPath,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Container(
+                                                  color: AppColors
+                                                      .surfaceContainerHigh,
+                                                ),
                                         ),
                                       ),
                                       Positioned(
                                         top: 4,
                                         left: 4,
                                         child: Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 4,
+                                            vertical: 2,
+                                          ),
                                           decoration: BoxDecoration(
                                             color: Colors.black87,
-                                            borderRadius: BorderRadius.circular(4),
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
                                           ),
                                           child: Text(
                                             '$score%',

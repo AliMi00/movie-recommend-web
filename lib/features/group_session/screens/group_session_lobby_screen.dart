@@ -12,16 +12,15 @@ import '../providers/group_session_providers.dart';
 class GroupSessionLobbyScreen extends ConsumerStatefulWidget {
   final String code;
 
-  const GroupSessionLobbyScreen({
-    super.key,
-    required this.code,
-  });
+  const GroupSessionLobbyScreen({super.key, required this.code});
 
   @override
-  ConsumerState<GroupSessionLobbyScreen> createState() => _GroupSessionLobbyScreenState();
+  ConsumerState<GroupSessionLobbyScreen> createState() =>
+      _GroupSessionLobbyScreenState();
 }
 
-class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScreen> {
+class _GroupSessionLobbyScreenState
+    extends ConsumerState<GroupSessionLobbyScreen> {
   final _emailController = TextEditingController();
   final _moodController = TextEditingController();
   bool _isInviting = false;
@@ -88,7 +87,9 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
     });
 
     try {
-      await ref.read(activeGroupSessionProvider.notifier).updateSessionMood(newMood);
+      await ref
+          .read(activeGroupSessionProvider.notifier)
+          .updateSessionMood(newMood);
       setState(() {
         _isEditingMood = false;
       });
@@ -129,7 +130,10 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.onSurface),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: AppColors.onSurface,
+          ),
           onPressed: () {
             ref.read(activeGroupSessionProvider.notifier).leaveSession();
             context.pop();
@@ -146,7 +150,8 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh_rounded, color: AppColors.onSurface),
-            onPressed: () => ref.read(activeGroupSessionProvider.notifier).refreshMembers(),
+            onPressed: () =>
+                ref.read(activeGroupSessionProvider.notifier).refreshMembers(),
           ),
           const SizedBox(width: 8),
         ],
@@ -180,14 +185,18 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
                             const SizedBox(height: 12),
                             // Main Room Code Display Card
                             GlassContainer(
-                              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 24,
+                                horizontal: 20,
+                              ),
                               borderRadius: 24,
                               child: Column(
                                 children: [
                                   Text(
                                     'SHARE THIS ROOM CODE',
                                     style: AppTextStyles.labelSmall.copyWith(
-                                      color: AppColors.onSurfaceVariant.withValues(alpha: 0.6),
+                                      color: AppColors.onSurfaceVariant
+                                          .withValues(alpha: 0.6),
                                       letterSpacing: 1.5,
                                     ),
                                   ),
@@ -195,17 +204,23 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
                                   GestureDetector(
                                     onTap: _copyToClipboard,
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 12,
+                                        horizontal: 24,
+                                      ),
                                       decoration: BoxDecoration(
                                         color: AppColors.surfaceContainerHigh,
                                         borderRadius: BorderRadius.circular(16),
-                                        border: Border.all(color: AppColors.glassBorder),
+                                        border: Border.all(
+                                          color: AppColors.glassBorder,
+                                        ),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: AppColors.secondary.withValues(alpha: 0.08),
+                                            color: AppColors.secondary
+                                                .withValues(alpha: 0.08),
                                             blurRadius: 16,
                                             spreadRadius: 2,
-                                          )
+                                          ),
                                         ],
                                       ),
                                       child: Row(
@@ -213,19 +228,27 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
                                         children: [
                                           Text(
                                             session.sessionCode,
-                                            style: AppTextStyles.displaySmall.copyWith(
-                                              fontSize: 30,
-                                              fontWeight: FontWeight.w900,
-                                              letterSpacing: 4,
-                                              color: AppColors.secondary,
-                                            ),
+                                            style: AppTextStyles.displaySmall
+                                                .copyWith(
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.w900,
+                                                  letterSpacing: 4,
+                                                  color: AppColors.secondary,
+                                                ),
                                           ),
                                           const SizedBox(width: 14),
-                                          const Icon(Icons.copy_rounded, color: AppColors.secondary, size: 20),
+                                          const Icon(
+                                            Icons.copy_rounded,
+                                            color: AppColors.secondary,
+                                            size: 20,
+                                          ),
                                         ],
                                       ),
                                     ),
-                                  ).animate().scale(delay: 150.ms, duration: 300.ms),
+                                  ).animate().scale(
+                                    delay: 150.ms,
+                                    duration: 300.ms,
+                                  ),
                                   const SizedBox(height: 16),
                                   _isEditingMood
                                       ? Row(
@@ -233,18 +256,36 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
                                             Expanded(
                                               child: TextField(
                                                 controller: _moodController,
-                                                style: AppTextStyles.bodySmall.copyWith(
-                                                  color: AppColors.onSurface,
-                                                  fontStyle: FontStyle.italic,
-                                                ),
+                                                style: AppTextStyles.bodySmall
+                                                    .copyWith(
+                                                      color:
+                                                          AppColors.onSurface,
+                                                      fontStyle:
+                                                          FontStyle.italic,
+                                                    ),
                                                 decoration: InputDecoration(
-                                                  hintText: 'Enter session vibe...',
-                                                  hintStyle: TextStyle(color: AppColors.outline.withValues(alpha: 0.5)),
+                                                  hintText:
+                                                      'Enter session vibe...',
+                                                  hintStyle: TextStyle(
+                                                    color: AppColors.outline
+                                                        .withValues(alpha: 0.5),
+                                                  ),
                                                   isDense: true,
-                                                  contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                                  contentPadding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 8,
+                                                      ),
                                                   border: OutlineInputBorder(
-                                                    borderRadius: BorderRadius.circular(10),
-                                                    borderSide: const BorderSide(color: AppColors.glassBorder),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10,
+                                                        ),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                          color: AppColors
+                                                              .glassBorder,
+                                                        ),
                                                   ),
                                                 ),
                                               ),
@@ -254,20 +295,36 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
                                                 ? const SizedBox(
                                                     height: 20,
                                                     width: 20,
-                                                    child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.secondary),
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                          strokeWidth: 2,
+                                                          color: AppColors
+                                                              .secondary,
+                                                        ),
                                                   )
                                                 : Row(
-                                                    mainAxisSize: MainAxisSize.min,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
                                                     children: [
                                                       IconButton(
-                                                        icon: const Icon(Icons.check_rounded, color: AppColors.like, size: 18),
+                                                        icon: const Icon(
+                                                          Icons.check_rounded,
+                                                          color: AppColors.like,
+                                                          size: 18,
+                                                        ),
                                                         onPressed: _saveMood,
                                                       ),
                                                       IconButton(
-                                                        icon: const Icon(Icons.close_rounded, color: AppColors.dislike, size: 18),
+                                                        icon: const Icon(
+                                                          Icons.close_rounded,
+                                                          color:
+                                                              AppColors.dislike,
+                                                          size: 18,
+                                                        ),
                                                         onPressed: () {
                                                           setState(() {
-                                                            _isEditingMood = false;
+                                                            _isEditingMood =
+                                                                false;
                                                           });
                                                         },
                                                       ),
@@ -277,7 +334,8 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
                                         )
                                       : GestureDetector(
                                           onTap: () {
-                                            _moodController.text = session.mood ?? '';
+                                            _moodController.text =
+                                                session.mood ?? '';
                                             setState(() {
                                               _isEditingMood = true;
                                             });
@@ -285,32 +343,58 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
                                           child: MouseRegion(
                                             cursor: SystemMouseCursors.click,
                                             child: Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                    vertical: 6,
+                                                  ),
                                               decoration: BoxDecoration(
-                                                color: AppColors.secondary.withValues(alpha: 0.05),
-                                                borderRadius: BorderRadius.circular(12),
-                                                border: Border.all(color: AppColors.glassBorder.withValues(alpha: 0.5)),
+                                                color: AppColors.secondary
+                                                    .withValues(alpha: 0.05),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                border: Border.all(
+                                                  color: AppColors.glassBorder
+                                                      .withValues(alpha: 0.5),
+                                                ),
                                               ),
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  const Icon(Icons.auto_awesome, color: AppColors.secondary, size: 14),
+                                                  const Icon(
+                                                    Icons.auto_awesome,
+                                                    color: AppColors.secondary,
+                                                    size: 14,
+                                                  ),
                                                   const SizedBox(width: 6),
                                                   Flexible(
                                                     child: Text(
-                                                      session.mood != null && session.mood!.isNotEmpty
+                                                      session.mood != null &&
+                                                              session
+                                                                  .mood!
+                                                                  .isNotEmpty
                                                           ? 'Vibe: "${session.mood}"'
                                                           : 'Set Room Vibe ✨',
-                                                      style: AppTextStyles.bodySmall.copyWith(
-                                                        fontStyle: FontStyle.italic,
-                                                        color: AppColors.onSurfaceVariant,
-                                                        fontSize: 12,
-                                                      ),
-                                                      textAlign: TextAlign.center,
+                                                      style: AppTextStyles
+                                                          .bodySmall
+                                                          .copyWith(
+                                                            fontStyle: FontStyle
+                                                                .italic,
+                                                            color: AppColors
+                                                                .onSurfaceVariant,
+                                                            fontSize: 12,
+                                                          ),
+                                                      textAlign:
+                                                          TextAlign.center,
                                                     ),
                                                   ),
                                                   const SizedBox(width: 6),
-                                                  const Icon(Icons.edit_rounded, color: AppColors.onSurfaceVariant, size: 12),
+                                                  const Icon(
+                                                    Icons.edit_rounded,
+                                                    color: AppColors
+                                                        .onSurfaceVariant,
+                                                    size: 12,
+                                                  ),
                                                 ],
                                               ),
                                             ),
@@ -342,16 +426,28 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
                                         child: TextField(
                                           controller: _emailController,
                                           style: AppTextStyles.bodyMedium,
-                                          keyboardType: TextInputType.emailAddress,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
                                           decoration: InputDecoration(
                                             hintText: 'friend@email.com',
-                                            hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.outline),
+                                            hintStyle: AppTextStyles.bodyMedium
+                                                .copyWith(
+                                                  color: AppColors.outline,
+                                                ),
                                             filled: true,
-                                            fillColor: AppColors.surfaceContainerLow,
-                                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                                            fillColor:
+                                                AppColors.surfaceContainerLow,
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                  horizontal: 14,
+                                                  vertical: 12,
+                                                ),
                                             border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(12),
-                                              borderSide: const BorderSide(color: AppColors.glassBorder),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              borderSide: const BorderSide(
+                                                color: AppColors.glassBorder,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -360,20 +456,34 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
                                       SizedBox(
                                         height: 48,
                                         child: ElevatedButton(
-                                          onPressed: _isInviting ? null : _handleInvite,
+                                          onPressed: _isInviting
+                                              ? null
+                                              : _handleInvite,
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: AppColors.secondaryContainer,
-                                            foregroundColor: AppColors.onSecondaryContainer,
-                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                            backgroundColor:
+                                                AppColors.secondaryContainer,
+                                            foregroundColor:
+                                                AppColors.onSecondaryContainer,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
                                             elevation: 0,
                                           ),
                                           child: _isInviting
                                               ? const SizedBox(
                                                   height: 18,
                                                   width: 18,
-                                                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                        color: Colors.white,
+                                                      ),
                                                 )
-                                              : const Icon(Icons.send_rounded, size: 20),
+                                              : const Icon(
+                                                  Icons.send_rounded,
+                                                  size: 20,
+                                                ),
                                         ),
                                       ),
                                     ],
@@ -383,7 +493,9 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
                                     Text(
                                       _statusMessage!,
                                       style: AppTextStyles.bodySmall.copyWith(
-                                        color: _isSuccess ? AppColors.like : AppColors.error,
+                                        color: _isSuccess
+                                            ? AppColors.like
+                                            : AppColors.error,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -399,7 +511,9 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
                               child: Text(
                                 'PARTICIPANTS (${session.members.length})',
                                 style: AppTextStyles.labelSmall.copyWith(
-                                  color: AppColors.onSurfaceVariant.withValues(alpha: 0.8),
+                                  color: AppColors.onSurfaceVariant.withValues(
+                                    alpha: 0.8,
+                                  ),
                                   letterSpacing: 1.5,
                                 ),
                               ),
@@ -412,7 +526,8 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
                               itemCount: session.members.length,
                               itemBuilder: (context, index) {
                                 final member = session.members[index];
-                                final isMe = member.userId.toString() == currentUserId;
+                                final isMe =
+                                    member.userId.toString() == currentUserId;
 
                                 Color statusColor = AppColors.tertiary;
                                 IconData statusIcon = Icons.pending_outlined;
@@ -433,46 +548,74 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
                                     child: Row(
                                       children: [
                                         CircleAvatar(
-                                          backgroundColor: statusColor.withValues(alpha: 0.1),
-                                          child: Icon(statusIcon, color: statusColor, size: 20),
+                                          backgroundColor: statusColor
+                                              .withValues(alpha: 0.1),
+                                          child: Icon(
+                                            statusIcon,
+                                            color: statusColor,
+                                            size: 20,
+                                          ),
                                         ),
                                         const SizedBox(width: 14),
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 member.email,
-                                                style: AppTextStyles.bodyMedium.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                                style: AppTextStyles.bodyMedium
+                                                    .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                               Text(
-                                                isMe ? 'You (Creator)' : 'Participant',
-                                                style: AppTextStyles.bodySmall.copyWith(
-                                                  color: AppColors.onSurfaceVariant.withValues(alpha: 0.6),
-                                                  fontSize: 11,
-                                                ),
+                                                isMe
+                                                    ? 'You (Creator)'
+                                                    : 'Participant',
+                                                style: AppTextStyles.bodySmall
+                                                    .copyWith(
+                                                      color: AppColors
+                                                          .onSurfaceVariant
+                                                          .withValues(
+                                                            alpha: 0.6,
+                                                          ),
+                                                      fontSize: 11,
+                                                    ),
                                               ),
                                             ],
                                           ),
                                         ),
                                         Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 4,
+                                          ),
                                           decoration: BoxDecoration(
-                                            color: statusColor.withValues(alpha: 0.15),
-                                            borderRadius: BorderRadius.circular(20),
-                                            border: Border.all(color: statusColor.withValues(alpha: 0.3), width: 0.5),
+                                            color: statusColor.withValues(
+                                              alpha: 0.15,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                            border: Border.all(
+                                              color: statusColor.withValues(
+                                                alpha: 0.3,
+                                              ),
+                                              width: 0.5,
+                                            ),
                                           ),
                                           child: Text(
                                             member.status.toUpperCase(),
-                                            style: AppTextStyles.labelSmall.copyWith(
-                                              color: statusColor,
-                                              fontSize: 9,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                            style: AppTextStyles.labelSmall
+                                                .copyWith(
+                                                  color: statusColor,
+                                                  fontSize: 9,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
                                         ),
                                       ],
@@ -494,14 +637,19 @@ class _GroupSessionLobbyScreenState extends ConsumerState<GroupSessionLobbyScree
                         height: 56,
                         child: ElevatedButton(
                           onPressed: () {
-                            context.push('/group-session/recommendations/${session.sessionCode}');
+                            context.push(
+                              '/group-session/recommendations/${session.sessionCode}',
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.secondaryContainer,
                             foregroundColor: AppColors.onSecondaryContainer,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                             elevation: 0,
-                            shadowColor: AppColors.secondaryContainer.withValues(alpha: 0.4),
+                            shadowColor: AppColors.secondaryContainer
+                                .withValues(alpha: 0.4),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

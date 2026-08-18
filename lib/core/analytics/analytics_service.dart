@@ -78,7 +78,10 @@ class AnalyticsService {
   /// PostHog tracking accordingly.
   static Future<void> setCookieConsent(bool accepted) async {
     final storage = await LocalStorageService.getInstance();
-    await storage.saveString(_cookieConsentKey, accepted ? 'accepted' : 'declined');
+    await storage.saveString(
+      _cookieConsentKey,
+      accepted ? 'accepted' : 'declined',
+    );
     try {
       if (accepted) {
         await _posthog.enable();
@@ -86,7 +89,9 @@ class AnalyticsService {
         await _posthog.disable();
       }
     } catch (e, stack) {
-      debugPrint('AnalyticsService Error: Failed to apply cookie consent: $e\n$stack');
+      debugPrint(
+        'AnalyticsService Error: Failed to apply cookie consent: $e\n$stack',
+      );
     }
   }
 
@@ -94,13 +99,18 @@ class AnalyticsService {
   /// "streamlined"). Returns [defaultValue] if the flag hasn't loaded yet,
   /// isn't set, or PostHog is opted out — callers should always get a
   /// sensible variant back rather than needing to handle null.
-  static Future<String> getFeatureFlagVariant(String key, {required String defaultValue}) async {
+  static Future<String> getFeatureFlagVariant(
+    String key, {
+    required String defaultValue,
+  }) async {
     try {
       final result = await _posthog.getFeatureFlag(key);
       if (result is String && result.isNotEmpty) return result;
       return defaultValue;
     } catch (e, stack) {
-      debugPrint('AnalyticsService Error: Failed to resolve feature flag "$key": $e\n$stack');
+      debugPrint(
+        'AnalyticsService Error: Failed to resolve feature flag "$key": $e\n$stack',
+      );
       return defaultValue;
     }
   }
@@ -109,7 +119,9 @@ class AnalyticsService {
   static void trackEvent(String eventName, {Map<String, dynamic>? properties}) {
     try {
       if (kDebugMode) {
-        debugPrint('AnalyticsService: Track Event "$eventName" with properties: $properties');
+        debugPrint(
+          'AnalyticsService: Track Event "$eventName" with properties: $properties',
+        );
       }
       _posthog.capture(
         eventName: eventName,
@@ -121,10 +133,15 @@ class AnalyticsService {
   }
 
   /// Identify logged-in user
-  static void identifyUser(String userId, {Map<String, dynamic>? userProperties}) {
+  static void identifyUser(
+    String userId, {
+    Map<String, dynamic>? userProperties,
+  }) {
     try {
       if (kDebugMode) {
-        debugPrint('AnalyticsService: Identify User "$userId" with properties: $userProperties');
+        debugPrint(
+          'AnalyticsService: Identify User "$userId" with properties: $userProperties',
+        );
       }
       _posthog.identify(
         userId: userId,
@@ -143,7 +160,9 @@ class AnalyticsService {
       }
       _posthog.reset();
     } catch (e, stack) {
-      debugPrint('AnalyticsService Error: Failed to reset identity: $e\n$stack');
+      debugPrint(
+        'AnalyticsService Error: Failed to reset identity: $e\n$stack',
+      );
     }
   }
 
@@ -153,9 +172,7 @@ class AnalyticsService {
       if (kDebugMode) {
         debugPrint('AnalyticsService: Track Screen "$screenName"');
       }
-      _posthog.screen(
-        screenName: screenName,
-      );
+      _posthog.screen(screenName: screenName);
     } catch (e, stack) {
       debugPrint('AnalyticsService Error: Failed to track screen: $e\n$stack');
     }

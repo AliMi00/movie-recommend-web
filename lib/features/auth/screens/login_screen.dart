@@ -25,7 +25,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   bool _obscurePassword = true;
   bool _rememberMe = false;
 
@@ -73,11 +73,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _handleSocialLogin(String provider) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$provider login coming soon!'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('$provider login coming soon!')));
   }
 
   @override
@@ -112,7 +110,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
             ),
-            
+
             SafeArea(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -122,7 +120,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 20),
-                      
+
                       Align(
                         alignment: Alignment.centerLeft,
                         child: IconButton(
@@ -133,15 +131,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               context.go('/');
                             }
                           },
-                          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.onSurfaceVariant),
+                          icon: const Icon(
+                            Icons.arrow_back_ios_new_rounded,
+                            color: AppColors.onSurfaceVariant,
+                          ),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 20),
-                      
+
                       const AuthLogo(size: 60),
                       const SizedBox(height: 32),
-                      
+
                       Text(
                         'Welcome Back',
                         style: AppTextStyles.headlineLarge.copyWith(
@@ -150,22 +151,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      
+
                       const SizedBox(height: 8),
-                      
+
                       Text(
                         'Sign in to continue your journey',
                         style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.onSurfaceVariant.withValues(alpha: 0.7),
+                          color: AppColors.onSurfaceVariant.withValues(
+                            alpha: 0.7,
+                          ),
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      
+
                       const SizedBox(height: 16),
                       const PrivateProjectBanner(),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       AutofillGroup(
                         child: Column(
                           children: [
@@ -175,10 +178,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.next,
                               prefixIcon: Icons.email_outlined,
-                              autofillHints: const [AutofillHints.username, AutofillHints.email],
+                              autofillHints: const [
+                                AutofillHints.username,
+                                AutofillHints.email,
+                              ],
                               validator: (value) {
-                                if (value == null || value.isEmpty) return 'Please enter your email';
-                                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) return 'Please enter a valid email';
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your email';
+                                }
+                                if (!RegExp(
+                                  r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                                ).hasMatch(value)) {
+                                  return 'Please enter a valid email';
+                                }
                                 return null;
                               },
                             ),
@@ -191,11 +203,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               prefixIcon: Icons.lock_outline,
                               autofillHints: const [AutofillHints.password],
                               suffixIcon: IconButton(
-                                icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
-                                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                                icon: Icon(
+                                  _obscurePassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed: () => setState(
+                                  () => _obscurePassword = !_obscurePassword,
+                                ),
                               ),
                               validator: (value) {
-                                if (value == null || value.isEmpty) return 'Please enter your password';
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your password';
+                                }
                                 return null;
                               },
                               onFieldSubmitted: (_) => _handleLogin(),
@@ -203,9 +223,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ],
                         ),
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -213,12 +233,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             children: [
                               Checkbox(
                                 value: _rememberMe,
-                                onChanged: (value) => setState(() => _rememberMe = value ?? false),
+                                onChanged: (value) => setState(
+                                  () => _rememberMe = value ?? false,
+                                ),
                                 activeColor: AppColors.tertiary,
                               ),
                               Text(
                                 'Remember me',
-                                style: AppTextStyles.bodyMedium.copyWith(color: AppColors.onSurfaceVariant),
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: AppColors.onSurfaceVariant,
+                                ),
                               ),
                             ],
                           ),
@@ -226,14 +250,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             onPressed: _handleForgotPassword,
                             child: Text(
                               'Forgot Password?',
-                              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.tertiary),
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: AppColors.tertiary,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       AuthButton(
                         text: 'Sign In',
                         onPressed: _handleLogin,
@@ -246,12 +272,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           width: double.infinity,
                           height: 48,
                           child: OutlinedButton.icon(
-                            onPressed: authState.isLoading ? null : _handleDemoLogin,
-                            icon: const Icon(Icons.visibility_outlined, size: 18),
+                            onPressed: authState.isLoading
+                                ? null
+                                : _handleDemoLogin,
+                            icon: const Icon(
+                              Icons.visibility_outlined,
+                              size: 18,
+                            ),
                             label: const Text('Continue with Demo Account'),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppColors.tertiary,
-                              side: BorderSide(color: AppColors.tertiary.withValues(alpha: 0.4)),
+                              side: BorderSide(
+                                color: AppColors.tertiary.withValues(
+                                  alpha: 0.4,
+                                ),
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
                               ),
@@ -267,31 +302,45 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           decoration: BoxDecoration(
                             color: AppColors.error.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: AppColors.error.withValues(alpha: 0.2)),
+                            border: Border.all(
+                              color: AppColors.error.withValues(alpha: 0.2),
+                            ),
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.error_outline, color: AppColors.error, size: 20),
+                              const Icon(
+                                Icons.error_outline,
+                                color: AppColors.error,
+                                size: 20,
+                              ),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   authState.error!,
-                                  style: AppTextStyles.bodySmall.copyWith(color: AppColors.error),
+                                  style: AppTextStyles.bodySmall.copyWith(
+                                    color: AppColors.error,
+                                  ),
                                 ),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.close, color: AppColors.error, size: 18),
-                                onPressed: () => ref.read(authProvider.notifier).clearError(),
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: AppColors.error,
+                                  size: 18,
+                                ),
+                                onPressed: () => ref
+                                    .read(authProvider.notifier)
+                                    .clearError(),
                               ),
                             ],
                           ),
                         ),
                       ],
-                      
+
                       const SizedBox(height: 32),
                       const AuthDivider(text: 'Or continue with'),
                       const SizedBox(height: 24),
-                      
+
                       Row(
                         children: [
                           Expanded(
@@ -311,15 +360,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 32),
-                      
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             'Don\'t have an account? ',
-                            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.onSurfaceVariant),
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
                           ),
                           TextButton(
                             onPressed: () => context.go('/register'),
@@ -333,7 +384,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 20),
                     ],
                   ),

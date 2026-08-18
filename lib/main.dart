@@ -23,9 +23,7 @@ void main() async {
   runApp(
     DevicePreview(
       enabled: kDebugMode,
-      builder: (context) => const ProviderScope(
-        child: CinejoApp(),
-      ),
+      builder: (context) => const ProviderScope(child: CinejoApp()),
     ),
   );
 }

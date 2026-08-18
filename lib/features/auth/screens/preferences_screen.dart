@@ -66,7 +66,10 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
       _onboardingFlagKey,
       defaultValue: _onboardingControlVariant,
     );
-    AnalyticsService.trackEvent('onboarding_started', properties: {'variant': variant});
+    AnalyticsService.trackEvent(
+      'onboarding_started',
+      properties: {'variant': variant},
+    );
     if (mounted) {
       setState(() => _variant = variant);
     }
@@ -75,9 +78,7 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
   Future<void> _handleSavePreferences() async {
     if (_selectedGenres.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select at least one genre'),
-        ),
+        const SnackBar(content: Text('Please select at least one genre')),
       );
       return;
     }
@@ -85,7 +86,9 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
     if (_selectedGenres.length < 3) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please select at least 3 genres for better recommendations'),
+          content: Text(
+            'Please select at least 3 genres for better recommendations',
+          ),
         ),
       );
       return;
@@ -102,11 +105,14 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
     final success = await authNotifier.saveUserPreferences(preferences);
 
     if (success) {
-      AnalyticsService.trackEvent('onboarding_completed', properties: {
-        'variant': _variant,
-        'genreCount': _selectedGenres.length,
-        'skipped': false,
-      });
+      AnalyticsService.trackEvent(
+        'onboarding_completed',
+        properties: {
+          'variant': _variant,
+          'genreCount': _selectedGenres.length,
+          'skipped': false,
+        },
+      );
     }
 
     if (success && mounted) {
@@ -115,7 +121,10 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
   }
 
   void _handleSkip() {
-    AnalyticsService.trackEvent('onboarding_skipped', properties: {'variant': _variant});
+    AnalyticsService.trackEvent(
+      'onboarding_skipped',
+      properties: {'variant': _variant},
+    );
     // Save default preferences and continue
     final defaultPreferences = UserPreferences(
       preferredGenres: ['Action', 'Comedy', 'Drama'],
@@ -123,11 +132,14 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
       isDarkTheme: true,
     );
 
-    ref.read(authProvider.notifier).saveUserPreferences(defaultPreferences).then((success) {
-      if (success && mounted) {
-        context.go('/home');
-      }
-    });
+    ref
+        .read(authProvider.notifier)
+        .saveUserPreferences(defaultPreferences)
+        .then((success) {
+          if (success && mounted) {
+            context.go('/home');
+          }
+        });
   }
 
   @override
@@ -172,9 +184,9 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
                 backgroundColor: theme.colorScheme.surfaceContainerHighest,
                 valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Welcome text
               Text(
                 'Almost there! 🎬',
@@ -182,18 +194,18 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
                   color: theme.colorScheme.onSurface,
                 ),
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               Text(
                 'Help us personalize your movie recommendations by selecting your preferences.',
                 style: AppTextStyles.bodyLarge.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-              
+
               const SizedBox(height: 40),
-              
+
               // Genre selection
               Text(
                 'What genres do you love?',
@@ -202,18 +214,18 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               Text(
                 'Select at least 3 genres (${_selectedGenres.length} selected)',
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Genre chips
               Wrap(
                 spacing: 8,
@@ -235,110 +247,109 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
                   );
                 }).toList(),
               ),
-              
+
               const SizedBox(height: 40),
 
               // Minimum rating and theme are skipped in the "streamlined"
               // onboarding A/B test variant — sensible defaults (6.0, dark)
               // are used instead. See _onboardingFlagKey.
               if (!_isStreamlined) ...[
-              // Minimum rating
-              Text(
-                'Minimum Rating',
-                style: AppTextStyles.titleLarge.copyWith(
-                  color: theme.colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              
-              const SizedBox(height: 8),
-              
-              Text(
-                'Only show movies with ratings above ${_minRating.toStringAsFixed(1)}',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              
-              const SizedBox(height: 16),
-              
-              SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: AppColors.primary,
-                  thumbColor: AppColors.primary,
-                  inactiveTrackColor: theme.colorScheme.surfaceContainerHighest,
-                  overlayColor: AppColors.primary.withValues(alpha: 0.2),
-                ),
-                child: Slider(
-                  value: _minRating,
-                  min: 0.0,
-                  max: 10.0,
-                  divisions: 20,
-                  onChanged: (value) {
-                    setState(() {
-                      _minRating = value;
-                    });
-                  },
-                ),
-              ),
-              
-              // Rating display
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '0.0',
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
+                // Minimum rating
+                Text(
+                  'Minimum Rating',
+                  style: AppTextStyles.titleLarge.copyWith(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w600,
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
+                ),
+
+                const SizedBox(height: 8),
+
+                Text(
+                  'Only show movies with ratings above ${_minRating.toStringAsFixed(1)}',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    activeTrackColor: AppColors.primary,
+                    thumbColor: AppColors.primary,
+                    inactiveTrackColor:
+                        theme.colorScheme.surfaceContainerHighest,
+                    overlayColor: AppColors.primary.withValues(alpha: 0.2),
+                  ),
+                  child: Slider(
+                    value: _minRating,
+                    min: 0.0,
+                    max: 10.0,
+                    divisions: 20,
+                    onChanged: (value) {
+                      setState(() {
+                        _minRating = value;
+                      });
+                    },
+                  ),
+                ),
+
+                // Rating display
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '0.0',
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.star,
-                          size: 16,
-                          color: AppColors.primary,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          _minRating.toStringAsFixed(1),
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.w600,
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.star, size: 16, color: AppColors.primary),
+                          const SizedBox(width: 4),
+                          Text(
+                            _minRating.toStringAsFixed(1),
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Text(
-                    '10.0',
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                    Text(
+                      '10.0',
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
               ],
 
               const SizedBox(height: 40),
 
-
               const SizedBox(height: 48),
-              
+
               // Save preferences button
               AuthButton(
                 text: 'Save Preferences',
                 onPressed: _handleSavePreferences,
                 isLoading: authState.isLoading,
               ),
-              
+
               // Error message
               if (authState.error != null) ...[
                 const SizedBox(height: 16),
@@ -378,7 +389,7 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
                   ),
                 ),
               ],
-              
+
               const SizedBox(height: 32),
             ],
           ),

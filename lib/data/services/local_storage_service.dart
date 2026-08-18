@@ -18,7 +18,10 @@ class LocalStorageService {
 
   /// Save user authentication state
   Future<void> saveAuthUser(User user) async {
-    await _preferences!.setString(AppConstants.userDataKey, json.encode(user.toJson()));
+    await _preferences!.setString(
+      AppConstants.userDataKey,
+      json.encode(user.toJson()),
+    );
     await _preferences!.setBool('is_authenticated', true);
   }
 
@@ -26,7 +29,7 @@ class LocalStorageService {
   Future<User?> getSavedUser() async {
     final userJson = _preferences!.getString(AppConstants.userDataKey);
     if (userJson == null) return null;
-    
+
     try {
       final userMap = json.decode(userJson) as Map<String, dynamic>;
       return User.fromJson(userMap);
@@ -44,16 +47,22 @@ class LocalStorageService {
 
   /// Save user preferences
   Future<void> saveUserPreferences(UserPreferences preferences) async {
-    await _preferences!.setString(AppConstants.userPreferencesKey, json.encode(preferences.toJson()));
+    await _preferences!.setString(
+      AppConstants.userPreferencesKey,
+      json.encode(preferences.toJson()),
+    );
   }
 
   /// Get user preferences
   Future<UserPreferences?> getUserPreferences() async {
-    final preferencesJson = _preferences!.getString(AppConstants.userPreferencesKey);
+    final preferencesJson = _preferences!.getString(
+      AppConstants.userPreferencesKey,
+    );
     if (preferencesJson == null) return null;
-    
+
     try {
-      final preferencesMap = json.decode(preferencesJson) as Map<String, dynamic>;
+      final preferencesMap =
+          json.decode(preferencesJson) as Map<String, dynamic>;
       return UserPreferences.fromJson(preferencesMap);
     } catch (e) {
       return null;
@@ -67,7 +76,8 @@ class LocalStorageService {
 
   /// Get theme preference
   Future<bool> getThemeMode() async {
-    return _preferences!.getBool(AppConstants.themeKey) ?? true; // Default to dark
+    return _preferences!.getBool(AppConstants.themeKey) ??
+        true; // Default to dark
   }
 
   /// Check if user is first time user
@@ -210,12 +220,20 @@ class LocalStorageService {
 
   // Recent searches (serialized JSON list)
   Future<void> saveRecentSearches(List<String> queries) async {
-    await _preferences!.setString('recent_searches', json.encode(queries.take(10).toList()));
+    await _preferences!.setString(
+      'recent_searches',
+      json.encode(queries.take(10).toList()),
+    );
   }
 
   List<String> getRecentSearches() {
     final raw = _preferences!.getString('recent_searches');
-    if(raw==null) return [];
-    try { final list = json.decode(raw) as List; return list.map((e)=> e.toString()).toList(); } catch (_) { return []; }
+    if (raw == null) return [];
+    try {
+      final list = json.decode(raw) as List;
+      return list.map((e) => e.toString()).toList();
+    } catch (_) {
+      return [];
+    }
   }
 }

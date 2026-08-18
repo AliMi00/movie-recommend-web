@@ -12,7 +12,9 @@ final movieRepositoryProvider = Provider<MovieRepository>((ref) {
 });
 
 /// Movies state provider
-final moviesProvider = StateNotifierProvider<MoviesNotifier, MoviesState>((ref) {
+final moviesProvider = StateNotifierProvider<MoviesNotifier, MoviesState>((
+  ref,
+) {
   final repository = ref.watch(movieRepositoryProvider);
   return MoviesNotifier(repository);
 });
@@ -66,7 +68,7 @@ class MoviesNotifier extends StateNotifier<MoviesState> {
   /// Load initial movies
   Future<void> _loadInitialMovies() async {
     state = state.copyWith(isLoading: true, error: null);
-    
+
     try {
       final movies = await _repository.getRecommendations(page: 1, limit: 10);
       state = state.copyWith(
@@ -75,21 +77,21 @@ class MoviesNotifier extends StateNotifier<MoviesState> {
         hasMoreMovies: movies.isNotEmpty,
       );
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
   /// Load more movies for the stack
   Future<void> loadMoreMovies() async {
     if (state.isLoading || !state.hasMoreMovies) return;
-    
+
     try {
       _currentPage++;
-      final newMovies = await _repository.getRecommendations(page: _currentPage, limit: 10);
-      
+      final newMovies = await _repository.getRecommendations(
+        page: _currentPage,
+        limit: 10,
+      );
+
       if (newMovies.isEmpty) {
         state = state.copyWith(hasMoreMovies: false);
       } else {
@@ -106,19 +108,22 @@ class MoviesNotifier extends StateNotifier<MoviesState> {
   Future<void> likeMovie(Movie movie) async {
     try {
       await _repository.likeMovie(movie.id);
-      
+
       // Remove from current stack
       final updatedStack = List<Movie>.from(state.currentStack);
       updatedStack.removeWhere((m) => m.id == movie.id);
-      
+
       // Add to liked movies
-      final updatedLiked = [movie.withUserInteraction(UserInteraction.liked), ...state.likedMovies];
-      
+      final updatedLiked = [
+        movie.withUserInteraction(UserInteraction.liked),
+        ...state.likedMovies,
+      ];
+
       state = state.copyWith(
         currentStack: updatedStack,
         likedMovies: updatedLiked,
       );
-      
+
       // Load more movies if stack is getting low
       if (updatedStack.length < 3) {
         loadMoreMovies();
@@ -132,19 +137,22 @@ class MoviesNotifier extends StateNotifier<MoviesState> {
   Future<void> dislikeMovie(Movie movie) async {
     try {
       await _repository.dislikeMovie(movie.id);
-      
+
       // Remove from current stack
       final updatedStack = List<Movie>.from(state.currentStack);
       updatedStack.removeWhere((m) => m.id == movie.id);
-      
+
       // Add to disliked movies
-      final updatedDisliked = [movie.withUserInteraction(UserInteraction.disliked), ...state.dislikedMovies];
-      
+      final updatedDisliked = [
+        movie.withUserInteraction(UserInteraction.disliked),
+        ...state.dislikedMovies,
+      ];
+
       state = state.copyWith(
         currentStack: updatedStack,
         dislikedMovies: updatedDisliked,
       );
-      
+
       // Load more movies if stack is getting low
       if (updatedStack.length < 3) {
         loadMoreMovies();
@@ -158,19 +166,22 @@ class MoviesNotifier extends StateNotifier<MoviesState> {
   Future<void> superLikeMovie(Movie movie) async {
     try {
       await _repository.superLikeMovie(movie.id);
-      
+
       // Remove from current stack
       final updatedStack = List<Movie>.from(state.currentStack);
       updatedStack.removeWhere((m) => m.id == movie.id);
-      
+
       // Add to liked movies
-      final updatedLiked = [movie.withUserInteraction(UserInteraction.superLiked), ...state.likedMovies];
-      
+      final updatedLiked = [
+        movie.withUserInteraction(UserInteraction.superLiked),
+        ...state.likedMovies,
+      ];
+
       state = state.copyWith(
         currentStack: updatedStack,
         likedMovies: updatedLiked,
       );
-      
+
       // Load more movies if stack is getting low
       if (updatedStack.length < 3) {
         loadMoreMovies();
@@ -208,13 +219,19 @@ final basicWatchHistoryProvider = FutureProvider<List<Movie>>((ref) async {
 });
 
 /// Provider for movie details (basic version)
-final basicMovieDetailsProvider = FutureProvider.family<Movie?, int>((ref, movieId) async {
+final basicMovieDetailsProvider = FutureProvider.family<Movie?, int>((
+  ref,
+  movieId,
+) async {
   final repository = ref.watch(movieRepositoryProvider);
   return repository.getMovieDetails(movieId);
 });
 
 /// Provider for movie search (basic version)
-final basicMovieSearchProvider = FutureProvider.family<List<Movie>, String>((ref, query) async {
+final basicMovieSearchProvider = FutureProvider.family<List<Movie>, String>((
+  ref,
+  query,
+) async {
   final repository = ref.watch(movieRepositoryProvider);
   if (query.trim().isEmpty) return [];
   return repository.searchMovies(query);

@@ -12,7 +12,9 @@ class User with _$User {
     String? username,
     @JsonKey(name: 'full_name') String? fullName,
     @JsonKey(name: 'avatar_url') String? avatarUrl,
-    @JsonKey(name: 'preferred_genres') @Default([]) List<String> preferredGenres,
+    @JsonKey(name: 'preferred_genres')
+    @Default([])
+    List<String> preferredGenres,
     @JsonKey(name: 'is_first_time_user') @Default(false) bool isFirstTimeUser,
     @JsonKey(name: 'min_rating') @Default(7.0) double minRating,
     @JsonKey(name: 'is_dark_theme') @Default(true) bool isDarkTheme,
@@ -31,15 +33,19 @@ class User with _$User {
 @freezed
 class UserPreferences with _$UserPreferences {
   const factory UserPreferences({
-    @JsonKey(name: 'preferred_genres') @Default([]) List<String> preferredGenres,
+    @JsonKey(name: 'preferred_genres')
+    @Default([])
+    List<String> preferredGenres,
     @JsonKey(name: 'min_rating') @Default(7.0) double minRating,
     @JsonKey(name: 'is_dark_theme') @Default(true) bool isDarkTheme,
-    @JsonKey(name: 'enable_notifications') @Default(true) bool enableNotifications,
+    @JsonKey(name: 'enable_notifications')
+    @Default(true)
+    bool enableNotifications,
     @JsonKey(name: 'enable_autoplay') @Default(true) bool enableAutoplay,
     @Default('en') String language,
   }) = _UserPreferences;
 
-  factory UserPreferences.fromJson(Map<String, dynamic> json) => 
+  factory UserPreferences.fromJson(Map<String, dynamic> json) =>
       _$UserPreferencesFromJson(json);
 }
 
@@ -48,12 +54,14 @@ class UserState with _$UserState {
   const factory UserState({
     User? user,
     @JsonKey(name: 'is_authenticated') @Default(false) bool isAuthenticated,
-    @JsonKey(name: 'preferred_genres') @Default([]) List<String> preferredGenres,
+    @JsonKey(name: 'preferred_genres')
+    @Default([])
+    List<String> preferredGenres,
     UserPreferences? preferences,
     @JsonKey(name: 'is_loading') @Default(false) bool isLoading,
     String? error,
   }) = _UserState;
 
-  factory UserState.fromJson(Map<String, dynamic> json) => 
+  factory UserState.fromJson(Map<String, dynamic> json) =>
       _$UserStateFromJson(json);
 }

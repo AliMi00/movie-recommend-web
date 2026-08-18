@@ -44,7 +44,9 @@ extension MovieExtension on Movie {
       return posterUrl!;
     }
     if (posterUrl!.startsWith('/')) {
-      final host = (baseUrlHost != null && baseUrlHost.isNotEmpty) ? baseUrlHost.replaceAll(RegExp(r'/v1/?$'), '') : '';
+      final host = (baseUrlHost != null && baseUrlHost.isNotEmpty)
+          ? baseUrlHost.replaceAll(RegExp(r'/v1/?$'), '')
+          : '';
       return '$host$posterUrl';
     }
     return 'https://image.tmdb.org/t/p/w500/$posterUrl';
@@ -61,7 +63,9 @@ extension MovieExtension on Movie {
       return backdropUrl!;
     }
     if (backdropUrl!.startsWith('/')) {
-      final host = (baseUrlHost != null && baseUrlHost.isNotEmpty) ? baseUrlHost.replaceAll(RegExp(r'/v1/?$'), '') : '';
+      final host = (baseUrlHost != null && baseUrlHost.isNotEmpty)
+          ? baseUrlHost.replaceAll(RegExp(r'/v1/?$'), '')
+          : '';
       return '$host$backdropUrl';
     }
     return 'https://image.tmdb.org/t/p/w1280/$backdropUrl';
@@ -159,9 +163,4 @@ extension MovieExtension on Movie {
   }
 }
 
-enum UserInteraction {
-  none,
-  liked,
-  disliked,
-  superLiked,
-}
+enum UserInteraction { none, liked, disliked, superLiked }

@@ -20,12 +20,12 @@ class ActiveGroupSessionNotifier extends StateNotifier<GroupSession?> {
     try {
       final session = await _repository.createSession(mood: mood);
       state = session;
-      
-      AnalyticsService.trackEvent('group_session_created', properties: {
-        'mood': mood,
-        'code': session.sessionCode,
-      });
-      
+
+      AnalyticsService.trackEvent(
+        'group_session_created',
+        properties: {'mood': mood, 'code': session.sessionCode},
+      );
+
       startLobbyPolling();
     } catch (e) {
       rethrow;
@@ -36,11 +36,12 @@ class ActiveGroupSessionNotifier extends StateNotifier<GroupSession?> {
     try {
       final session = await _repository.joinSession(code);
       state = session;
-      
-      AnalyticsService.trackEvent('group_session_joined', properties: {
-        'code': code,
-      });
-      
+
+      AnalyticsService.trackEvent(
+        'group_session_joined',
+        properties: {'code': code},
+      );
+
       startLobbyPolling();
     } catch (e) {
       rethrow;
@@ -51,13 +52,16 @@ class ActiveGroupSessionNotifier extends StateNotifier<GroupSession?> {
     final current = state;
     if (current == null) return;
     try {
-      final updated = await _repository.inviteMember(current.sessionCode, email);
+      final updated = await _repository.inviteMember(
+        current.sessionCode,
+        email,
+      );
       state = updated;
-      
-      AnalyticsService.trackEvent('group_session_member_invited', properties: {
-        'code': current.sessionCode,
-        'invited_email': email,
-      });
+
+      AnalyticsService.trackEvent(
+        'group_session_member_invited',
+        properties: {'code': current.sessionCode, 'invited_email': email},
+      );
     } catch (e) {
       rethrow;
     }
@@ -94,9 +98,10 @@ class ActiveGroupSessionNotifier extends StateNotifier<GroupSession?> {
 
   void leaveSession() {
     if (state != null) {
-      AnalyticsService.trackEvent('group_session_left', properties: {
-        'code': state!.sessionCode,
-      });
+      AnalyticsService.trackEvent(
+        'group_session_left',
+        properties: {'code': state!.sessionCode},
+      );
     }
     stopLobbyPolling();
     state = null;
@@ -106,13 +111,16 @@ class ActiveGroupSessionNotifier extends StateNotifier<GroupSession?> {
     final current = state;
     if (current == null) return;
     try {
-      final updated = await _repository.updateSessionMood(current.sessionCode, mood);
+      final updated = await _repository.updateSessionMood(
+        current.sessionCode,
+        mood,
+      );
       state = updated;
-      
-      AnalyticsService.trackEvent('group_session_mood_updated', properties: {
-        'code': current.sessionCode,
-        'mood': mood,
-      });
+
+      AnalyticsService.trackEvent(
+        'group_session_mood_updated',
+        properties: {'code': current.sessionCode, 'mood': mood},
+      );
     } catch (e) {
       rethrow;
     }
@@ -127,15 +135,17 @@ class ActiveGroupSessionNotifier extends StateNotifier<GroupSession?> {
 
 final activeGroupSessionProvider =
     StateNotifierProvider<ActiveGroupSessionNotifier, GroupSession?>((ref) {
-  final repo = ref.watch(groupSessionRepositoryProvider);
-  return ActiveGroupSessionNotifier(repo);
-});
+      final repo = ref.watch(groupSessionRepositoryProvider);
+      return ActiveGroupSessionNotifier(repo);
+    });
 
-class PendingInvitationsNotifier extends StateNotifier<AsyncValue<List<GroupSession>>> {
+class PendingInvitationsNotifier
+    extends StateNotifier<AsyncValue<List<GroupSession>>> {
   final GroupSessionRepository _repository;
   Timer? _pollingTimer;
 
-  PendingInvitationsNotifier(this._repository) : super(const AsyncValue.loading()) {
+  PendingInvitationsNotifier(this._repository)
+    : super(const AsyncValue.loading()) {
     fetchInvitations();
     _startPolling();
   }
@@ -159,12 +169,12 @@ class PendingInvitationsNotifier extends StateNotifier<AsyncValue<List<GroupSess
   Future<void> respond(int memberId, String response) async {
     try {
       await _repository.respondToInvitation(memberId, response);
-      
-      AnalyticsService.trackEvent('group_session_invite_responded', properties: {
-        'member_id': memberId,
-        'response': response,
-      });
-      
+
+      AnalyticsService.trackEvent(
+        'group_session_invite_responded',
+        properties: {'member_id': memberId, 'response': response},
+      );
+
       await fetchInvitations();
     } catch (e) {
       rethrow;
@@ -179,10 +189,13 @@ class PendingInvitationsNotifier extends StateNotifier<AsyncValue<List<GroupSess
 }
 
 final pendingInvitationsProvider =
-    StateNotifierProvider<PendingInvitationsNotifier, AsyncValue<List<GroupSession>>>((ref) {
-  final repo = ref.watch(groupSessionRepositoryProvider);
-  return PendingInvitationsNotifier(repo);
-});
+    StateNotifierProvider<
+      PendingInvitationsNotifier,
+      AsyncValue<List<GroupSession>>
+    >((ref) {
+      final repo = ref.watch(groupSessionRepositoryProvider);
+      return PendingInvitationsNotifier(repo);
+    });
 
 class GroupRecommendationsState {
   final List<GroupMovie> movies;
@@ -216,12 +229,13 @@ class GroupRecommendationsState {
   }
 }
 
-class GroupRecommendationsNotifier extends StateNotifier<GroupRecommendationsState> {
+class GroupRecommendationsNotifier
+    extends StateNotifier<GroupRecommendationsState> {
   final GroupSessionRepository _repository;
   final String _code;
 
   GroupRecommendationsNotifier(this._repository, this._code)
-      : super(const GroupRecommendationsState()) {
+    : super(const GroupRecommendationsState()) {
     loadRecommendations();
   }
 
@@ -231,7 +245,10 @@ class GroupRecommendationsNotifier extends StateNotifier<GroupRecommendationsSta
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      final items = await _repository.getGroupRecommendations(_code, page: state.page);
+      final items = await _repository.getGroupRecommendations(
+        _code,
+        page: state.page,
+      );
       state = state.copyWith(
         movies: [...state.movies, ...items],
         isLoading: false,
@@ -239,10 +256,7 @@ class GroupRecommendationsNotifier extends StateNotifier<GroupRecommendationsSta
         hasMore: items.length >= 20,
       );
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -252,8 +266,12 @@ class GroupRecommendationsNotifier extends StateNotifier<GroupRecommendationsSta
   }
 }
 
-final groupRecommendationsProvider = StateNotifierProvider.family<
-    GroupRecommendationsNotifier, GroupRecommendationsState, String>((ref, code) {
-  final repo = ref.watch(groupSessionRepositoryProvider);
-  return GroupRecommendationsNotifier(repo, code);
-});
+final groupRecommendationsProvider =
+    StateNotifierProvider.family<
+      GroupRecommendationsNotifier,
+      GroupRecommendationsState,
+      String
+    >((ref, code) {
+      final repo = ref.watch(groupSessionRepositoryProvider);
+      return GroupRecommendationsNotifier(repo, code);
+    });

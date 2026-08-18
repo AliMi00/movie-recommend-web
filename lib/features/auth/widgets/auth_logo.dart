@@ -5,12 +5,8 @@ import '../../../core/theme/app_text_styles.dart';
 class AuthLogo extends StatelessWidget {
   final double size;
   final bool showText;
-  
-  const AuthLogo({
-    super.key,
-    this.size = 80,
-    this.showText = true,
-  });
+
+  const AuthLogo({super.key, this.size = 80, this.showText = true});
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +49,10 @@ class AuthLogo extends StatelessWidget {
             ],
           ),
         ),
-        
+
         if (showText) ...[
           const SizedBox(height: 24),
-          
+
           // App name
           Text(
             'CINEJO',

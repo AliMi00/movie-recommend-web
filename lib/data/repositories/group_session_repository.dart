@@ -8,7 +8,11 @@ abstract class GroupSessionRepository {
   Future<GroupSession> inviteMember(String code, String email);
   Future<List<GroupSession>> getPendingInvitations();
   Future<GroupSession> respondToInvitation(int memberId, String response);
-  Future<List<GroupMovie>> getGroupRecommendations(String code, {int page = 1, int limit = 20});
+  Future<List<GroupMovie>> getGroupRecommendations(
+    String code, {
+    int page = 1,
+    int limit = 20,
+  });
   Future<GroupSession> updateSessionMood(String code, String mood);
 }
 
@@ -22,9 +26,7 @@ class ApiGroupSessionRepository implements GroupSessionRepository {
     try {
       final res = await _dio.post(
         '/group-sessions',
-        data: {
-          if (mood != null && mood.isNotEmpty) 'mood': mood,
-        },
+        data: {if (mood != null && mood.isNotEmpty) 'mood': mood},
       );
       return GroupSession.fromJson(res.data as Map<String, dynamic>);
     } catch (e) {
@@ -37,9 +39,7 @@ class ApiGroupSessionRepository implements GroupSessionRepository {
     try {
       final res = await _dio.post(
         '/group-sessions/join',
-        data: {
-          'code': code.toUpperCase(),
-        },
+        data: {'code': code.toUpperCase()},
       );
       return GroupSession.fromJson(res.data as Map<String, dynamic>);
     } catch (e) {
@@ -52,7 +52,9 @@ class ApiGroupSessionRepository implements GroupSessionRepository {
     try {
       final res = await _dio.get('/group-sessions/$code/members');
       final data = res.data as List<dynamic>? ?? [];
-      return data.map((e) => SessionMember.fromJson(e as Map<String, dynamic>)).toList();
+      return data
+          .map((e) => SessionMember.fromJson(e as Map<String, dynamic>))
+          .toList();
     } catch (e) {
       rethrow;
     }
@@ -63,9 +65,7 @@ class ApiGroupSessionRepository implements GroupSessionRepository {
     try {
       final res = await _dio.post(
         '/group-sessions/$code/invite',
-        data: {
-          'email': email.trim(),
-        },
+        data: {'email': email.trim()},
       );
       return GroupSession.fromJson(res.data as Map<String, dynamic>);
     } catch (e) {
@@ -78,14 +78,19 @@ class ApiGroupSessionRepository implements GroupSessionRepository {
     try {
       final res = await _dio.get('/group-sessions/invitations');
       final data = res.data as List<dynamic>? ?? [];
-      return data.map((e) => GroupSession.fromJson(e as Map<String, dynamic>)).toList();
+      return data
+          .map((e) => GroupSession.fromJson(e as Map<String, dynamic>))
+          .toList();
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<GroupSession> respondToInvitation(int memberId, String response) async {
+  Future<GroupSession> respondToInvitation(
+    int memberId,
+    String response,
+  ) async {
     try {
       final res = await _dio.post(
         '/group-sessions/invitations/$memberId/respond',
@@ -100,17 +105,20 @@ class ApiGroupSessionRepository implements GroupSessionRepository {
   }
 
   @override
-  Future<List<GroupMovie>> getGroupRecommendations(String code, {int page = 1, int limit = 20}) async {
+  Future<List<GroupMovie>> getGroupRecommendations(
+    String code, {
+    int page = 1,
+    int limit = 20,
+  }) async {
     try {
       final res = await _dio.get(
         '/group-sessions/$code/recommendations',
-        queryParameters: {
-          'page': page,
-          'page_size': limit,
-        },
+        queryParameters: {'page': page, 'page_size': limit},
       );
       final data = res.data['data'] as List<dynamic>? ?? [];
-      return data.map((e) => GroupMovie.fromJson(e as Map<String, dynamic>)).toList();
+      return data
+          .map((e) => GroupMovie.fromJson(e as Map<String, dynamic>))
+          .toList();
     } catch (e) {
       rethrow;
     }
@@ -121,9 +129,7 @@ class ApiGroupSessionRepository implements GroupSessionRepository {
     try {
       final res = await _dio.put(
         '/group-sessions/$code/mood',
-        data: {
-          'mood': mood.trim(),
-        },
+        data: {'mood': mood.trim()},
       );
       return GroupSession.fromJson(res.data as Map<String, dynamic>);
     } catch (e) {
