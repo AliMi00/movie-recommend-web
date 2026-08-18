@@ -14,10 +14,11 @@ RUN flutter pub get
 
 COPY . .
 
-# --no-web-resources-cdn bundles CanvasKit into the image instead of
-# fetching it from gstatic at runtime: the container stays self-contained,
-# the Content-Security-Policy needs no CDN origin, and first paint does not
-# depend on a third-party host.
+# --no-web-resources-cdn bundles the CanvasKit runtime (~7MB) into the
+# image instead of fetching it from a CDN, so first paint does not depend
+# on a third-party host. Note this covers CanvasKit only: Flutter still
+# fetches Roboto/Noto from fonts.gstatic.com at runtime, which is why the
+# CSP allows that one origin (see nginx/security-headers.conf).
 #
 # The API URL is deliberately NOT baked in here — it is injected at
 # container start by docker-entrypoint.sh, so one image serves every
