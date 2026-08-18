@@ -1,0 +1,30 @@
+# Build output — the image builds this itself in the builder stage
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# VCS & CI
+.git/
+.github/
+.gitignore
+
+# Infra (not needed inside the app image)
+terraform/
+monitoring/
+docker-compose.yml
+docker-compose.override.yml
+
+# Secrets — belt and braces; these are gitignored too
+.env
+.env.*
+!.env.example
+
+# Editors
+.vscode/
+.idea/
+*.iml
+
+# Docs
+*.md
+!assets/legal/*.md
