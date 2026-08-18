@@ -101,10 +101,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     AnalyticsService.trackEvent(
       skipped ? 'intro_onboarding_skipped' : 'intro_onboarding_completed',
-      properties: {
-        'page_index': _index,
-        'page_count': kOnboardingPages.length,
-      },
+      properties: {'page_index': _index, 'page_count': kOnboardingPages.length},
     );
 
     try {
@@ -237,43 +234,54 @@ class _OnboardingSlide extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 132,
-                    height: 132,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: data.accent.withValues(alpha: 0.12),
-                      border: Border.all(
-                        color: data.accent.withValues(alpha: 0.35),
-                        width: 1.5,
-                      ),
-                    ),
-                    child: Icon(data.icon, size: 60, color: data.accent),
-                  )
+                        width: 132,
+                        height: 132,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: data.accent.withValues(alpha: 0.12),
+                          border: Border.all(
+                            color: data.accent.withValues(alpha: 0.35),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Icon(data.icon, size: 60, color: data.accent),
+                      )
                       .animate()
                       .fadeIn(duration: 400.ms)
-                      .scale(begin: const Offset(0.85, 0.85), curve: Curves.easeOutBack),
+                      .scale(
+                        begin: const Offset(0.85, 0.85),
+                        curve: Curves.easeOutBack,
+                      ),
 
                   const SizedBox(height: 48),
 
                   Text(
-                    data.title,
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.headlineLargeMobile.copyWith(
-                      color: AppColors.onSurface,
-                      height: 1.25,
-                    ),
-                  ).animate().fadeIn(delay: 120.ms, duration: 400.ms).slideY(begin: 0.15),
+                        data.title,
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.headlineLargeMobile.copyWith(
+                          color: AppColors.onSurface,
+                          height: 1.25,
+                        ),
+                      )
+                      .animate()
+                      .fadeIn(delay: 120.ms, duration: 400.ms)
+                      .slideY(begin: 0.15),
 
                   const SizedBox(height: 20),
 
                   Text(
-                    data.body,
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.onSurfaceVariant.withValues(alpha: 0.8),
-                      height: 1.6,
-                    ),
-                  ).animate().fadeIn(delay: 220.ms, duration: 400.ms).slideY(begin: 0.15),
+                        data.body,
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.onSurfaceVariant.withValues(
+                            alpha: 0.8,
+                          ),
+                          height: 1.6,
+                        ),
+                      )
+                      .animate()
+                      .fadeIn(delay: 220.ms, duration: 400.ms)
+                      .slideY(begin: 0.15),
                 ],
               ),
             ),
@@ -335,7 +343,9 @@ class _OnboardingFooter extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.tertiary,
                 foregroundColor: AppColors.onTertiary,
-                disabledBackgroundColor: AppColors.tertiary.withValues(alpha: 0.6),
+                disabledBackgroundColor: AppColors.tertiary.withValues(
+                  alpha: 0.6,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -347,8 +357,9 @@ class _OnboardingFooter extends StatelessWidget {
                       height: 22,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(AppColors.onTertiary),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppColors.onTertiary,
+                        ),
                       ),
                     )
                   : Row(

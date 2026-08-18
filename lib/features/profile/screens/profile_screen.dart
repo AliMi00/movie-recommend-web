@@ -11,7 +11,8 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../shared/widgets/glass_container.dart';
 import '../../../data/services/local_storage_service.dart';
-import '../../discovery/screens/discovery_screen.dart' show selectedGenresProvider, minRatingFilterProvider;
+import '../../discovery/screens/discovery_screen.dart'
+    show selectedGenresProvider, minRatingFilterProvider;
 
 /// Renders watchedMinutes in hours, matching the "Hours Watched" label at
 /// every value rather than switching to minutes below 60 (which would read
@@ -105,8 +106,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.errorContainer),
-            child: const Text('Reset Everything', style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.errorContainer,
+            ),
+            child: const Text(
+              'Reset Everything',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -142,8 +148,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.errorContainer),
-            child: const Text('Delete My Account', style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.errorContainer,
+            ),
+            child: const Text(
+              'Delete My Account',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -159,7 +170,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     } else {
       final error = ref.read(authProvider).error;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error ?? 'Failed to delete account. Please try again.')),
+        SnackBar(
+          content: Text(error ?? 'Failed to delete account. Please try again.'),
+        ),
       );
     }
   }
@@ -196,7 +209,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   // SliverToBoxAdapter solves the SliverAppBar RenderFlex overflow crash by sizing naturally!
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 16,
+                      ),
                       child: Column(
                         children: [
                           // Profile Header
@@ -206,14 +222,26 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 padding: const EdgeInsets.all(3),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border: Border.all(color: AppColors.secondary.withValues(alpha: 0.4), width: 2),
+                                  border: Border.all(
+                                    color: AppColors.secondary.withValues(
+                                      alpha: 0.4,
+                                    ),
+                                    width: 2,
+                                  ),
                                 ),
                                 child: CircleAvatar(
                                   radius: 38,
-                                  backgroundColor: AppColors.surfaceContainerHigh,
-                                  backgroundImage: user?.avatarUrl != null ? NetworkImage(user!.avatarUrl!) : null,
+                                  backgroundColor:
+                                      AppColors.surfaceContainerHigh,
+                                  backgroundImage: user?.avatarUrl != null
+                                      ? NetworkImage(user!.avatarUrl!)
+                                      : null,
                                   child: user?.avatarUrl == null
-                                      ? const Icon(Icons.person, size: 40, color: AppColors.secondary)
+                                      ? const Icon(
+                                          Icons.person,
+                                          size: 40,
+                                          color: AppColors.secondary,
+                                        )
                                       : null,
                                 ),
                               ),
@@ -223,13 +251,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      user?.fullName ?? user?.username ?? 'CineJo User',
-                                      style: AppTextStyles.titleMedium.copyWith(fontSize: 22, fontWeight: FontWeight.bold),
+                                      user?.fullName ??
+                                          user?.username ??
+                                          'CineJo User',
+                                      style: AppTextStyles.titleMedium.copyWith(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     Text(
                                       user?.email ?? 'member since 2026',
                                       style: AppTextStyles.labelSmall.copyWith(
-                                        color: AppColors.onSurfaceVariant.withValues(alpha: 0.8),
+                                        color: AppColors.onSurfaceVariant
+                                            .withValues(alpha: 0.8),
                                         letterSpacing: 0,
                                       ),
                                     ),
@@ -237,7 +271,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     Text(
                                       '🍿 Cinephile • Always seeking the next masterpiece',
                                       style: AppTextStyles.bodySmall.copyWith(
-                                        color: AppColors.onSurfaceVariant.withValues(alpha: 0.6),
+                                        color: AppColors.onSurfaceVariant
+                                            .withValues(alpha: 0.6),
                                         fontSize: 12,
                                       ),
                                     ),
@@ -245,9 +280,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 ),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.settings_outlined, color: AppColors.onSurfaceVariant),
+                                icon: const Icon(
+                                  Icons.settings_outlined,
+                                  color: AppColors.onSurfaceVariant,
+                                ),
                                 tooltip: 'Settings',
-                                onPressed: () => context.push(AppConstants.settingsRoute),
+                                onPressed: () =>
+                                    context.push(AppConstants.settingsRoute),
                               ),
                             ],
                           ).animate().fadeIn(duration: 400.ms),
@@ -257,16 +296,33 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           // Interactive Donut Chart / Genre Analytics
                           statsAsync.when(
                             data: (stats) {
-                              final topGenresRaw = stats['topGenres'] as List<dynamic>? ?? [];
+                              final topGenresRaw =
+                                  stats['topGenres'] as List<dynamic>? ?? [];
                               final List<DonutSliceData> slices = [];
-                              
+
                               if (topGenresRaw.isEmpty) {
                                 // Dynamic premium mock fallback so it always looks fantastic!
                                 slices.addAll([
-                                  DonutSliceData('Sci-Fi', 45, AppColors.secondary),
-                                  DonutSliceData('Action', 30, AppColors.tertiary),
-                                  DonutSliceData('Drama', 15, Colors.purpleAccent),
-                                  DonutSliceData('Comedy', 10, Colors.tealAccent),
+                                  DonutSliceData(
+                                    'Sci-Fi',
+                                    45,
+                                    AppColors.secondary,
+                                  ),
+                                  DonutSliceData(
+                                    'Action',
+                                    30,
+                                    AppColors.tertiary,
+                                  ),
+                                  DonutSliceData(
+                                    'Drama',
+                                    15,
+                                    Colors.purpleAccent,
+                                  ),
+                                  DonutSliceData(
+                                    'Comedy',
+                                    10,
+                                    Colors.tealAccent,
+                                  ),
                                 ]);
                               } else {
                                 final colors = [
@@ -312,22 +368,30 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                             painter: DonutChartPainter(slices),
                                             child: Center(
                                               child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   Text(
                                                     slices.first.genre,
-                                                    style: AppTextStyles.labelSmall.copyWith(
-                                                      fontSize: 10,
-                                                      color: AppColors.onSurfaceVariant,
-                                                    ),
+                                                    style: AppTextStyles
+                                                        .labelSmall
+                                                        .copyWith(
+                                                          fontSize: 10,
+                                                          color: AppColors
+                                                              .onSurfaceVariant,
+                                                        ),
                                                   ),
                                                   Text(
                                                     '${(slices.first.count / slices.map((s) => s.count).fold(0, (a, b) => a + b) * 100).toStringAsFixed(0)}%',
-                                                    style: AppTextStyles.titleMedium.copyWith(
-                                                      fontWeight: FontWeight.w900,
-                                                      fontSize: 20,
-                                                      color: AppColors.onSurface,
-                                                    ),
+                                                    style: AppTextStyles
+                                                        .titleMedium
+                                                        .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w900,
+                                                          fontSize: 20,
+                                                          color: AppColors
+                                                              .onSurface,
+                                                        ),
                                                   ),
                                                 ],
                                               ),
@@ -338,10 +402,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                         // Legend
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: slices.map((slice) {
                                               return Padding(
-                                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 4,
+                                                    ),
                                                 child: Row(
                                                   children: [
                                                     Container(
@@ -356,18 +424,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                     Expanded(
                                                       child: Text(
                                                         slice.genre,
-                                                        style: AppTextStyles.bodySmall.copyWith(
-                                                          fontWeight: FontWeight.bold,
-                                                          fontSize: 12,
-                                                        ),
+                                                        style: AppTextStyles
+                                                            .bodySmall
+                                                            .copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 12,
+                                                            ),
                                                       ),
                                                     ),
                                                     Text(
                                                       '${slice.count} matches',
-                                                      style: AppTextStyles.labelSmall.copyWith(
-                                                        fontSize: 10,
-                                                        color: AppColors.onSurfaceVariant,
-                                                      ),
+                                                      style: AppTextStyles
+                                                          .labelSmall
+                                                          .copyWith(
+                                                            fontSize: 10,
+                                                            color: AppColors
+                                                                .onSurfaceVariant,
+                                                          ),
                                                     ),
                                                   ],
                                                 ),
@@ -379,11 +454,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     ),
                                   ],
                                 ),
-                              ).animate().fadeIn(delay: 150.ms, duration: 400.ms);
+                              ).animate().fadeIn(
+                                delay: 150.ms,
+                                duration: 400.ms,
+                              );
                             },
                             loading: () => const SizedBox(
                               height: 120,
-                              child: Center(child: CircularProgressIndicator(color: AppColors.secondary)),
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: AppColors.secondary,
+                                ),
+                              ),
                             ),
                             error: (_, __) => const SizedBox.shrink(),
                           ),
@@ -391,54 +473,61 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           const SizedBox(height: 20),
 
                           // Gamified Stats Grid
-                          statsAsync.when(
-                            data: (stats) => GridView.count(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                              childAspectRatio: 1.6,
-                              children: [
-                                _StatCard(
-                                  label: 'Swipes Deck',
-                                  // 0, not a fabricated default: these keys are
-                                  // always present on a successful response, so
-                                  // a missing key only means the fetch failed —
-                                  // showing a fake "150" then would be a lie,
-                                  // not a placeholder.
-                                  value: (stats['totalSwipes'] ?? 0).toString(),
-                                  icon: Icons.swipe_rounded,
-                                  color: AppColors.secondary,
+                          statsAsync
+                              .when(
+                                data: (stats) => GridView.count(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 12,
+                                  childAspectRatio: 1.6,
+                                  children: [
+                                    _StatCard(
+                                      label: 'Swipes Deck',
+                                      // 0, not a fabricated default: these keys are
+                                      // always present on a successful response, so
+                                      // a missing key only means the fetch failed —
+                                      // showing a fake "150" then would be a lie,
+                                      // not a placeholder.
+                                      value: (stats['totalSwipes'] ?? 0)
+                                          .toString(),
+                                      icon: Icons.swipe_rounded,
+                                      color: AppColors.secondary,
+                                    ),
+                                    _StatCard(
+                                      label: 'Matches',
+                                      value: (stats['likes'] ?? 0).toString(),
+                                      icon: Icons.favorite_rounded,
+                                      color: AppColors.like,
+                                    ),
+                                    _StatCard(
+                                      label: 'Super Swipes',
+                                      value: (stats['superLikes'] ?? 0)
+                                          .toString(),
+                                      icon: Icons.star_rounded,
+                                      color: AppColors.tertiary,
+                                    ),
+                                    _StatCard(
+                                      label: 'Hours Watched',
+                                      // Real minutes from movies actually marked
+                                      // watched (History), summed server-side from
+                                      // Movie.runtime — previously a hardcoded
+                                      // "18 movies * 1.8h" that showed every user
+                                      // exactly 32h regardless of activity.
+                                      value: _formatWatchHours(
+                                        stats['watchedMinutes'] ?? 0,
+                                      ),
+                                      icon: Icons.access_time_filled_rounded,
+                                      color: Colors.orangeAccent,
+                                    ),
+                                  ],
                                 ),
-                                _StatCard(
-                                  label: 'Matches',
-                                  value: (stats['likes'] ?? 0).toString(),
-                                  icon: Icons.favorite_rounded,
-                                  color: AppColors.like,
-                                ),
-                                _StatCard(
-                                  label: 'Super Swipes',
-                                  value: (stats['superLikes'] ?? 0).toString(),
-                                  icon: Icons.star_rounded,
-                                  color: AppColors.tertiary,
-                                ),
-                                _StatCard(
-                                  label: 'Hours Watched',
-                                  // Real minutes from movies actually marked
-                                  // watched (History), summed server-side from
-                                  // Movie.runtime — previously a hardcoded
-                                  // "18 movies * 1.8h" that showed every user
-                                  // exactly 32h regardless of activity.
-                                  value: _formatWatchHours(stats['watchedMinutes'] ?? 0),
-                                  icon: Icons.access_time_filled_rounded,
-                                  color: Colors.orangeAccent,
-                                ),
-                              ],
-                            ),
-                            loading: () => const SizedBox.shrink(),
-                            error: (_, __) => const SizedBox.shrink(),
-                          ).animate().fadeIn(delay: 200.ms, duration: 400.ms),
+                                loading: () => const SizedBox.shrink(),
+                                error: (_, __) => const SizedBox.shrink(),
+                              )
+                              .animate()
+                              .fadeIn(delay: 200.ms, duration: 400.ms),
 
                           const SizedBox(height: 28),
 
@@ -448,7 +537,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             child: Text(
                               'CINEJO PREFERENCES',
                               style: AppTextStyles.labelSmall.copyWith(
-                                color: AppColors.onSurfaceVariant.withValues(alpha: 0.8),
+                                color: AppColors.onSurfaceVariant.withValues(
+                                  alpha: 0.8,
+                                ),
                                 letterSpacing: 1.5,
                               ),
                             ),
@@ -462,24 +553,28 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             borderRadius: 20,
                             child: Column(
                               children: [
-
                                 // Minimum Rating Slider
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           'Minimum Rating Threshold',
-                                          style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+                                          style: AppTextStyles.bodyMedium
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                         ),
                                         Text(
                                           '≥ ${_minRating.toStringAsFixed(1)}',
-                                          style: AppTextStyles.labelSmall.copyWith(
-                                            color: AppColors.tertiary,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                          style: AppTextStyles.labelSmall
+                                              .copyWith(
+                                                color: AppColors.tertiary,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -506,56 +601,82 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   children: [
                                     Text(
                                       'Preferred Genres',
-                                      style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+                                      style: AppTextStyles.bodyMedium.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     const SizedBox(height: 8),
                                     Wrap(
                                       spacing: 8,
                                       runSpacing: 8,
-                                      children: [
-                                        'Action',
-                                        'Adventure',
-                                        'Drama',
-                                        'Romance',
-                                        'Comedy',
-                                        'Science Fiction',
-                                        'Horror',
-                                        'Thriller'
-                                      ].map((genre) {
-                                        final active = _preferredGenres.contains(genre);
-                                        return GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              if (active) {
-                                                _preferredGenres.remove(genre);
-                                              } else {
-                                                _preferredGenres.add(genre);
-                                              }
-                                            });
-                                          },
-                                          child: AnimatedContainer(
-                                            duration: const Duration(milliseconds: 150),
-                                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                            decoration: BoxDecoration(
-                                              color: active
-                                                  ? AppColors.secondaryContainer.withValues(alpha: 0.3)
-                                                  : AppColors.surfaceContainerLow,
-                                              border: Border.all(
-                                                color: active ? AppColors.secondary : AppColors.glassBorder,
-                                                width: 1,
+                                      children:
+                                          [
+                                            'Action',
+                                            'Adventure',
+                                            'Drama',
+                                            'Romance',
+                                            'Comedy',
+                                            'Science Fiction',
+                                            'Horror',
+                                            'Thriller',
+                                          ].map((genre) {
+                                            final active = _preferredGenres
+                                                .contains(genre);
+                                            return GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  if (active) {
+                                                    _preferredGenres.remove(
+                                                      genre,
+                                                    );
+                                                  } else {
+                                                    _preferredGenres.add(genre);
+                                                  }
+                                                });
+                                              },
+                                              child: AnimatedContainer(
+                                                duration: const Duration(
+                                                  milliseconds: 150,
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 8,
+                                                    ),
+                                                decoration: BoxDecoration(
+                                                  color: active
+                                                      ? AppColors
+                                                            .secondaryContainer
+                                                            .withValues(
+                                                              alpha: 0.3,
+                                                            )
+                                                      : AppColors
+                                                            .surfaceContainerLow,
+                                                  border: Border.all(
+                                                    color: active
+                                                        ? AppColors.secondary
+                                                        : AppColors.glassBorder,
+                                                    width: 1,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                ),
+                                                child: Text(
+                                                  genre,
+                                                  style: AppTextStyles
+                                                      .labelSmall
+                                                      .copyWith(
+                                                        color: active
+                                                            ? AppColors
+                                                                  .secondary
+                                                            : AppColors
+                                                                  .onSurface,
+                                                        fontSize: 11,
+                                                      ),
+                                                ),
                                               ),
-                                              borderRadius: BorderRadius.circular(16),
-                                            ),
-                                            child: Text(
-                                              genre,
-                                              style: AppTextStyles.labelSmall.copyWith(
-                                                color: active ? AppColors.secondary : AppColors.onSurface,
-                                                fontSize: 11,
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      }).toList(),
+                                            );
+                                          }).toList(),
                                     ),
                                   ],
                                 ),
@@ -566,18 +687,29 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 SizedBox(
                                   width: double.infinity,
                                   child: ElevatedButton(
-                                    onPressed: _savingPrefs ? null : _updatePreferences,
+                                    onPressed: _savingPrefs
+                                        ? null
+                                        : _updatePreferences,
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.secondaryContainer,
-                                      foregroundColor: AppColors.onSecondaryContainer,
-                                      padding: const EdgeInsets.symmetric(vertical: 14),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      backgroundColor:
+                                          AppColors.secondaryContainer,
+                                      foregroundColor:
+                                          AppColors.onSecondaryContainer,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 14,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
                                     ),
                                     child: _savingPrefs
                                         ? const SizedBox(
                                             height: 18,
                                             width: 18,
-                                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: Colors.white,
+                                            ),
                                           )
                                         : const Text('SAVE TUNING'),
                                   ),
@@ -595,41 +727,79 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             child: Column(
                               children: [
                                 ListTile(
-                                  leading: const Icon(Icons.history_rounded, color: AppColors.secondary),
+                                  leading: const Icon(
+                                    Icons.history_rounded,
+                                    color: AppColors.secondary,
+                                  ),
                                   title: const Text('Watch History'),
-                                  trailing: const Icon(Icons.chevron_right_rounded, color: AppColors.onSurfaceVariant),
-                                  onTap: () => context.push(AppConstants.watchHistoryRoute),
+                                  trailing: const Icon(
+                                    Icons.chevron_right_rounded,
+                                    color: AppColors.onSurfaceVariant,
+                                  ),
+                                  onTap: () => context.push(
+                                    AppConstants.watchHistoryRoute,
+                                  ),
                                 ),
                                 const Divider(indent: 16, endIndent: 16),
                                 ListTile(
-                                  leading: const Icon(Icons.cleaning_services_outlined, color: Colors.redAccent),
-                                  title: const Text('Reset Account Data', style: TextStyle(color: Colors.redAccent)),
-                                  trailing: const Icon(Icons.delete_forever, color: Colors.redAccent),
+                                  leading: const Icon(
+                                    Icons.cleaning_services_outlined,
+                                    color: Colors.redAccent,
+                                  ),
+                                  title: const Text(
+                                    'Reset Account Data',
+                                    style: TextStyle(color: Colors.redAccent),
+                                  ),
+                                  trailing: const Icon(
+                                    Icons.delete_forever,
+                                    color: Colors.redAccent,
+                                  ),
                                   onTap: _resetUserData,
                                 ),
                                 const Divider(indent: 16, endIndent: 16),
                                 ListTile(
-                                  leading: const Icon(Icons.logout_rounded, color: Colors.redAccent),
-                                  title: const Text('Sign Out', style: TextStyle(color: Colors.redAccent)),
+                                  leading: const Icon(
+                                    Icons.logout_rounded,
+                                    color: Colors.redAccent,
+                                  ),
+                                  title: const Text(
+                                    'Sign Out',
+                                    style: TextStyle(color: Colors.redAccent),
+                                  ),
                                   onTap: () async {
-                                    await ref.read(authProvider.notifier).logout();
+                                    await ref
+                                        .read(authProvider.notifier)
+                                        .logout();
                                     if (!mounted || !context.mounted) return;
                                     context.go('/login');
                                   },
                                 ),
                                 const Divider(indent: 16, endIndent: 16),
                                 ListTile(
-                                  leading: const Icon(Icons.no_accounts_rounded, color: Colors.redAccent),
-                                  title: const Text('Delete Account', style: TextStyle(color: Colors.redAccent)),
-                                  subtitle: const Text('Permanently delete your account and data'),
-                                  trailing: const Icon(Icons.delete_forever, color: Colors.redAccent),
+                                  leading: const Icon(
+                                    Icons.no_accounts_rounded,
+                                    color: Colors.redAccent,
+                                  ),
+                                  title: const Text(
+                                    'Delete Account',
+                                    style: TextStyle(color: Colors.redAccent),
+                                  ),
+                                  subtitle: const Text(
+                                    'Permanently delete your account and data',
+                                  ),
+                                  trailing: const Icon(
+                                    Icons.delete_forever,
+                                    color: Colors.redAccent,
+                                  ),
                                   onTap: _deleteAccount,
                                 ),
                               ],
                             ),
                           ).animate().fadeIn(delay: 300.ms, duration: 400.ms),
 
-                          const SizedBox(height: 120), // Spacing for bottom navigation bar overlay
+                          const SizedBox(
+                            height: 120,
+                          ), // Spacing for bottom navigation bar overlay
                         ],
                       ),
                     ),

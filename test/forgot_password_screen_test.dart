@@ -30,8 +30,11 @@ class _FakeAuthRepository implements AuthRepository {
   Future<AuthResult> login(String email, String password) async =>
       AuthResult.failure('not used in this test');
   @override
-  Future<AuthResult> register(String email, String password, String username) async =>
-      AuthResult.failure('not used in this test');
+  Future<AuthResult> register(
+    String email,
+    String password,
+    String username,
+  ) async => AuthResult.failure('not used in this test');
   @override
   Future<void> logout() async {}
   @override
@@ -52,8 +55,14 @@ Widget _harness(_FakeAuthRepository repo) {
   final router = GoRouter(
     initialLocation: '/forgot-password',
     routes: [
-      GoRoute(path: '/forgot-password', builder: (_, __) => const ForgotPasswordScreen()),
-      GoRoute(path: '/login', builder: (_, __) => const Scaffold(body: Text('LOGIN'))),
+      GoRoute(
+        path: '/forgot-password',
+        builder: (_, __) => const ForgotPasswordScreen(),
+      ),
+      GoRoute(
+        path: '/login',
+        builder: (_, __) => const Scaffold(body: Text('LOGIN')),
+      ),
     ],
   );
   return ProviderScope(
@@ -63,7 +72,9 @@ Widget _harness(_FakeAuthRepository repo) {
 }
 
 void main() {
-  testWidgets('submitting a valid email calls the real API and shows success', (tester) async {
+  testWidgets('submitting a valid email calls the real API and shows success', (
+    tester,
+  ) async {
     final repo = _FakeAuthRepository();
     await tester.pumpWidget(_harness(repo));
 
@@ -79,7 +90,9 @@ void main() {
     expect(find.text('Email Sent!'), findsOneWidget);
   });
 
-  testWidgets('a failed request shows an error, not a false success', (tester) async {
+  testWidgets('a failed request shows an error, not a false success', (
+    tester,
+  ) async {
     final repo = _FakeAuthRepository(forgotPasswordResult: false);
     await tester.pumpWidget(_harness(repo));
 

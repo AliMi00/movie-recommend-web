@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/models/movie_model.dart';
 import '../../../data/repositories/movie_repository.dart';
-import '../../../shared/providers/movie_providers.dart' show movieRepositoryProvider;
+import '../../../shared/providers/movie_providers.dart'
+    show movieRepositoryProvider;
 
 /// State notifier that manages the watchlist list of movies reactively
 class WatchlistNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
@@ -37,7 +38,9 @@ class WatchlistNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
 
       if (state is AsyncData<List<Movie>>) {
         final currentList = state.value!;
-        state = AsyncValue.data(currentList.where((m) => m.id != movieId).toList());
+        state = AsyncValue.data(
+          currentList.where((m) => m.id != movieId).toList(),
+        );
       }
     } catch (e) {
       // ignore
@@ -52,7 +55,10 @@ class WatchlistNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
       if (state is AsyncData<List<Movie>>) {
         final currentList = state.value!;
         if (!currentList.any((m) => m.id == movie.id)) {
-          state = AsyncValue.data([...currentList, movie.copyWith(isLiked: true)]);
+          state = AsyncValue.data([
+            ...currentList,
+            movie.copyWith(isLiked: true),
+          ]);
         }
       } else {
         state = AsyncValue.data([movie.copyWith(isLiked: true)]);
@@ -73,7 +79,8 @@ class WatchlistNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
 }
 
 /// Provider for reactive watchlist movies
-final watchlistProvider = StateNotifierProvider<WatchlistNotifier, AsyncValue<List<Movie>>>((ref) {
-  final repository = ref.watch(movieRepositoryProvider);
-  return WatchlistNotifier(repository);
-});
+final watchlistProvider =
+    StateNotifierProvider<WatchlistNotifier, AsyncValue<List<Movie>>>((ref) {
+      final repository = ref.watch(movieRepositoryProvider);
+      return WatchlistNotifier(repository);
+    });

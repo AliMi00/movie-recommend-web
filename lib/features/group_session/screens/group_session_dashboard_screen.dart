@@ -11,10 +11,12 @@ class GroupSessionDashboardScreen extends ConsumerStatefulWidget {
   const GroupSessionDashboardScreen({super.key});
 
   @override
-  ConsumerState<GroupSessionDashboardScreen> createState() => _GroupSessionDashboardScreenState();
+  ConsumerState<GroupSessionDashboardScreen> createState() =>
+      _GroupSessionDashboardScreenState();
 }
 
-class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashboardScreen> {
+class _GroupSessionDashboardScreenState
+    extends ConsumerState<GroupSessionDashboardScreen> {
   final _codeController = TextEditingController();
   final _moodController = TextEditingController();
   bool _isCreating = false;
@@ -35,8 +37,12 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
     });
 
     try {
-      await ref.read(activeGroupSessionProvider.notifier).createSession(
-            mood: _moodController.text.trim().isEmpty ? null : _moodController.text.trim(),
+      await ref
+          .read(activeGroupSessionProvider.notifier)
+          .createSession(
+            mood: _moodController.text.trim().isEmpty
+                ? null
+                : _moodController.text.trim(),
           );
       final activeSession = ref.read(activeGroupSessionProvider);
       if (activeSession != null && mounted) {
@@ -124,7 +130,11 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                 ),
                 Row(
                   children: [
-                    const Icon(Icons.add_to_photos_rounded, size: 24, color: AppColors.secondary),
+                    const Icon(
+                      Icons.add_to_photos_rounded,
+                      size: 24,
+                      color: AppColors.secondary,
+                    ),
                     const SizedBox(width: 12),
                     Text(
                       'Create Collaborative Session',
@@ -138,7 +148,9 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                 const SizedBox(height: 16),
                 Text(
                   'Set the mood or vibe for your group (optional). CineJo will curate consensual matches based on this prompt!',
-                  style: AppTextStyles.bodySmall.copyWith(color: AppColors.onSurfaceVariant),
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 TextField(
@@ -146,18 +158,28 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                   autofocus: true,
                   style: AppTextStyles.bodyMedium,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.psychology_outlined, color: AppColors.secondary),
+                    prefixIcon: const Icon(
+                      Icons.psychology_outlined,
+                      color: AppColors.secondary,
+                    ),
                     hintText: 'e.g. fast-paced neon action thriller',
-                    hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.outline),
+                    hintStyle: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.outline,
+                    ),
                     filled: true,
                     fillColor: AppColors.surfaceContainerHigh,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: AppColors.glassBorder),
+                      borderSide: const BorderSide(
+                        color: AppColors.glassBorder,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: AppColors.secondary, width: 1.5),
+                      borderSide: const BorderSide(
+                        color: AppColors.secondary,
+                        width: 1.5,
+                      ),
                     ),
                   ),
                 ),
@@ -176,7 +198,9 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.secondaryContainer,
                       foregroundColor: AppColors.onSecondaryContainer,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                       elevation: 0,
                     ),
                     child: _isCreating
@@ -235,18 +259,26 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                 ),
                 Row(
                   children: [
-                    const Icon(Icons.group_add_rounded, size: 24, color: AppColors.secondary),
+                    const Icon(
+                      Icons.group_add_rounded,
+                      size: 24,
+                      color: AppColors.secondary,
+                    ),
                     const SizedBox(width: 12),
                     Text(
                       'Join Lobby',
-                      style: AppTextStyles.titleMedium.copyWith(fontWeight: FontWeight.bold),
+                      style: AppTextStyles.titleMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Enter the 6-character room code shared by your friend to join their swiping lobby.',
-                  style: AppTextStyles.bodySmall.copyWith(color: AppColors.onSurfaceVariant),
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 TextField(
@@ -270,11 +302,16 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                     fillColor: AppColors.surfaceContainerHigh,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: AppColors.glassBorder),
+                      borderSide: const BorderSide(
+                        color: AppColors.glassBorder,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: AppColors.secondary, width: 1.5),
+                      borderSide: const BorderSide(
+                        color: AppColors.secondary,
+                        width: 1.5,
+                      ),
                     ),
                   ),
                   onChanged: (val) {
@@ -288,7 +325,8 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                   width: double.infinity,
                   height: 54,
                   child: ElevatedButton(
-                    onPressed: _isJoining || _codeController.text.trim().length < 5
+                    onPressed:
+                        _isJoining || _codeController.text.trim().length < 5
                         ? null
                         : () async {
                             setModalState(() => _isJoining = true);
@@ -298,7 +336,9 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.secondaryContainer,
                       foregroundColor: AppColors.onSecondaryContainer,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                       elevation: 0,
                     ),
                     child: _isJoining
@@ -332,7 +372,10 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.onSurface),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: AppColors.onSurface,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -395,7 +438,9 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                           Text(
                             'Connect with friends, sync your taste preferences, and instantly find the perfect film to watch together.',
                             style: AppTextStyles.bodyMedium.copyWith(
-                              color: AppColors.onSurfaceVariant.withValues(alpha: 0.8),
+                              color: AppColors.onSurfaceVariant.withValues(
+                                alpha: 0.8,
+                              ),
                             ),
                           ).animate().fadeIn(delay: 100.ms, duration: 400.ms),
                           const SizedBox(height: 28),
@@ -404,18 +449,29 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                             Container(
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
-                                color: AppColors.errorContainer.withValues(alpha: 0.2),
+                                color: AppColors.errorContainer.withValues(
+                                  alpha: 0.2,
+                                ),
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: AppColors.errorContainer.withValues(alpha: 0.5)),
+                                border: Border.all(
+                                  color: AppColors.errorContainer.withValues(
+                                    alpha: 0.5,
+                                  ),
+                                ),
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.error_outline_rounded, color: AppColors.error),
+                                  const Icon(
+                                    Icons.error_outline_rounded,
+                                    color: AppColors.error,
+                                  ),
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Text(
                                       _errorMessage!,
-                                      style: AppTextStyles.bodySmall.copyWith(color: AppColors.error),
+                                      style: AppTextStyles.bodySmall.copyWith(
+                                        color: AppColors.error,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -427,60 +483,81 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                           // Resume ongoing session card
                           if (activeSession != null) ...[
                             GestureDetector(
-                              onTap: () => context.push('/group-session/lobby/${activeSession.sessionCode}'),
+                              onTap: () => context.push(
+                                '/group-session/lobby/${activeSession.sessionCode}',
+                              ),
                               child: GlassContainer(
                                 padding: const EdgeInsets.all(20),
                                 borderRadius: 20,
                                 opacity: 0.1,
-                                border: Border.all(color: AppColors.secondary.withValues(alpha: 0.3), width: 1.5),
+                                border: Border.all(
+                                  color: AppColors.secondary.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                  width: 1.5,
+                                ),
                                 child: Row(
                                   children: [
                                     Container(
                                       padding: const EdgeInsets.all(12),
                                       decoration: BoxDecoration(
-                                        color: AppColors.secondary.withValues(alpha: 0.15),
+                                        color: AppColors.secondary.withValues(
+                                          alpha: 0.15,
+                                        ),
                                         shape: BoxShape.circle,
                                       ),
-                                      child: const Icon(Icons.play_circle_fill_rounded,
-                                          color: AppColors.secondary, size: 28),
+                                      child: const Icon(
+                                        Icons.play_circle_fill_rounded,
+                                        color: AppColors.secondary,
+                                        size: 28,
+                                      ),
                                     ),
                                     const SizedBox(width: 16),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             'ACTIVE SESSION',
-                                            style: AppTextStyles.labelSmall.copyWith(
-                                              color: AppColors.secondary,
-                                              letterSpacing: 1.5,
-                                            ),
+                                            style: AppTextStyles.labelSmall
+                                                .copyWith(
+                                                  color: AppColors.secondary,
+                                                  letterSpacing: 1.5,
+                                                ),
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
                                             'Room Code: ${activeSession.sessionCode}',
-                                            style: AppTextStyles.titleMedium.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18,
-                                            ),
+                                            style: AppTextStyles.titleMedium
+                                                .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                ),
                                           ),
                                           if (activeSession.mood != null) ...[
                                             const SizedBox(height: 4),
                                             Text(
                                               'Mood: "${activeSession.mood}"',
-                                              style: AppTextStyles.bodySmall.copyWith(
-                                                color: AppColors.onSurfaceVariant.withValues(alpha: 0.7),
-                                                fontStyle: FontStyle.italic,
-                                              ),
+                                              style: AppTextStyles.bodySmall
+                                                  .copyWith(
+                                                    color: AppColors
+                                                        .onSurfaceVariant
+                                                        .withValues(alpha: 0.7),
+                                                    fontStyle: FontStyle.italic,
+                                                  ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
-                                          ]
+                                          ],
                                         ],
                                       ),
                                     ),
-                                    const Icon(Icons.arrow_forward_ios_rounded,
-                                        color: AppColors.onSurfaceVariant, size: 18),
+                                    const Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      color: AppColors.onSurfaceVariant,
+                                      size: 18,
+                                    ),
                                   ],
                                 ),
                               ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.2, end: 0),
@@ -495,31 +572,44 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                                 child: GestureDetector(
                                   onTap: _showCreateBottomSheet,
                                   child: GlassContainer(
-                                    padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 24,
+                                      horizontal: 16,
+                                    ),
                                     borderRadius: 20,
                                     child: Column(
                                       children: [
                                         Container(
                                           padding: const EdgeInsets.all(14),
                                           decoration: BoxDecoration(
-                                            color: AppColors.secondary.withValues(alpha: 0.1),
+                                            color: AppColors.secondary
+                                                .withValues(alpha: 0.1),
                                             shape: BoxShape.circle,
                                           ),
-                                          child: const Icon(Icons.add_to_photos_rounded,
-                                              color: AppColors.secondary, size: 28),
+                                          child: const Icon(
+                                            Icons.add_to_photos_rounded,
+                                            color: AppColors.secondary,
+                                            size: 28,
+                                          ),
                                         ),
                                         const SizedBox(height: 16),
                                         Text(
                                           'Start Lobby',
-                                          style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
+                                          style: AppTextStyles.bodyLarge
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
                                           'Host a collaborative room',
-                                          style: AppTextStyles.bodySmall.copyWith(
-                                            color: AppColors.onSurfaceVariant.withValues(alpha: 0.6),
-                                            fontSize: 11,
-                                          ),
+                                          style: AppTextStyles.bodySmall
+                                              .copyWith(
+                                                color: AppColors
+                                                    .onSurfaceVariant
+                                                    .withValues(alpha: 0.6),
+                                                fontSize: 11,
+                                              ),
                                           textAlign: TextAlign.center,
                                         ),
                                       ],
@@ -532,31 +622,44 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                                 child: GestureDetector(
                                   onTap: _showJoinBottomSheet,
                                   child: GlassContainer(
-                                    padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 24,
+                                      horizontal: 16,
+                                    ),
                                     borderRadius: 20,
                                     child: Column(
                                       children: [
                                         Container(
                                           padding: const EdgeInsets.all(14),
                                           decoration: BoxDecoration(
-                                            color: AppColors.tertiary.withValues(alpha: 0.1),
+                                            color: AppColors.tertiary
+                                                .withValues(alpha: 0.1),
                                             shape: BoxShape.circle,
                                           ),
-                                          child: const Icon(Icons.group_add_rounded,
-                                              color: AppColors.tertiary, size: 28),
+                                          child: const Icon(
+                                            Icons.group_add_rounded,
+                                            color: AppColors.tertiary,
+                                            size: 28,
+                                          ),
                                         ),
                                         const SizedBox(height: 16),
                                         Text(
                                           'Join Room',
-                                          style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
+                                          style: AppTextStyles.bodyLarge
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
                                           'Enter shared room code',
-                                          style: AppTextStyles.bodySmall.copyWith(
-                                            color: AppColors.onSurfaceVariant.withValues(alpha: 0.6),
-                                            fontSize: 11,
-                                          ),
+                                          style: AppTextStyles.bodySmall
+                                              .copyWith(
+                                                color: AppColors
+                                                    .onSurfaceVariant
+                                                    .withValues(alpha: 0.6),
+                                                fontSize: 11,
+                                              ),
                                           textAlign: TextAlign.center,
                                         ),
                                       ],
@@ -571,7 +674,9 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                           Text(
                             'PENDING INVITATIONS',
                             style: AppTextStyles.labelSmall.copyWith(
-                              color: AppColors.onSurfaceVariant.withValues(alpha: 0.8),
+                              color: AppColors.onSurfaceVariant.withValues(
+                                alpha: 0.8,
+                              ),
                               letterSpacing: 1.5,
                             ),
                           ),
@@ -586,18 +691,26 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                         if (invites.isEmpty) {
                           return SliverToBoxAdapter(
                             child: GlassContainer(
-                              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 32,
+                                horizontal: 20,
+                              ),
                               borderRadius: 20,
                               child: Center(
                                 child: Column(
                                   children: [
-                                    Icon(Icons.mail_outline_rounded,
-                                        size: 40, color: AppColors.onSurfaceVariant.withValues(alpha: 0.4)),
+                                    Icon(
+                                      Icons.mail_outline_rounded,
+                                      size: 40,
+                                      color: AppColors.onSurfaceVariant
+                                          .withValues(alpha: 0.4),
+                                    ),
                                     const SizedBox(height: 12),
                                     Text(
                                       'No pending invites',
                                       style: AppTextStyles.bodyMedium.copyWith(
-                                        color: AppColors.onSurfaceVariant.withValues(alpha: 0.7),
+                                        color: AppColors.onSurfaceVariant
+                                            .withValues(alpha: 0.7),
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -605,7 +718,8 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                                     Text(
                                       'Invite notifications will show up here.',
                                       style: AppTextStyles.bodySmall.copyWith(
-                                        color: AppColors.onSurfaceVariant.withValues(alpha: 0.5),
+                                        color: AppColors.onSurfaceVariant
+                                            .withValues(alpha: 0.5),
                                         fontSize: 12,
                                       ),
                                     ),
@@ -617,133 +731,181 @@ class _GroupSessionDashboardScreenState extends ConsumerState<GroupSessionDashbo
                         }
 
                         return SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final invite = invites[index];
-                              // Find matching member for current user
-                              final myMember = invite.members.firstWhere(
-                                (m) => m.status == 'pending',
-                                orElse: () => invite.members.first,
-                              );
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            final invite = invites[index];
+                            // Find matching member for current user
+                            final myMember = invite.members.firstWhere(
+                              (m) => m.status == 'pending',
+                              orElse: () => invite.members.first,
+                            );
 
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 14),
-                                child: GlassContainer(
-                                  padding: const EdgeInsets.all(16),
-                                  borderRadius: 20,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: AppColors.secondary.withValues(alpha: 0.1),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: const Icon(Icons.people_alt_rounded,
-                                                color: AppColors.secondary, size: 20),
-                                          ),
-                                          const SizedBox(width: 12),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Invitation Received',
-                                                  style: AppTextStyles.bodyMedium
-                                                      .copyWith(fontWeight: FontWeight.bold),
-                                                ),
-                                                Text(
-                                                  'Room Code: ${invite.sessionCode}',
-                                                  style: AppTextStyles.bodySmall.copyWith(
-                                                    color: AppColors.onSurfaceVariant,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      if (invite.mood != null) ...[
-                                        const SizedBox(height: 12),
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 14),
+                              child: GlassContainer(
+                                padding: const EdgeInsets.all(16),
+                                borderRadius: 20,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
                                         Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                          padding: const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
-                                            color: AppColors.surfaceContainerHigh,
-                                            borderRadius: BorderRadius.circular(8),
+                                            color: AppColors.secondary
+                                                .withValues(alpha: 0.1),
+                                            shape: BoxShape.circle,
                                           ),
-                                          child: Text(
-                                            'Vibe: "${invite.mood}"',
-                                            style: AppTextStyles.bodySmall.copyWith(
-                                              fontStyle: FontStyle.italic,
-                                              fontSize: 12,
-                                              color: AppColors.onSurface.withValues(alpha: 0.8),
-                                            ),
+                                          child: const Icon(
+                                            Icons.people_alt_rounded,
+                                            color: AppColors.secondary,
+                                            size: 20,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Invitation Received',
+                                                style: AppTextStyles.bodyMedium
+                                                    .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                              ),
+                                              Text(
+                                                'Room Code: ${invite.sessionCode}',
+                                                style: AppTextStyles.bodySmall
+                                                    .copyWith(
+                                                      color: AppColors
+                                                          .onSurfaceVariant,
+                                                      fontSize: 12,
+                                                    ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
-                                      const SizedBox(height: 16),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: ElevatedButton(
-                                              onPressed: () async {
-                                                await ref
-                                                    .read(pendingInvitationsProvider.notifier)
-                                                    .respond(myMember.id, 'accepted');
-                                                // Automatically load active session
-                                                await ref
-                                                    .read(activeGroupSessionProvider.notifier)
-                                                    .joinSession(invite.sessionCode);
-                                                if (context.mounted) {
-                                                  context.push('/group-session/lobby/${invite.sessionCode}');
-                                                }
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: AppColors.like.withValues(alpha: 0.15),
-                                                foregroundColor: AppColors.like,
-                                                side: const BorderSide(color: AppColors.like, width: 0.5),
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(10)),
-                                                elevation: 0,
-                                              ),
-                                              child: const Text('Accept'),
-                                            ),
+                                    ),
+                                    if (invite.mood != null) ...[
+                                      const SizedBox(height: 12),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 6,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.surfaceContainerHigh,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
                                           ),
-                                          const SizedBox(width: 12),
-                                          Expanded(
-                                            child: TextButton(
-                                              onPressed: () async {
-                                                await ref
-                                                    .read(pendingInvitationsProvider.notifier)
-                                                    .respond(myMember.id, 'declined');
-                                              },
-                                              style: TextButton.styleFrom(
-                                                backgroundColor: AppColors.dislike.withValues(alpha: 0.08),
-                                                foregroundColor: AppColors.dislike,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(10)),
+                                        ),
+                                        child: Text(
+                                          'Vibe: "${invite.mood}"',
+                                          style: AppTextStyles.bodySmall
+                                              .copyWith(
+                                                fontStyle: FontStyle.italic,
+                                                fontSize: 12,
+                                                color: AppColors.onSurface
+                                                    .withValues(alpha: 0.8),
                                               ),
-                                              child: const Text('Decline'),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ],
-                                  ),
+                                    const SizedBox(height: 16),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            onPressed: () async {
+                                              await ref
+                                                  .read(
+                                                    pendingInvitationsProvider
+                                                        .notifier,
+                                                  )
+                                                  .respond(
+                                                    myMember.id,
+                                                    'accepted',
+                                                  );
+                                              // Automatically load active session
+                                              await ref
+                                                  .read(
+                                                    activeGroupSessionProvider
+                                                        .notifier,
+                                                  )
+                                                  .joinSession(
+                                                    invite.sessionCode,
+                                                  );
+                                              if (context.mounted) {
+                                                context.push(
+                                                  '/group-session/lobby/${invite.sessionCode}',
+                                                );
+                                              }
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: AppColors.like
+                                                  .withValues(alpha: 0.15),
+                                              foregroundColor: AppColors.like,
+                                              side: const BorderSide(
+                                                color: AppColors.like,
+                                                width: 0.5,
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              elevation: 0,
+                                            ),
+                                            child: const Text('Accept'),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: TextButton(
+                                            onPressed: () async {
+                                              await ref
+                                                  .read(
+                                                    pendingInvitationsProvider
+                                                        .notifier,
+                                                  )
+                                                  .respond(
+                                                    myMember.id,
+                                                    'declined',
+                                                  );
+                                            },
+                                            style: TextButton.styleFrom(
+                                              backgroundColor: AppColors.dislike
+                                                  .withValues(alpha: 0.08),
+                                              foregroundColor:
+                                                  AppColors.dislike,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                            child: const Text('Decline'),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              );
-                            },
-                            childCount: invites.length,
-                          ),
+                              ),
+                            );
+                          }, childCount: invites.length),
                         );
                       },
                       loading: () => const SliverToBoxAdapter(
                         child: Center(
-                          child: CircularProgressIndicator(color: AppColors.secondary),
+                          child: CircularProgressIndicator(
+                            color: AppColors.secondary,
+                          ),
                         ),
                       ),
                       error: (e, _) => SliverToBoxAdapter(

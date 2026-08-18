@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   // Foundational Neutrals
   static const Color background = Color(0xFFEAF1FC); // Pale blue page base
-  static const Color surface = Color(0xFFFFFFFF);    // Raised clay surface
+  static const Color surface = Color(0xFFFFFFFF); // Raised clay surface
   static const Color surfaceDim = Color(0xFFE0E9F7);
   static const Color surfaceBright = Color(0xFFFFFFFF);
 
@@ -26,7 +26,7 @@ class AppColors {
   static const Color surfaceContainerHighest = Color(0xFFE6EEFB);
 
   // On Surface
-  static const Color onSurface = Color(0xFF1B2740);        // Deep navy ink
+  static const Color onSurface = Color(0xFF1B2740); // Deep navy ink
   // Muted slate blue. Darkened from the design's original 0xFF6B7A99, which
   // measured 3.8:1 against the page background and 4.31:1 against white
   // surfaces — both below WCAG AA's 4.5:1 minimum for normal-size text. This
@@ -68,7 +68,7 @@ class AppColors {
   // Like/dislike stay green/red: they signal a gesture's meaning, and
   // recolouring them to fit the palette would cost more in legibility than
   // it gains in cohesion. Super-like joins the blues.
-  static const Color like = Color(0xFF12A150);    // Emerald
+  static const Color like = Color(0xFF12A150); // Emerald
   static const Color dislike = Color(0xFFE5484D); // Coral red
   static const Color superLike = tertiary;
 
@@ -77,7 +77,7 @@ class AppColors {
   // light — using onSurface there would put navy text on a dark scrim.
   static const Color onMedia = Color(0xFFFFFFFF);
   static const Color onMediaVariant = Color(0xB3FFFFFF); // 70% white
-  static const Color onMediaFaint = Color(0x80FFFFFF);   // 50% white
+  static const Color onMediaFaint = Color(0x80FFFFFF); // 50% white
 
   // ===========================================================================
   // Claymorphism depth tokens
@@ -93,13 +93,21 @@ class AppColors {
   /// Standard raised clay elevation for cards, sheets and tiles.
   static const List<BoxShadow> clayShadow = [
     BoxShadow(color: clayShadowColor, offset: Offset(8, 8), blurRadius: 20),
-    BoxShadow(color: clayHighlightColor, offset: Offset(-8, -8), blurRadius: 20),
+    BoxShadow(
+      color: clayHighlightColor,
+      offset: Offset(-8, -8),
+      blurRadius: 20,
+    ),
   ];
 
   /// Tighter variant for small controls — chips, icon buttons, list rows.
   static const List<BoxShadow> clayShadowSmall = [
     BoxShadow(color: clayShadowColor, offset: Offset(5, 5), blurRadius: 12),
-    BoxShadow(color: clayHighlightColor, offset: Offset(-5, -5), blurRadius: 12),
+    BoxShadow(
+      color: clayHighlightColor,
+      offset: Offset(-5, -5),
+      blurRadius: 12,
+    ),
   ];
 
   /// Coloured glow for filled accent buttons, so a blue CTA still casts a
@@ -112,7 +120,7 @@ class AppColors {
   // Legacy glass tokens, retained because ~30 call sites still reference them.
   // Repointed at clay equivalents so those surfaces stay coherent without
   // needing every usage rewritten.
-  static const Color glassBorder = Color(0x1F3B82F6);  // 12% blue hairline
+  static const Color glassBorder = Color(0x1F3B82F6); // 12% blue hairline
   static const Color glassSurface = Color(0xFFFFFFFF);
 
   // Gradients
@@ -121,10 +129,7 @@ class AppColors {
   static const LinearGradient cardOverlayGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [
-      Colors.transparent,
-      Color(0xCC0B1220),
-    ],
+    colors: [Colors.transparent, Color(0xCC0B1220)],
   );
 
   static const LinearGradient primaryGradient = LinearGradient(

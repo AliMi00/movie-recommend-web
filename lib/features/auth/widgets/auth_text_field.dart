@@ -33,17 +33,17 @@ class AuthTextField extends StatelessWidget {
     this.validator,
     this.onChanged,
     this.onFieldSubmitted,
-  this.onEditingComplete,
+    this.onEditingComplete,
     this.enabled = true,
     this.maxLines = 1,
     this.focusNode,
-  this.autofillHints,
+    this.autofillHints,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -77,14 +77,13 @@ class AuthTextField extends StatelessWidget {
               color: theme.colorScheme.onSurfaceVariant,
             ),
             prefixIcon: prefixIcon != null
-                ? Icon(
-                    prefixIcon,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  )
+                ? Icon(prefixIcon, color: theme.colorScheme.onSurfaceVariant)
                 : null,
             suffixIcon: suffixIcon,
             filled: true,
-            fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            fillColor: theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: 0.3,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
@@ -99,23 +98,15 @@ class AuthTextField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
-                color: AppColors.secondary,
-                width: 2,
-              ),
+              borderSide: BorderSide(color: AppColors.secondary, width: 2),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
-                color: theme.colorScheme.error,
-              ),
+              borderSide: BorderSide(color: theme.colorScheme.error),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
-                color: theme.colorScheme.error,
-                width: 2,
-              ),
+              borderSide: BorderSide(color: theme.colorScheme.error, width: 2),
             ),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,

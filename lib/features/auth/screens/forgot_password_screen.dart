@@ -13,7 +13,8 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  ConsumerState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
 }
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
@@ -42,7 +43,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     // who has an account. `success` here only ever reflects "the request
     // reached the server", never "this email exists", so the UI can't leak
     // that distinction even if it wanted to.
-    final success = await ref.read(authProvider.notifier).forgotPassword(_emailController.text.trim());
+    final success = await ref
+        .read(authProvider.notifier)
+        .forgotPassword(_emailController.text.trim());
 
     if (!mounted) return;
     setState(() {
@@ -50,7 +53,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       if (success) {
         _emailSent = true;
       } else {
-        _requestError = 'Could not reach the server. Check your connection and try again.';
+        _requestError =
+            'Could not reach the server. Check your connection and try again.';
       }
     });
   }
@@ -76,10 +80,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: theme.colorScheme.onSurface,
-          ),
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
           onPressed: () {
             if (context.canPop()) {
               context.pop();
@@ -98,12 +99,12 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 20),
-                
+
                 // Logo
                 const AuthLogo(size: 60),
-                
+
                 const SizedBox(height: 32),
-                
+
                 if (!_emailSent) ...[
                   // Title and description
                   Text(
@@ -113,9 +114,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   Text(
                     'No worries! Enter your email address and we\'ll send you a link to reset your password.',
                     style: AppTextStyles.bodyMedium.copyWith(
@@ -123,9 +124,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   const SizedBox(height: 40),
-                  
+
                   // Email field
                   AuthTextField(
                     controller: _emailController,
@@ -137,16 +138,18 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email address';
                       }
-                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                      if (!RegExp(
+                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                      ).hasMatch(value)) {
                         return 'Please enter a valid email address';
                       }
                       return null;
                     },
                     onFieldSubmitted: (_) => _handlePasswordReset(),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Reset password button
                   AuthButton(
                     text: 'Send Reset Link',
@@ -158,7 +161,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     const SizedBox(height: 16),
                     Text(
                       _requestError!,
-                      style: AppTextStyles.bodySmall.copyWith(color: AppColors.error),
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.error,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -189,9 +194,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                             color: AppColors.primary,
                           ),
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         Text(
                           'Email Sent!',
                           style: AppTextStyles.headlineMedium.copyWith(
@@ -200,9 +205,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         Text(
                           'We\'ve sent a password reset link to',
                           style: AppTextStyles.bodyMedium.copyWith(
@@ -210,9 +215,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        
+
                         const SizedBox(height: 8),
-                        
+
                         Text(
                           _emailController.text,
                           style: AppTextStyles.bodyMedium.copyWith(
@@ -221,9 +226,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         Text(
                           'Please check your email and click the link to reset your password.',
                           style: AppTextStyles.bodyMedium.copyWith(
@@ -234,9 +239,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Resend email button
                   AuthButton(
                     text: 'Resend Email',
@@ -244,9 +249,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     isPrimary: false,
                   ),
                 ],
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Back to login
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -269,7 +274,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 40),
               ],
             ),

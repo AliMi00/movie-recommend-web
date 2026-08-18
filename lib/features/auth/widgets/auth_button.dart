@@ -24,15 +24,13 @@ class AuthButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveBackgroundColor = backgroundColor ??
-        (isPrimary 
-            ? AppColors.tertiary
-            : AppColors.surfaceContainerHigh);
-    
-    final effectiveForegroundColor = foregroundColor ??
-        (isPrimary 
-            ? AppColors.onTertiary
-            : AppColors.onSurface);
+    final effectiveBackgroundColor =
+        backgroundColor ??
+        (isPrimary ? AppColors.tertiary : AppColors.surfaceContainerHigh);
+
+    final effectiveForegroundColor =
+        foregroundColor ??
+        (isPrimary ? AppColors.onTertiary : AppColors.onSurface);
 
     return SizedBox(
       width: double.infinity,

@@ -28,42 +28,8 @@ resource "docker_container" "web" {
     name = docker_network.cinejo.name
   }
 
-  # Opt this container in to Traefik. Everything else on the daemon stays
-  # unpublished because exposedbydefault is off.
-  labels {
-    label = "traefik.enable"
-    value = "true"
-  }
-
-  labels {
-    label = "traefik.http.routers.cinejo.rule"
-    value = "Host(`${var.public_domain}`)"
-  }
-
-  labels {
-    label = "traefik.http.routers.cinejo.entrypoints"
-    value = "web"
-  }
-
-  # Traefik cannot infer the port: the image exposes both 8080 (app) and
-  # 9113 (metrics), and picking the wrong one would route traffic at the
-  # stub_status page.
-  labels {
-    label = "traefik.http.services.cinejo.loadbalancer.server.port"
-    value = "8080"
-  }
-
-  # Lets Traefik take an unhealthy instance out of rotation rather than
-  # serving 502s from a container that is up but not ready.
-  labels {
-    label = "traefik.http.services.cinejo.loadbalancer.healthcheck.path"
-    value = "/healthz"
-  }
-
-  labels {
-    label = "traefik.http.services.cinejo.loadbalancer.healthcheck.interval"
-    value = "30s"
-  }
+  # No Traefik labels here: routing is declared in the file provider config
+  # in traefik.tf, which avoids mounting the Docker socket into the proxy.
 
   healthcheck {
     test     = ["CMD", "curl", "-fsS", "http://localhost:8080/healthz"]

@@ -33,8 +33,9 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  testWidgets('advances through every slide and ends on Get Started',
-      (tester) async {
+  testWidgets('advances through every slide and ends on Get Started', (
+    tester,
+  ) async {
     await tester.pumpWidget(_harness());
     await tester.pumpAndSettle();
 
@@ -56,8 +57,9 @@ void main() {
     expect(find.text('Next'), findsNothing);
   });
 
-  testWidgets('completing the intro records the flag and leaves the carousel',
-      (tester) async {
+  testWidgets('completing the intro records the flag and leaves the carousel', (
+    tester,
+  ) async {
     await tester.pumpWidget(_harness());
     await tester.pumpAndSettle();
 
@@ -74,8 +76,9 @@ void main() {
     expect(await storage.hasSeenOnboardingIntro(), isTrue);
   });
 
-  testWidgets('skipping from the first slide also records the flag',
-      (tester) async {
+  testWidgets('skipping from the first slide also records the flag', (
+    tester,
+  ) async {
     await tester.pumpWidget(_harness());
     await tester.pumpAndSettle();
 

@@ -8,7 +8,8 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../shared/widgets/glass_container.dart';
 import '../../../shared/widgets/error_empty_state.dart';
 import '../../../data/models/movie_model.dart';
-import '../../../shared/providers/movie_providers.dart' show movieRepositoryProvider;
+import '../../../shared/providers/movie_providers.dart'
+    show movieRepositoryProvider;
 
 class WatchlistScreen extends ConsumerStatefulWidget {
   const WatchlistScreen({super.key});
@@ -21,7 +22,14 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
   String _selectedCategory = 'All';
   String _searchQuery = '';
 
-  final List<String> _categories = const ['All', 'Sci-Fi', 'Action', 'Drama', 'Romance', 'Comedy'];
+  final List<String> _categories = const [
+    'All',
+    'Sci-Fi',
+    'Action',
+    'Drama',
+    'Romance',
+    'Comedy',
+  ];
 
   void _showMovieDetails(Movie movie) {
     showModalBottomSheet(
@@ -95,25 +103,36 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'My Watchlist',
-                                style: AppTextStyles.displaySmall.copyWith(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.onSurface,
-                                  letterSpacing: -0.5,
-                                ),
-                              ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1),
+                                    'My Watchlist',
+                                    style: AppTextStyles.displaySmall.copyWith(
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.onSurface,
+                                      letterSpacing: -0.5,
+                                    ),
+                                  )
+                                  .animate()
+                                  .fadeIn(duration: 400.ms)
+                                  .slideX(begin: -0.1),
                               Text(
                                 'Your private screening room collection.',
                                 style: AppTextStyles.bodyMedium.copyWith(
                                   color: AppColors.onSurfaceVariant,
                                 ),
-                              ).animate().fadeIn(delay: 100.ms, duration: 400.ms),
+                              ).animate().fadeIn(
+                                delay: 100.ms,
+                                duration: 400.ms,
+                              ),
                             ],
                           ),
                           IconButton(
-                            icon: const Icon(Icons.refresh, color: AppColors.onSurfaceVariant),
-                            onPressed: () => ref.read(watchlistProvider.notifier).loadWatchlist(),
+                            icon: const Icon(
+                              Icons.refresh,
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                            onPressed: () => ref
+                                .read(watchlistProvider.notifier)
+                                .loadWatchlist(),
                           ),
                         ],
                       ),
@@ -123,7 +142,10 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
                   // Search Bar inside watchlist
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
                       child: GlassContainer(
                         padding: EdgeInsets.zero,
                         borderRadius: 16,
@@ -134,18 +156,29 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
                               _searchQuery = val;
                             });
                           },
-                          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.onSurface),
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.onSurface,
+                          ),
                           cursorColor: AppColors.secondary,
                           decoration: InputDecoration(
                             hintText: 'Search within your watchlist...',
                             hintStyle: AppTextStyles.bodyMedium.copyWith(
-                              color: AppColors.onSurfaceVariant.withValues(alpha: 0.4),
+                              color: AppColors.onSurfaceVariant.withValues(
+                                alpha: 0.4,
+                              ),
                             ),
-                            prefixIcon: const Icon(Icons.search, color: AppColors.onSurfaceVariant, size: 20),
+                            prefixIcon: const Icon(
+                              Icons.search,
+                              color: AppColors.onSurfaceVariant,
+                              size: 20,
+                            ),
                             border: InputBorder.none,
                             enabledBorder: InputBorder.none,
                             focusedBorder: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
                           ),
                         ),
                       ),
@@ -172,19 +205,27 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
                               });
                             },
                             child: GlassContainer(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
                               borderRadius: 20,
                               opacity: isSelected ? 0.3 : 0.05,
                               border: Border.all(
-                                color: isSelected ? AppColors.secondary : AppColors.glassBorder,
+                                color: isSelected
+                                    ? AppColors.secondary
+                                    : AppColors.glassBorder,
                                 width: 1,
                               ),
                               child: Center(
                                 child: Text(
                                   cat,
                                   style: AppTextStyles.labelSmall.copyWith(
-                                    color: isSelected ? AppColors.secondary : AppColors.onSurface,
-                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                    color: isSelected
+                                        ? AppColors.secondary
+                                        : AppColors.onSurface,
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.w500,
                                   ),
                                 ),
                               ),
@@ -202,14 +243,18 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
                       var filteredMovies = movies.where((m) {
                         if (_selectedCategory == 'All') return true;
                         // Map shorthand categories
-                        final catName = _selectedCategory == 'Sci-Fi' ? 'science fiction' : _selectedCategory.toLowerCase();
+                        final catName = _selectedCategory == 'Sci-Fi'
+                            ? 'science fiction'
+                            : _selectedCategory.toLowerCase();
                         return m.genres.any((g) => g.toLowerCase() == catName);
                       }).toList();
 
                       // Filter by query
                       if (_searchQuery.trim().isNotEmpty) {
                         final q = _searchQuery.toLowerCase();
-                        filteredMovies = filteredMovies.where((m) => m.title.toLowerCase().contains(q)).toList();
+                        filteredMovies = filteredMovies
+                            .where((m) => m.title.toLowerCase().contains(q))
+                            .toList();
                       }
 
                       if (filteredMovies.isEmpty) {
@@ -221,20 +266,32 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Icon(Icons.bookmark_outline_rounded, size: 72, color: AppColors.outlineVariant),
+                                  const Icon(
+                                    Icons.bookmark_outline_rounded,
+                                    size: 72,
+                                    color: AppColors.outlineVariant,
+                                  ),
                                   const SizedBox(height: 16),
                                   Text(
-                                    _searchQuery.isEmpty && _selectedCategory == 'All'
+                                    _searchQuery.isEmpty &&
+                                            _selectedCategory == 'All'
                                         ? 'Your Watchlist is empty'
                                         : 'No movies match your filters',
-                                    style: const TextStyle(color: AppColors.onSurfaceVariant, fontSize: 16),
+                                    style: const TextStyle(
+                                      color: AppColors.onSurfaceVariant,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    _searchQuery.isEmpty && _selectedCategory == 'All'
+                                    _searchQuery.isEmpty &&
+                                            _selectedCategory == 'All'
                                         ? 'Swipe right on Discover to save movies you want to watch!'
                                         : 'Try changing categories or search query.',
-                                    style: const TextStyle(color: AppColors.outline, fontSize: 12),
+                                    style: const TextStyle(
+                                      color: AppColors.outline,
+                                      fontSize: 12,
+                                    ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ],
@@ -247,33 +304,33 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
                       return SliverPadding(
                         padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
                         sliver: SliverGrid(
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 16,
-                            crossAxisSpacing: 16,
-                            childAspectRatio: 0.65,
-                          ),
-                          delegate: SliverChildBuilderDelegate(
-                            (ctx, index) {
-                              final movie = filteredMovies[index];
-                              return _WatchlistGridTile(
-                                movie: movie,
-                                onTap: () => _showMovieDetails(movie),
-                                onRemove: () => _removeFromWatchlist(movie.id),
-                              ).animate().fadeIn(
-                                    delay: (index * 60).ms,
-                                    duration: 300.ms,
-                                  );
-                            },
-                            childCount: filteredMovies.length,
-                          ),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 16,
+                                crossAxisSpacing: 16,
+                                childAspectRatio: 0.65,
+                              ),
+                          delegate: SliverChildBuilderDelegate((ctx, index) {
+                            final movie = filteredMovies[index];
+                            return _WatchlistGridTile(
+                              movie: movie,
+                              onTap: () => _showMovieDetails(movie),
+                              onRemove: () => _removeFromWatchlist(movie.id),
+                            ).animate().fadeIn(
+                              delay: (index * 60).ms,
+                              duration: 300.ms,
+                            );
+                          }, childCount: filteredMovies.length),
                         ),
                       );
                     },
                     loading: () => const SliverFillRemaining(
                       hasScrollBody: false,
                       child: Center(
-                        child: CircularProgressIndicator(color: AppColors.secondary),
+                        child: CircularProgressIndicator(
+                          color: AppColors.secondary,
+                        ),
                       ),
                     ),
                     error: (e, _) => SliverFillRemaining(
@@ -281,7 +338,9 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
                       child: Center(
                         child: ErrorEmptyState.error(
                           message: 'Error: $e',
-                          onRetry: () => ref.read(watchlistProvider.notifier).loadWatchlist(),
+                          onRetry: () => ref
+                              .read(watchlistProvider.notifier)
+                              .loadWatchlist(),
                         ),
                       ),
                     ),
@@ -324,7 +383,8 @@ class _WatchlistGridTile extends StatelessWidget {
                 Positioned.fill(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: movie.posterUrl != null && movie.posterUrl!.isNotEmpty
+                    child:
+                        movie.posterUrl != null && movie.posterUrl!.isNotEmpty
                         ? Image.network(
                             movie.fullPosterPath,
                             fit: BoxFit.cover,
@@ -351,10 +411,16 @@ class _WatchlistGridTile extends StatelessWidget {
                   top: 8,
                   left: 8,
                   child: GlassContainer(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     borderRadius: 12,
                     opacity: 0.25,
-                    border: Border.all(color: AppColors.secondary.withValues(alpha: 0.5), width: 0.5),
+                    border: Border.all(
+                      color: AppColors.secondary.withValues(alpha: 0.5),
+                      width: 0.5,
+                    ),
                     child: Text(
                       '$matchScore% Match',
                       style: AppTextStyles.labelSmall.copyWith(

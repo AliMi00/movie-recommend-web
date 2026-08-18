@@ -27,7 +27,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _acceptTerms = false;
@@ -63,7 +63,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   Future<void> _handleRegister() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (!_acceptTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please accept the Terms of Service')),
@@ -121,7 +121,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
               ),
             ),
-            
+
             SafeArea(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -131,7 +131,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 20),
-                      
+
                       Align(
                         alignment: Alignment.centerLeft,
                         child: IconButton(
@@ -142,15 +142,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               context.go('/');
                             }
                           },
-                          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.onSurfaceVariant),
+                          icon: const Icon(
+                            Icons.arrow_back_ios_new_rounded,
+                            color: AppColors.onSurfaceVariant,
+                          ),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 20),
-                      
+
                       const AuthLogo(size: 60),
                       const SizedBox(height: 32),
-                      
+
                       Text(
                         'Create Account',
                         style: AppTextStyles.headlineLarge.copyWith(
@@ -159,27 +162,30 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      
+
                       const SizedBox(height: 8),
-                      
+
                       Text(
                         'Join CineJo and start discovering',
                         style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.onSurfaceVariant.withValues(alpha: 0.7),
+                          color: AppColors.onSurfaceVariant.withValues(
+                            alpha: 0.7,
+                          ),
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      
+
                       const SizedBox(height: 16),
                       const PrivateProjectBanner(),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       AuthTextField(
                         controller: _usernameController,
                         label: 'Username',
                         prefixIcon: Icons.person_outline,
-                        validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
+                        validator: (v) =>
+                            (v == null || v.isEmpty) ? 'Required' : null,
                       ),
                       const SizedBox(height: 16),
                       AuthTextField(
@@ -187,7 +193,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         label: 'Email',
                         keyboardType: TextInputType.emailAddress,
                         prefixIcon: Icons.email_outlined,
-                        validator: (v) => (v == null || !v.contains('@')) ? 'Invalid email' : null,
+                        validator: (v) => (v == null || !v.contains('@'))
+                            ? 'Invalid email'
+                            : null,
                       ),
                       const SizedBox(height: 16),
                       AuthTextField(
@@ -196,10 +204,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         obscureText: _obscurePassword,
                         prefixIcon: Icons.lock_outline,
                         suffixIcon: IconButton(
-                          icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
-                          onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: () => setState(
+                            () => _obscurePassword = !_obscurePassword,
+                          ),
                         ),
-                        validator: (v) => (v == null || v.length < 6) ? 'Too short' : null,
+                        validator: (v) =>
+                            (v == null || v.length < 6) ? 'Too short' : null,
                       ),
                       const SizedBox(height: 16),
                       AuthTextField(
@@ -208,25 +223,36 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         obscureText: _obscureConfirmPassword,
                         prefixIcon: Icons.lock_outline,
                         suffixIcon: IconButton(
-                          icon: Icon(_obscureConfirmPassword ? Icons.visibility : Icons.visibility_off),
-                          onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+                          icon: Icon(
+                            _obscureConfirmPassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: () => setState(
+                            () => _obscureConfirmPassword =
+                                !_obscureConfirmPassword,
+                          ),
                         ),
-                        validator: (v) => (v != _passwordController.text) ? 'Mismatch' : null,
+                        validator: (v) =>
+                            (v != _passwordController.text) ? 'Mismatch' : null,
                       ),
-                      
+
                       const SizedBox(height: 20),
-                      
+
                       Row(
                         children: [
                           Checkbox(
                             value: _acceptTerms,
-                            onChanged: (v) => setState(() => _acceptTerms = v ?? false),
+                            onChanged: (v) =>
+                                setState(() => _acceptTerms = v ?? false),
                             activeColor: AppColors.tertiary,
                           ),
                           Expanded(
                             child: RichText(
                               text: TextSpan(
-                                style: AppTextStyles.bodySmall.copyWith(color: AppColors.onSurfaceVariant),
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: AppColors.onSurfaceVariant,
+                                ),
                                 children: [
                                   const TextSpan(text: 'I agree to the '),
                                   TextSpan(
@@ -254,15 +280,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       AuthButton(
                         text: 'Create Account',
                         onPressed: _handleRegister,
                         isLoading: authState.isLoading,
                       ),
-                      
+
                       if (authState.error != null) ...[
                         const SizedBox(height: 16),
                         Container(
@@ -271,14 +297,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             color: AppColors.error.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Text(authState.error!, style: const TextStyle(color: AppColors.error)),
+                          child: Text(
+                            authState.error!,
+                            style: const TextStyle(color: AppColors.error),
+                          ),
                         ),
                       ],
-                      
+
                       const SizedBox(height: 32),
                       const AuthDivider(text: 'Or sign up with'),
                       const SizedBox(height: 24),
-                      
+
                       Row(
                         children: [
                           Expanded(
@@ -298,20 +327,31 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 32),
-                      
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Already have an account? ', style: AppTextStyles.bodyMedium.copyWith(color: AppColors.onSurfaceVariant)),
+                          Text(
+                            'Already have an account? ',
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                          ),
                           TextButton(
                             onPressed: () => context.go('/login'),
-                            child: Text('Sign In', style: AppTextStyles.bodyMedium.copyWith(color: AppColors.tertiary, fontWeight: FontWeight.bold)),
+                            child: Text(
+                              'Sign In',
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: AppColors.tertiary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 20),
                     ],
                   ),

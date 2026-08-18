@@ -50,10 +50,7 @@ class LegalPolicyScreen extends StatelessWidget {
               ),
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(1),
-                child: Container(
-                  color: AppColors.glassBorder,
-                  height: 1.0,
-                ),
+                child: Container(color: AppColors.glassBorder, height: 1.0),
               ),
             ),
           ),
@@ -85,12 +82,16 @@ class LegalPolicyScreen extends StatelessWidget {
                     const SizedBox(height: 16),
                     Text(
                       'Failed to load policy',
-                      style: AppTextStyles.titleMedium.copyWith(color: AppColors.error),
+                      style: AppTextStyles.titleMedium.copyWith(
+                        color: AppColors.error,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Please check your network or try again later.',
-                      style: AppTextStyles.bodyMedium.copyWith(color: AppColors.onSurfaceVariant),
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -135,27 +136,30 @@ class LegalPolicyScreen extends StatelessWidget {
                     color: AppColors.onSurface,
                     fontWeight: FontWeight.bold,
                   ),
-                  
+
                   // Body copy
                   p: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.onSurfaceVariant,
                     height: 1.6,
                   ),
                   pPadding: const EdgeInsets.only(bottom: 14.0),
-                  
+
                   // Lists
                   listBullet: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.secondary,
                   ),
-                  listBulletPadding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
-                  
+                  listBulletPadding: const EdgeInsets.only(
+                    right: 8.0,
+                    bottom: 8.0,
+                  ),
+
                   // Links
                   a: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.secondary,
                     decoration: TextDecoration.underline,
                     decorationColor: AppColors.secondary,
                   ),
-                  
+
                   // Bold & Italics
                   strong: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.onSurface,
@@ -164,24 +168,21 @@ class LegalPolicyScreen extends StatelessWidget {
                   em: AppTextStyles.bodyMedium.copyWith(
                     fontStyle: FontStyle.italic,
                   ),
-                  
+
                   // Code
                   code: AppTextStyles.bodySmall.copyWith(
                     color: AppColors.tertiary,
                     backgroundColor: AppColors.surfaceContainer,
                     fontFamily: 'monospace',
                   ),
-                  
+
                   // Spacing
                   h1Padding: const EdgeInsets.only(top: 24.0, bottom: 12.0),
                   h2Padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
                   h3Padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
                   horizontalRuleDecoration: BoxDecoration(
                     border: Border(
-                      top: BorderSide(
-                        color: AppColors.glassBorder,
-                        width: 1.5,
-                      ),
+                      top: BorderSide(color: AppColors.glassBorder, width: 1.5),
                     ),
                   ),
                 ),

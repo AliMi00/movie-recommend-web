@@ -6,11 +6,7 @@ class MoodInputBar extends StatefulWidget {
   final Function(String) onSubmitted;
   final String? initialValue;
 
-  const MoodInputBar({
-    super.key,
-    required this.onSubmitted,
-    this.initialValue,
-  });
+  const MoodInputBar({super.key, required this.onSubmitted, this.initialValue});
 
   @override
   State<MoodInputBar> createState() => _MoodInputBarState();
@@ -67,7 +63,7 @@ class _MoodInputBarState extends State<MoodInputBar> {
                   color: AppColors.secondary.withValues(alpha: 0.2),
                   blurRadius: 12,
                   spreadRadius: 2,
-                )
+                ),
               ]
             : [],
       ),
@@ -84,7 +80,9 @@ class _MoodInputBarState extends State<MoodInputBar> {
             controller: _controller,
             focusNode: _focusNode,
             onSubmitted: widget.onSubmitted,
-            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.onSurface),
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.onSurface,
+            ),
             cursorColor: AppColors.secondary,
             decoration: InputDecoration(
               hintText: _currentPlaceholder,
@@ -94,7 +92,9 @@ class _MoodInputBarState extends State<MoodInputBar> {
               ),
               prefixIcon: Icon(
                 Icons.auto_awesome,
-                color: _isFocused ? AppColors.secondary : AppColors.onSurfaceVariant,
+                color: _isFocused
+                    ? AppColors.secondary
+                    : AppColors.onSurfaceVariant,
                 size: 20,
               ),
               suffixIcon: _controller.text.isNotEmpty

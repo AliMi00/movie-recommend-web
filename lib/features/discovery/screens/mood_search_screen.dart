@@ -6,7 +6,8 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../shared/widgets/glass_container.dart';
 import '../../../shared/widgets/error_empty_state.dart';
 import '../../../data/models/movie_model.dart';
-import '../../../shared/providers/movie_providers.dart' show movieRepositoryProvider;
+import '../../../shared/providers/movie_providers.dart'
+    show movieRepositoryProvider;
 import 'movie_details_modal.dart';
 
 /// Provider to manage the current mood query
@@ -34,12 +35,30 @@ class _MoodSearchScreenState extends ConsumerState<MoodSearchScreen> {
   bool _isFocused = false;
 
   final List<Map<String, String>> _suggestedMoods = const [
-    {'label': 'Neon & fast-paced ⚡', 'query': 'neon fast paced cyberpunk action'},
-    {'label': 'Dark, gritty & cerebral 🌃', 'query': 'dark gritty cerebral thriller detective'},
-    {'label': 'Cozy & feel-good 🍿', 'query': 'cozy feel good heartwarming comedy'},
-    {'label': 'Mind-bending sci-fi 🌌', 'query': 'mind bending space time travel sci-fi'},
-    {'label': 'Romantic with a twist 🕯️', 'query': 'romantic tragic romance dramatic love story'},
-    {'label': 'High-octane adrenaline 🏎️', 'query': 'high octane adrenaline action explosion speed'},
+    {
+      'label': 'Neon & fast-paced ⚡',
+      'query': 'neon fast paced cyberpunk action',
+    },
+    {
+      'label': 'Dark, gritty & cerebral 🌃',
+      'query': 'dark gritty cerebral thriller detective',
+    },
+    {
+      'label': 'Cozy & feel-good 🍿',
+      'query': 'cozy feel good heartwarming comedy',
+    },
+    {
+      'label': 'Mind-bending sci-fi 🌌',
+      'query': 'mind bending space time travel sci-fi',
+    },
+    {
+      'label': 'Romantic with a twist 🕯️',
+      'query': 'romantic tragic romance dramatic love story',
+    },
+    {
+      'label': 'High-octane adrenaline 🏎️',
+      'query': 'high octane adrenaline action explosion speed',
+    },
   ];
 
   @override
@@ -122,14 +141,17 @@ class _MoodSearchScreenState extends ConsumerState<MoodSearchScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Mood Explorer',
-                            style: AppTextStyles.displaySmall.copyWith(
-                              fontSize: 32,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.onSurface,
-                              letterSpacing: -0.5,
-                            ),
-                          ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1),
+                                'Mood Explorer',
+                                style: AppTextStyles.displaySmall.copyWith(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.onSurface,
+                                  letterSpacing: -0.5,
+                                ),
+                              )
+                              .animate()
+                              .fadeIn(duration: 400.ms)
+                              .slideX(begin: -0.1),
                           const SizedBox(height: 6),
                           Text(
                             'Type how you feel, or select a vibe below to discover tailored movies.',
@@ -145,63 +167,94 @@ class _MoodSearchScreenState extends ConsumerState<MoodSearchScreen> {
                   // Search Field with Glow effect
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        decoration: BoxDecoration(
-                          color: AppColors.surfaceContainerLow.withValues(alpha: 0.8),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: _isFocused ? AppColors.secondary : AppColors.glassBorder,
-                            width: _isFocused ? 1.5 : 1,
-                          ),
-                          boxShadow: _isFocused
-                              ? [
-                                  BoxShadow(
-                                    color: AppColors.secondary.withValues(alpha: 0.25),
-                                    blurRadius: 16,
-                                    spreadRadius: 2,
-                                  )
-                                ]
-                              : [],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: TextField(
-                            controller: _searchController,
-                            focusNode: _focusNode,
-                            onSubmitted: _submitMood,
-                            textInputAction: TextInputAction.search,
-                            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.onSurface),
-                            cursorColor: AppColors.secondary,
-                            decoration: InputDecoration(
-                              hintText: 'How are you feeling tonight?',
-                              hintStyle: AppTextStyles.bodyMedium.copyWith(
-                                color: AppColors.onSurfaceVariant.withValues(alpha: 0.5),
-                                fontStyle: FontStyle.italic,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 16,
+                      ),
+                      child:
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceContainerLow.withValues(
+                                alpha: 0.8,
                               ),
-                              prefixIcon: Icon(
-                                Icons.auto_awesome,
-                                color: _isFocused ? AppColors.secondary : AppColors.onSurfaceVariant,
-                                size: 20,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: _isFocused
+                                    ? AppColors.secondary
+                                    : AppColors.glassBorder,
+                                width: _isFocused ? 1.5 : 1,
                               ),
-                              suffixIcon: _searchController.text.isNotEmpty
-                                  ? IconButton(
-                                      icon: const Icon(Icons.clear, size: 20),
-                                      onPressed: () {
-                                        _searchController.clear();
-                                        ref.read(moodSearchQueryProvider.notifier).state = '';
-                                      },
-                                    )
-                                  : null,
-                              border: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                              boxShadow: _isFocused
+                                  ? [
+                                      BoxShadow(
+                                        color: AppColors.secondary.withValues(
+                                          alpha: 0.25,
+                                        ),
+                                        blurRadius: 16,
+                                        spreadRadius: 2,
+                                      ),
+                                    ]
+                                  : [],
                             ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: TextField(
+                                controller: _searchController,
+                                focusNode: _focusNode,
+                                onSubmitted: _submitMood,
+                                textInputAction: TextInputAction.search,
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: AppColors.onSurface,
+                                ),
+                                cursorColor: AppColors.secondary,
+                                decoration: InputDecoration(
+                                  hintText: 'How are you feeling tonight?',
+                                  hintStyle: AppTextStyles.bodyMedium.copyWith(
+                                    color: AppColors.onSurfaceVariant
+                                        .withValues(alpha: 0.5),
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                  prefixIcon: Icon(
+                                    Icons.auto_awesome,
+                                    color: _isFocused
+                                        ? AppColors.secondary
+                                        : AppColors.onSurfaceVariant,
+                                    size: 20,
+                                  ),
+                                  suffixIcon: _searchController.text.isNotEmpty
+                                      ? IconButton(
+                                          icon: const Icon(
+                                            Icons.clear,
+                                            size: 20,
+                                          ),
+                                          onPressed: () {
+                                            _searchController.clear();
+                                            ref
+                                                    .read(
+                                                      moodSearchQueryProvider
+                                                          .notifier,
+                                                    )
+                                                    .state =
+                                                '';
+                                          },
+                                        )
+                                      : null,
+                                  border: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ).animate().scale(
+                            delay: 150.ms,
+                            duration: 300.ms,
+                            curve: Curves.easeOut,
                           ),
-                        ),
-                      ).animate().scale(delay: 150.ms, duration: 300.ms, curve: Curves.easeOut),
                     ),
                   ),
 
@@ -211,11 +264,16 @@ class _MoodSearchScreenState extends ConsumerState<MoodSearchScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 8,
+                          ),
                           child: Text(
                             'POPULAR VIBES',
                             style: AppTextStyles.labelSmall.copyWith(
-                              color: AppColors.onSurfaceVariant.withValues(alpha: 0.7),
+                              color: AppColors.onSurfaceVariant.withValues(
+                                alpha: 0.7,
+                              ),
                               fontSize: 10,
                             ),
                           ),
@@ -226,27 +284,37 @@ class _MoodSearchScreenState extends ConsumerState<MoodSearchScreen> {
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             itemCount: _suggestedMoods.length,
-                            separatorBuilder: (_, __) => const SizedBox(width: 8),
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(width: 8),
                             itemBuilder: (context, index) {
                               final item = _suggestedMoods[index];
                               final isSelected = query == item['query'];
                               return GestureDetector(
                                 onTap: () => _submitMood(item['query']!),
                                 child: GlassContainer(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 10,
+                                  ),
                                   borderRadius: 24,
                                   opacity: isSelected ? 0.35 : 0.08,
                                   border: Border.all(
-                                    color: isSelected ? AppColors.secondary : AppColors.glassBorder,
+                                    color: isSelected
+                                        ? AppColors.secondary
+                                        : AppColors.glassBorder,
                                     width: 1,
                                   ),
                                   child: Center(
                                     child: Text(
                                       item['label']!,
                                       style: AppTextStyles.labelSmall.copyWith(
-                                        color: isSelected ? AppColors.secondary : AppColors.onSurface,
+                                        color: isSelected
+                                            ? AppColors.secondary
+                                            : AppColors.onSurface,
                                         fontSize: 12,
-                                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                        fontWeight: isSelected
+                                            ? FontWeight.bold
+                                            : FontWeight.w500,
                                       ),
                                     ),
                                   ),
@@ -269,16 +337,26 @@ class _MoodSearchScreenState extends ConsumerState<MoodSearchScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.bubble_chart_outlined, size: 72, color: AppColors.outlineVariant),
+                                Icon(
+                                  Icons.bubble_chart_outlined,
+                                  size: 72,
+                                  color: AppColors.outlineVariant,
+                                ),
                                 SizedBox(height: 16),
                                 Text(
                                   'Ready to explore?',
-                                  style: TextStyle(color: AppColors.onSurfaceVariant, fontSize: 16),
+                                  style: TextStyle(
+                                    color: AppColors.onSurfaceVariant,
+                                    fontSize: 16,
+                                  ),
                                 ),
                                 SizedBox(height: 8),
                                 Text(
                                   'Try typing "mind bending mystery" or choose a vibe above!',
-                                  style: TextStyle(color: AppColors.outline, fontSize: 12),
+                                  style: TextStyle(
+                                    color: AppColors.outline,
+                                    fontSize: 12,
+                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               ],
@@ -294,11 +372,26 @@ class _MoodSearchScreenState extends ConsumerState<MoodSearchScreen> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(Icons.movie_creation_outlined, size: 64, color: AppColors.outlineVariant),
+                                      Icon(
+                                        Icons.movie_creation_outlined,
+                                        size: 64,
+                                        color: AppColors.outlineVariant,
+                                      ),
                                       SizedBox(height: 16),
-                                      Text('No matches found', style: TextStyle(color: AppColors.onSurfaceVariant)),
+                                      Text(
+                                        'No matches found',
+                                        style: TextStyle(
+                                          color: AppColors.onSurfaceVariant,
+                                        ),
+                                      ),
                                       SizedBox(height: 8),
-                                      Text('Try adjusting your description or pick a different mood.', style: TextStyle(color: AppColors.outline, fontSize: 12)),
+                                      Text(
+                                        'Try adjusting your description or pick a different mood.',
+                                        style: TextStyle(
+                                          color: AppColors.outline,
+                                          fontSize: 12,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -306,34 +399,42 @@ class _MoodSearchScreenState extends ConsumerState<MoodSearchScreen> {
                             }
 
                             return SliverPadding(
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
+                              padding: const EdgeInsets.fromLTRB(
+                                20,
+                                0,
+                                20,
+                                100,
+                              ),
                               sliver: SliverGrid(
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 16,
-                                  crossAxisSpacing: 16,
-                                  childAspectRatio: 0.65,
-                                ),
-                                delegate: SliverChildBuilderDelegate(
-                                  (ctx, index) {
-                                    final movie = movies[index];
-                                    return _MoodResultTile(
-                                      movie: movie,
-                                      onTap: () => _showMovieDetails(movie),
-                                    ).animate().fadeIn(
-                                          delay: (index * 50).ms,
-                                          duration: 350.ms,
-                                        );
-                                  },
-                                  childCount: movies.length,
-                                ),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      mainAxisSpacing: 16,
+                                      crossAxisSpacing: 16,
+                                      childAspectRatio: 0.65,
+                                    ),
+                                delegate: SliverChildBuilderDelegate((
+                                  ctx,
+                                  index,
+                                ) {
+                                  final movie = movies[index];
+                                  return _MoodResultTile(
+                                    movie: movie,
+                                    onTap: () => _showMovieDetails(movie),
+                                  ).animate().fadeIn(
+                                    delay: (index * 50).ms,
+                                    duration: 350.ms,
+                                  );
+                                }, childCount: movies.length),
                               ),
                             );
                           },
                           loading: () => const SliverFillRemaining(
                             hasScrollBody: false,
                             child: Center(
-                              child: CircularProgressIndicator(color: AppColors.secondary),
+                              child: CircularProgressIndicator(
+                                color: AppColors.secondary,
+                              ),
                             ),
                           ),
                           error: (e, _) => SliverFillRemaining(
@@ -341,7 +442,8 @@ class _MoodSearchScreenState extends ConsumerState<MoodSearchScreen> {
                             child: Center(
                               child: ErrorEmptyState.error(
                                 message: 'Search failed: $e',
-                                onRetry: () => ref.refresh(moodSearchResultsProvider),
+                                onRetry: () =>
+                                    ref.refresh(moodSearchResultsProvider),
                               ),
                             ),
                           ),
@@ -360,10 +462,7 @@ class _MoodResultTile extends StatelessWidget {
   final Movie movie;
   final VoidCallback onTap;
 
-  const _MoodResultTile({
-    required this.movie,
-    required this.onTap,
-  });
+  const _MoodResultTile({required this.movie, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -383,7 +482,8 @@ class _MoodResultTile extends StatelessWidget {
                 Positioned.fill(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: movie.posterUrl != null && movie.posterUrl!.isNotEmpty
+                    child:
+                        movie.posterUrl != null && movie.posterUrl!.isNotEmpty
                         ? Image.network(
                             movie.fullPosterPath,
                             fit: BoxFit.cover,
@@ -410,10 +510,16 @@ class _MoodResultTile extends StatelessWidget {
                   top: 8,
                   right: 8,
                   child: GlassContainer(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     borderRadius: 12,
                     opacity: 0.25,
-                    border: Border.all(color: AppColors.secondary.withValues(alpha: 0.5), width: 0.5),
+                    border: Border.all(
+                      color: AppColors.secondary.withValues(alpha: 0.5),
+                      width: 0.5,
+                    ),
                     child: Text(
                       '$matchScore% Match',
                       style: AppTextStyles.labelSmall.copyWith(

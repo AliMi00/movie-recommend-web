@@ -52,24 +52,22 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       vsync: this,
     );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+      ),
+    );
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.2, 0.8, curve: Curves.easeOutBack),
-    ));
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: const Interval(0.2, 0.8, curve: Curves.easeOutBack),
+      ),
+    );
 
     _animationController.forward();
-    
+
     // Check authentication status after a brief delay
     _checkAuthAndNavigate();
   }
@@ -92,9 +90,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     ]);
 
     if (!mounted) return;
-    
+
     final authState = ref.read(authProvider);
-    
+
     // Navigate based on authentication state
     if (authState.isAuthenticated && authState.user != null) {
       if (authState.isFirstTimeUser) {
@@ -110,7 +108,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     // Listen to auth state for real-time updates
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (!next.isLoading && mounted) {
@@ -157,9 +155,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   );
                 },
               ),
-              
+
               const SizedBox(height: 48),
-              
+
               // Loading indicator
               AnimatedBuilder(
                 animation: _animationController,
@@ -178,9 +176,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                             ),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         Text(
                           'Loading your movie experience...',
                           style: AppTextStyles.bodyMedium.copyWith(

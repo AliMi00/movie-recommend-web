@@ -7,26 +7,27 @@ part of 'user_model.dart';
 // **************************************************************************
 
 _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
-      id: json['id'] as String,
-      email: json['email'] as String,
-      username: json['username'] as String?,
-      fullName: json['full_name'] as String?,
-      avatarUrl: json['avatar_url'] as String?,
-      preferredGenres: (json['preferred_genres'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      isFirstTimeUser: json['is_first_time_user'] as bool? ?? false,
-      minRating: (json['min_rating'] as num?)?.toDouble() ?? 7.0,
-      isDarkTheme: json['is_dark_theme'] as bool? ?? true,
-      emailVerified: json['email_verified'] as bool? ?? true,
-      createdAt: json['created_at'] == null
-          ? null
-          : DateTime.parse(json['created_at'] as String),
-      lastActiveAt: json['last_active_at'] == null
-          ? null
-          : DateTime.parse(json['last_active_at'] as String),
-    );
+  id: json['id'] as String,
+  email: json['email'] as String,
+  username: json['username'] as String?,
+  fullName: json['full_name'] as String?,
+  avatarUrl: json['avatar_url'] as String?,
+  preferredGenres:
+      (json['preferred_genres'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const [],
+  isFirstTimeUser: json['is_first_time_user'] as bool? ?? false,
+  minRating: (json['min_rating'] as num?)?.toDouble() ?? 7.0,
+  isDarkTheme: json['is_dark_theme'] as bool? ?? true,
+  emailVerified: json['email_verified'] as bool? ?? true,
+  createdAt: json['created_at'] == null
+      ? null
+      : DateTime.parse(json['created_at'] as String),
+  lastActiveAt: json['last_active_at'] == null
+      ? null
+      : DateTime.parse(json['last_active_at'] as String),
+);
 
 Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
     <String, dynamic>{
@@ -45,29 +46,30 @@ Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
     };
 
 _$UserPreferencesImpl _$$UserPreferencesImplFromJson(
-        Map<String, dynamic> json) =>
-    _$UserPreferencesImpl(
-      preferredGenres: (json['preferred_genres'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      minRating: (json['min_rating'] as num?)?.toDouble() ?? 7.0,
-      isDarkTheme: json['is_dark_theme'] as bool? ?? true,
-      enableNotifications: json['enable_notifications'] as bool? ?? true,
-      enableAutoplay: json['enable_autoplay'] as bool? ?? true,
-      language: json['language'] as String? ?? 'en',
-    );
+  Map<String, dynamic> json,
+) => _$UserPreferencesImpl(
+  preferredGenres:
+      (json['preferred_genres'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const [],
+  minRating: (json['min_rating'] as num?)?.toDouble() ?? 7.0,
+  isDarkTheme: json['is_dark_theme'] as bool? ?? true,
+  enableNotifications: json['enable_notifications'] as bool? ?? true,
+  enableAutoplay: json['enable_autoplay'] as bool? ?? true,
+  language: json['language'] as String? ?? 'en',
+);
 
 Map<String, dynamic> _$$UserPreferencesImplToJson(
-        _$UserPreferencesImpl instance) =>
-    <String, dynamic>{
-      'preferred_genres': instance.preferredGenres,
-      'min_rating': instance.minRating,
-      'is_dark_theme': instance.isDarkTheme,
-      'enable_notifications': instance.enableNotifications,
-      'enable_autoplay': instance.enableAutoplay,
-      'language': instance.language,
-    };
+  _$UserPreferencesImpl instance,
+) => <String, dynamic>{
+  'preferred_genres': instance.preferredGenres,
+  'min_rating': instance.minRating,
+  'is_dark_theme': instance.isDarkTheme,
+  'enable_notifications': instance.enableNotifications,
+  'enable_autoplay': instance.enableAutoplay,
+  'language': instance.language,
+};
 
 _$UserStateImpl _$$UserStateImplFromJson(Map<String, dynamic> json) =>
     _$UserStateImpl(
@@ -75,14 +77,16 @@ _$UserStateImpl _$$UserStateImplFromJson(Map<String, dynamic> json) =>
           ? null
           : User.fromJson(json['user'] as Map<String, dynamic>),
       isAuthenticated: json['is_authenticated'] as bool? ?? false,
-      preferredGenres: (json['preferred_genres'] as List<dynamic>?)
+      preferredGenres:
+          (json['preferred_genres'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
       preferences: json['preferences'] == null
           ? null
           : UserPreferences.fromJson(
-              json['preferences'] as Map<String, dynamic>),
+              json['preferences'] as Map<String, dynamic>,
+            ),
       isLoading: json['is_loading'] as bool? ?? false,
       error: json['error'] as String?,
     );

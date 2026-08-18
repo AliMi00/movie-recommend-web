@@ -14,8 +14,8 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../shared/widgets/glass_container.dart';
 
 // Filtering state
-final selectedGenresProvider = StateProvider<Set<String>>((_)=> {});
-final minRatingFilterProvider = StateProvider<double>((_)=> 0);
+final selectedGenresProvider = StateProvider<Set<String>>((_) => {});
+final minRatingFilterProvider = StateProvider<double>((_) => 0);
 
 class DiscoveryScreen extends ConsumerStatefulWidget {
   const DiscoveryScreen({super.key});
@@ -67,8 +67,8 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: _openFilters, 
-            icon: const Icon(Icons.tune, color: AppColors.onSurfaceVariant)
+            onPressed: _openFilters,
+            icon: const Icon(Icons.tune, color: AppColors.onSurfaceVariant),
           ),
           IconButton(
             tooltip: 'Watch History',
@@ -97,7 +97,7 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
                 ),
               ),
             ),
-            
+
             // Layer 2: Main Content
             SafeArea(
               child: Column(
@@ -109,7 +109,7 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
                       ref.read(moodProvider.notifier).state = v;
                     },
                   ),
-                  
+
                   // Ambient popular vibe chips scrollable list
                   SizedBox(
                     height: 38,
@@ -121,42 +121,47 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
                           label: '⚡ Neon Cyberpunk',
                           query: 'neon fast paced cyberpunk action',
                           currentMood: mood,
-                          onTap: (q) => ref.read(moodProvider.notifier).state = q,
+                          onTap: (q) =>
+                              ref.read(moodProvider.notifier).state = q,
                         ),
                         const SizedBox(width: 8),
                         _MoodChip(
                           label: '🌃 Dark Gritty',
                           query: 'dark gritty cerebral thriller detective',
                           currentMood: mood,
-                          onTap: (q) => ref.read(moodProvider.notifier).state = q,
+                          onTap: (q) =>
+                              ref.read(moodProvider.notifier).state = q,
                         ),
                         const SizedBox(width: 8),
                         _MoodChip(
                           label: '🍿 Cozy Feel-Good',
                           query: 'cozy feel good heartwarming comedy',
                           currentMood: mood,
-                          onTap: (q) => ref.read(moodProvider.notifier).state = q,
+                          onTap: (q) =>
+                              ref.read(moodProvider.notifier).state = q,
                         ),
                         const SizedBox(width: 8),
                         _MoodChip(
                           label: '🌌 Mind-Bending',
                           query: 'mind bending space time travel sci-fi',
                           currentMood: mood,
-                          onTap: (q) => ref.read(moodProvider.notifier).state = q,
+                          onTap: (q) =>
+                              ref.read(moodProvider.notifier).state = q,
                         ),
                         const SizedBox(width: 8),
                         _MoodChip(
                           label: '🕯️ Tragic Romance',
                           query: 'romantic tragic romance dramatic love story',
                           currentMood: mood,
-                          onTap: (q) => ref.read(moodProvider.notifier).state = q,
+                          onTap: (q) =>
+                              ref.read(moodProvider.notifier).state = q,
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 6),
                   _ActiveFiltersBar(onTap: _openFilters),
-                  
+
                   if (state.error != null)
                     Padding(
                       padding: const EdgeInsets.all(24),
@@ -165,11 +170,12 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
                         borderRadius: 16,
                         child: ErrorEmptyState.error(
                           message: 'Connection issue: ${state.error}',
-                          onRetry: () => ref.read(movieStackProvider.notifier).loadMore(),
+                          onRetry: () =>
+                              ref.read(movieStackProvider.notifier).loadMore(),
                         ),
                       ),
                     ),
-                    
+
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
@@ -180,7 +186,7 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
                       ),
                     ),
                   ),
-                  
+
                   // Bottom Actions (Layer 3)
                   if (top != null)
                     Padding(
@@ -196,17 +202,20 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
                         },
                       ),
                     ),
-                    
+
                   if (state.canUndo)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: TextButton.icon(
-                        onPressed: () => ref.read(movieStackProvider.notifier).undo(),
+                        onPressed: () =>
+                            ref.read(movieStackProvider.notifier).undo(),
                         icon: const Icon(Icons.undo, size: 16),
                         label: const Text('UNDO last swipe'),
                         style: TextButton.styleFrom(
                           foregroundColor: AppColors.onSurfaceVariant,
-                          textStyle: AppTextStyles.labelSmall.copyWith(fontSize: 10),
+                          textStyle: AppTextStyles.labelSmall.copyWith(
+                            fontSize: 10,
+                          ),
                         ),
                       ),
                     ),
@@ -228,7 +237,7 @@ class _ActiveFiltersBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final genres = ref.watch(selectedGenresProvider);
     final minRating = ref.watch(minRatingFilterProvider);
-    
+
     if (genres.isEmpty && minRating == 0) return const SizedBox.shrink();
 
     return Padding(
@@ -276,7 +285,122 @@ class _ActiveFiltersBar extends ConsumerWidget {
   }
 }
 
-class _FilterSheet extends ConsumerWidget{ const _FilterSheet(); @override Widget build(BuildContext context, WidgetRef ref){ final selected = ref.watch(selectedGenresProvider); final minRating = ref.watch(minRatingFilterProvider); final allGenres = ['Action','Adventure','Drama','Romance','Comedy','Science Fiction','Horror','Thriller']; return Container(decoration: const BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.vertical(top: Radius.circular(28)), border: Border(top: BorderSide(color: AppColors.glassBorder))), padding: EdgeInsets.only(left:20,right:20, top:16, bottom: MediaQuery.of(context).viewInsets.bottom + 32), child: SingleChildScrollView(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children:[ Center(child: Container(width:50,height:5,margin: const EdgeInsets.only(bottom:16), decoration: BoxDecoration(color: AppColors.outlineVariant,borderRadius: BorderRadius.circular(3)))), Row(children:[ const Icon(Icons.tune,size:20, color: AppColors.secondary), const SizedBox(width:8), Text('Filters', style: Theme.of(context).textTheme.titleMedium)],), const SizedBox(height:16), Text('Genres', style: Theme.of(context).textTheme.labelLarge), const SizedBox(height:8), Wrap(spacing:8, runSpacing:8, children: allGenres.map((g){ final active = selected.contains(g); return FilterChip(label: Text(g), selected: active, onSelected: (_){ final set = {...selected}; if(active){ set.remove(g);} else { set.add(g);} ref.read(selectedGenresProvider.notifier).state = set; }, selectedColor: AppColors.secondaryContainer, labelStyle: TextStyle(color: active? AppColors.onSecondaryContainer : AppColors.onSurface),); }).toList()), const SizedBox(height:24), Text('Minimum Rating (${minRating.toStringAsFixed(1)})', style: Theme.of(context).textTheme.labelLarge), Slider(value: minRating, min:0, max:10, divisions:20, label: minRating.toStringAsFixed(1), activeColor: AppColors.secondary, inactiveColor: AppColors.outlineVariant, onChanged: (v)=> ref.read(minRatingFilterProvider.notifier).state = v), const SizedBox(height:12), Row(children:[ Expanded(child: ElevatedButton.icon(onPressed: ()=> Navigator.of(context).pop(), icon: const Icon(Icons.check), label: const Text('Apply'), style: ElevatedButton.styleFrom(backgroundColor: AppColors.secondaryContainer, foregroundColor: AppColors.onSecondaryContainer),))],) ]))); }
+class _FilterSheet extends ConsumerWidget {
+  const _FilterSheet();
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selected = ref.watch(selectedGenresProvider);
+    final minRating = ref.watch(minRatingFilterProvider);
+    final allGenres = [
+      'Action',
+      'Adventure',
+      'Drama',
+      'Romance',
+      'Comedy',
+      'Science Fiction',
+      'Horror',
+      'Thriller',
+    ];
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.surfaceContainerLow,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        border: Border(top: BorderSide(color: AppColors.glassBorder)),
+      ),
+      padding: EdgeInsets.only(
+        left: 20,
+        right: 20,
+        top: 16,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 32,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 50,
+                height: 5,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: AppColors.outlineVariant,
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                const Icon(Icons.tune, size: 20, color: AppColors.secondary),
+                const SizedBox(width: 8),
+                Text('Filters', style: Theme.of(context).textTheme.titleMedium),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text('Genres', style: Theme.of(context).textTheme.labelLarge),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: allGenres.map((g) {
+                final active = selected.contains(g);
+                return FilterChip(
+                  label: Text(g),
+                  selected: active,
+                  onSelected: (_) {
+                    final set = {...selected};
+                    if (active) {
+                      set.remove(g);
+                    } else {
+                      set.add(g);
+                    }
+                    ref.read(selectedGenresProvider.notifier).state = set;
+                  },
+                  selectedColor: AppColors.secondaryContainer,
+                  labelStyle: TextStyle(
+                    color: active
+                        ? AppColors.onSecondaryContainer
+                        : AppColors.onSurface,
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Minimum Rating (${minRating.toStringAsFixed(1)})',
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
+            Slider(
+              value: minRating,
+              min: 0,
+              max: 10,
+              divisions: 20,
+              label: minRating.toStringAsFixed(1),
+              activeColor: AppColors.secondary,
+              inactiveColor: AppColors.outlineVariant,
+              onChanged: (v) =>
+                  ref.read(minRatingFilterProvider.notifier).state = v,
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.check),
+                    label: const Text('Apply'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.secondaryContainer,
+                      foregroundColor: AppColors.onSecondaryContainer,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _MoodChip extends StatelessWidget {

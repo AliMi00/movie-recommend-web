@@ -6,7 +6,8 @@ import 'web_config_stub.dart' if (dart.library.html) 'web_config_real.dart';
 class AppConfig {
   final String baseUrl;
   final bool useApi;
-  final bool useCookieAuth; // if true, rely on refresh cookie; else bearer token
+  final bool
+  useCookieAuth; // if true, rely on refresh cookie; else bearer token
   final int defaultPageSize;
   // Optional shared demo account, surfaced as a one-click login on the
   // welcome/login screens. Empty when not configured for this deployment.
@@ -24,7 +25,12 @@ class AppConfig {
 
   bool get hasDemoAccount => demoEmail.isNotEmpty && demoPassword.isNotEmpty;
 
-  AppConfig copyWith({String? baseUrl, bool? useApi, bool? useCookieAuth, int? defaultPageSize}) {
+  AppConfig copyWith({
+    String? baseUrl,
+    bool? useApi,
+    bool? useCookieAuth,
+    int? defaultPageSize,
+  }) {
     return AppConfig(
       baseUrl: baseUrl ?? this.baseUrl,
       useApi: useApi ?? this.useApi,
@@ -40,19 +46,40 @@ final appConfigProvider = Provider<AppConfig>((ref) {
   // Allow overriding via --dart-define at build/run time. Defaults point at
   // the live public CineJo API — this is a public repo, so no private
   // network address belongs here.
-  const envBaseUrlRaw = String.fromEnvironment('CINEJO_API_BASE_URL', defaultValue: 'https://api.gozaga.xyz/v1');
+  const envBaseUrlRaw = String.fromEnvironment(
+    'CINEJO_API_BASE_URL',
+    defaultValue: 'https://api.gozaga.xyz/v1',
+  );
   const envUseApi = bool.fromEnvironment('CINEJO_USE_API', defaultValue: true);
   // Use string to support tri-state: 'true'/'false'/'auto'
-  const envCookieRaw = String.fromEnvironment('CINEJO_USE_COOKIE_AUTH', defaultValue: 'false');
-  const envPageSize = int.fromEnvironment('CINEJO_DEFAULT_PAGE_SIZE', defaultValue: 20);
-  const envDemoEmailRaw = String.fromEnvironment('CINEJO_DEMO_EMAIL', defaultValue: '');
-  const envDemoPasswordRaw = String.fromEnvironment('CINEJO_DEMO_PASSWORD', defaultValue: '');
+  const envCookieRaw = String.fromEnvironment(
+    'CINEJO_USE_COOKIE_AUTH',
+    defaultValue: 'false',
+  );
+  const envPageSize = int.fromEnvironment(
+    'CINEJO_DEFAULT_PAGE_SIZE',
+    defaultValue: 20,
+  );
+  const envDemoEmailRaw = String.fromEnvironment(
+    'CINEJO_DEMO_EMAIL',
+    defaultValue: '',
+  );
+  const envDemoPasswordRaw = String.fromEnvironment(
+    'CINEJO_DEMO_PASSWORD',
+    defaultValue: '',
+  );
 
   // Resolve base URL: runtime JS global (web) takes priority over dart-define
   String resolvedBase = getRuntimeApiBaseUrl() ?? envBaseUrlRaw;
   try {
-    if (!kIsWeb && platformIsAndroid && (envBaseUrlRaw.contains('localhost') || envBaseUrlRaw.contains('127.0.0.1'))) {
-      resolvedBase = envBaseUrlRaw.replaceFirst(RegExp(r'localhost|127\.0\.0\.1'), '10.0.2.2');
+    if (!kIsWeb &&
+        platformIsAndroid &&
+        (envBaseUrlRaw.contains('localhost') ||
+            envBaseUrlRaw.contains('127.0.0.1'))) {
+      resolvedBase = envBaseUrlRaw.replaceFirst(
+        RegExp(r'localhost|127\.0\.0\.1'),
+        '10.0.2.2',
+      );
     }
   } catch (_) {}
 

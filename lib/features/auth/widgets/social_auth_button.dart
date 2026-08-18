@@ -18,7 +18,7 @@ class SocialAuthButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return SizedBox(
       height: 56,
       child: OutlinedButton(
@@ -46,11 +46,7 @@ class SocialAuthButton extends StatelessWidget {
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    icon,
-                    size: 20,
-                    color: theme.colorScheme.onSurface,
-                  ),
+                  Icon(icon, size: 20, color: theme.colorScheme.onSurface),
                   const SizedBox(width: 8),
                   Text(
                     provider,

@@ -17,7 +17,7 @@ class GenreChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -26,7 +26,9 @@ class GenreChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primary
-              : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+              : theme.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.5,
+                ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
@@ -48,11 +50,7 @@ class GenreChip extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (isSelected) ...[
-              Icon(
-                Icons.check,
-                size: 16,
-                color: Colors.white,
-              ),
+              Icon(Icons.check, size: 16, color: Colors.white),
               const SizedBox(width: 6),
             ],
             Text(

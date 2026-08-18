@@ -12,7 +12,8 @@ part of 'movie_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 Movie _$MovieFromJson(Map<String, dynamic> json) {
   return _Movie.fromJson(json);
@@ -63,28 +64,29 @@ abstract class $MovieCopyWith<$Res> {
   factory $MovieCopyWith(Movie value, $Res Function(Movie) then) =
       _$MovieCopyWithImpl<$Res, Movie>;
   @useResult
-  $Res call(
-      {int id,
-      String title,
-      String overview,
-      String? posterUrl,
-      String? backdropUrl,
-      List<String> genres,
-      String releaseDate,
-      @JsonKey(name: 'vote_average') double voteAverage,
-      @JsonKey(name: 'vote_count') int voteCount,
-      int runtime,
-      List<String> cast,
-      String director,
-      @JsonKey(name: 'trailer_key') String? trailerKey,
-      String? reason,
-      @JsonKey(name: 'similar_movies') List<int> similarIds,
-      @JsonKey(name: 'is_liked') bool isLiked,
-      @JsonKey(name: 'is_disliked') bool isDisliked,
-      @JsonKey(name: 'is_super_liked') bool isSuperLiked,
-      @JsonKey(name: 'is_watched') bool isWatched,
-      @JsonKey(name: 'liked_at') DateTime? likedAt,
-      @JsonKey(name: 'watched_at') DateTime? watchedAt});
+  $Res call({
+    int id,
+    String title,
+    String overview,
+    String? posterUrl,
+    String? backdropUrl,
+    List<String> genres,
+    String releaseDate,
+    @JsonKey(name: 'vote_average') double voteAverage,
+    @JsonKey(name: 'vote_count') int voteCount,
+    int runtime,
+    List<String> cast,
+    String director,
+    @JsonKey(name: 'trailer_key') String? trailerKey,
+    String? reason,
+    @JsonKey(name: 'similar_movies') List<int> similarIds,
+    @JsonKey(name: 'is_liked') bool isLiked,
+    @JsonKey(name: 'is_disliked') bool isDisliked,
+    @JsonKey(name: 'is_super_liked') bool isSuperLiked,
+    @JsonKey(name: 'is_watched') bool isWatched,
+    @JsonKey(name: 'liked_at') DateTime? likedAt,
+    @JsonKey(name: 'watched_at') DateTime? watchedAt,
+  });
 }
 
 /// @nodoc
@@ -122,124 +124,129 @@ class _$MovieCopyWithImpl<$Res, $Val extends Movie>
     Object? likedAt = freezed,
     Object? watchedAt = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      overview: null == overview
-          ? _value.overview
-          : overview // ignore: cast_nullable_to_non_nullable
-              as String,
-      posterUrl: freezed == posterUrl
-          ? _value.posterUrl
-          : posterUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      backdropUrl: freezed == backdropUrl
-          ? _value.backdropUrl
-          : backdropUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      genres: null == genres
-          ? _value.genres
-          : genres // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      releaseDate: null == releaseDate
-          ? _value.releaseDate
-          : releaseDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      voteAverage: null == voteAverage
-          ? _value.voteAverage
-          : voteAverage // ignore: cast_nullable_to_non_nullable
-              as double,
-      voteCount: null == voteCount
-          ? _value.voteCount
-          : voteCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      runtime: null == runtime
-          ? _value.runtime
-          : runtime // ignore: cast_nullable_to_non_nullable
-              as int,
-      cast: null == cast
-          ? _value.cast
-          : cast // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      director: null == director
-          ? _value.director
-          : director // ignore: cast_nullable_to_non_nullable
-              as String,
-      trailerKey: freezed == trailerKey
-          ? _value.trailerKey
-          : trailerKey // ignore: cast_nullable_to_non_nullable
-              as String?,
-      reason: freezed == reason
-          ? _value.reason
-          : reason // ignore: cast_nullable_to_non_nullable
-              as String?,
-      similarIds: null == similarIds
-          ? _value.similarIds
-          : similarIds // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      isLiked: null == isLiked
-          ? _value.isLiked
-          : isLiked // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isDisliked: null == isDisliked
-          ? _value.isDisliked
-          : isDisliked // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isSuperLiked: null == isSuperLiked
-          ? _value.isSuperLiked
-          : isSuperLiked // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isWatched: null == isWatched
-          ? _value.isWatched
-          : isWatched // ignore: cast_nullable_to_non_nullable
-              as bool,
-      likedAt: freezed == likedAt
-          ? _value.likedAt
-          : likedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      watchedAt: freezed == watchedAt
-          ? _value.watchedAt
-          : watchedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            title: null == title
+                ? _value.title
+                : title // ignore: cast_nullable_to_non_nullable
+                      as String,
+            overview: null == overview
+                ? _value.overview
+                : overview // ignore: cast_nullable_to_non_nullable
+                      as String,
+            posterUrl: freezed == posterUrl
+                ? _value.posterUrl
+                : posterUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            backdropUrl: freezed == backdropUrl
+                ? _value.backdropUrl
+                : backdropUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            genres: null == genres
+                ? _value.genres
+                : genres // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            releaseDate: null == releaseDate
+                ? _value.releaseDate
+                : releaseDate // ignore: cast_nullable_to_non_nullable
+                      as String,
+            voteAverage: null == voteAverage
+                ? _value.voteAverage
+                : voteAverage // ignore: cast_nullable_to_non_nullable
+                      as double,
+            voteCount: null == voteCount
+                ? _value.voteCount
+                : voteCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            runtime: null == runtime
+                ? _value.runtime
+                : runtime // ignore: cast_nullable_to_non_nullable
+                      as int,
+            cast: null == cast
+                ? _value.cast
+                : cast // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            director: null == director
+                ? _value.director
+                : director // ignore: cast_nullable_to_non_nullable
+                      as String,
+            trailerKey: freezed == trailerKey
+                ? _value.trailerKey
+                : trailerKey // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            reason: freezed == reason
+                ? _value.reason
+                : reason // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            similarIds: null == similarIds
+                ? _value.similarIds
+                : similarIds // ignore: cast_nullable_to_non_nullable
+                      as List<int>,
+            isLiked: null == isLiked
+                ? _value.isLiked
+                : isLiked // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            isDisliked: null == isDisliked
+                ? _value.isDisliked
+                : isDisliked // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            isSuperLiked: null == isSuperLiked
+                ? _value.isSuperLiked
+                : isSuperLiked // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            isWatched: null == isWatched
+                ? _value.isWatched
+                : isWatched // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            likedAt: freezed == likedAt
+                ? _value.likedAt
+                : likedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            watchedAt: freezed == watchedAt
+                ? _value.watchedAt
+                : watchedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$MovieImplCopyWith<$Res> implements $MovieCopyWith<$Res> {
   factory _$$MovieImplCopyWith(
-          _$MovieImpl value, $Res Function(_$MovieImpl) then) =
-      __$$MovieImplCopyWithImpl<$Res>;
+    _$MovieImpl value,
+    $Res Function(_$MovieImpl) then,
+  ) = __$$MovieImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String title,
-      String overview,
-      String? posterUrl,
-      String? backdropUrl,
-      List<String> genres,
-      String releaseDate,
-      @JsonKey(name: 'vote_average') double voteAverage,
-      @JsonKey(name: 'vote_count') int voteCount,
-      int runtime,
-      List<String> cast,
-      String director,
-      @JsonKey(name: 'trailer_key') String? trailerKey,
-      String? reason,
-      @JsonKey(name: 'similar_movies') List<int> similarIds,
-      @JsonKey(name: 'is_liked') bool isLiked,
-      @JsonKey(name: 'is_disliked') bool isDisliked,
-      @JsonKey(name: 'is_super_liked') bool isSuperLiked,
-      @JsonKey(name: 'is_watched') bool isWatched,
-      @JsonKey(name: 'liked_at') DateTime? likedAt,
-      @JsonKey(name: 'watched_at') DateTime? watchedAt});
+  $Res call({
+    int id,
+    String title,
+    String overview,
+    String? posterUrl,
+    String? backdropUrl,
+    List<String> genres,
+    String releaseDate,
+    @JsonKey(name: 'vote_average') double voteAverage,
+    @JsonKey(name: 'vote_count') int voteCount,
+    int runtime,
+    List<String> cast,
+    String director,
+    @JsonKey(name: 'trailer_key') String? trailerKey,
+    String? reason,
+    @JsonKey(name: 'similar_movies') List<int> similarIds,
+    @JsonKey(name: 'is_liked') bool isLiked,
+    @JsonKey(name: 'is_disliked') bool isDisliked,
+    @JsonKey(name: 'is_super_liked') bool isSuperLiked,
+    @JsonKey(name: 'is_watched') bool isWatched,
+    @JsonKey(name: 'liked_at') DateTime? likedAt,
+    @JsonKey(name: 'watched_at') DateTime? watchedAt,
+  });
 }
 
 /// @nodoc
@@ -247,8 +254,9 @@ class __$$MovieImplCopyWithImpl<$Res>
     extends _$MovieCopyWithImpl<$Res, _$MovieImpl>
     implements _$$MovieImplCopyWith<$Res> {
   __$$MovieImplCopyWithImpl(
-      _$MovieImpl _value, $Res Function(_$MovieImpl) _then)
-      : super(_value, _then);
+    _$MovieImpl _value,
+    $Res Function(_$MovieImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -275,123 +283,125 @@ class __$$MovieImplCopyWithImpl<$Res>
     Object? likedAt = freezed,
     Object? watchedAt = freezed,
   }) {
-    return _then(_$MovieImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      overview: null == overview
-          ? _value.overview
-          : overview // ignore: cast_nullable_to_non_nullable
-              as String,
-      posterUrl: freezed == posterUrl
-          ? _value.posterUrl
-          : posterUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      backdropUrl: freezed == backdropUrl
-          ? _value.backdropUrl
-          : backdropUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      genres: null == genres
-          ? _value._genres
-          : genres // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      releaseDate: null == releaseDate
-          ? _value.releaseDate
-          : releaseDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      voteAverage: null == voteAverage
-          ? _value.voteAverage
-          : voteAverage // ignore: cast_nullable_to_non_nullable
-              as double,
-      voteCount: null == voteCount
-          ? _value.voteCount
-          : voteCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      runtime: null == runtime
-          ? _value.runtime
-          : runtime // ignore: cast_nullable_to_non_nullable
-              as int,
-      cast: null == cast
-          ? _value._cast
-          : cast // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      director: null == director
-          ? _value.director
-          : director // ignore: cast_nullable_to_non_nullable
-              as String,
-      trailerKey: freezed == trailerKey
-          ? _value.trailerKey
-          : trailerKey // ignore: cast_nullable_to_non_nullable
-              as String?,
-      reason: freezed == reason
-          ? _value.reason
-          : reason // ignore: cast_nullable_to_non_nullable
-              as String?,
-      similarIds: null == similarIds
-          ? _value._similarIds
-          : similarIds // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      isLiked: null == isLiked
-          ? _value.isLiked
-          : isLiked // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isDisliked: null == isDisliked
-          ? _value.isDisliked
-          : isDisliked // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isSuperLiked: null == isSuperLiked
-          ? _value.isSuperLiked
-          : isSuperLiked // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isWatched: null == isWatched
-          ? _value.isWatched
-          : isWatched // ignore: cast_nullable_to_non_nullable
-              as bool,
-      likedAt: freezed == likedAt
-          ? _value.likedAt
-          : likedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      watchedAt: freezed == watchedAt
-          ? _value.watchedAt
-          : watchedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$MovieImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        title: null == title
+            ? _value.title
+            : title // ignore: cast_nullable_to_non_nullable
+                  as String,
+        overview: null == overview
+            ? _value.overview
+            : overview // ignore: cast_nullable_to_non_nullable
+                  as String,
+        posterUrl: freezed == posterUrl
+            ? _value.posterUrl
+            : posterUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        backdropUrl: freezed == backdropUrl
+            ? _value.backdropUrl
+            : backdropUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        genres: null == genres
+            ? _value._genres
+            : genres // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        releaseDate: null == releaseDate
+            ? _value.releaseDate
+            : releaseDate // ignore: cast_nullable_to_non_nullable
+                  as String,
+        voteAverage: null == voteAverage
+            ? _value.voteAverage
+            : voteAverage // ignore: cast_nullable_to_non_nullable
+                  as double,
+        voteCount: null == voteCount
+            ? _value.voteCount
+            : voteCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        runtime: null == runtime
+            ? _value.runtime
+            : runtime // ignore: cast_nullable_to_non_nullable
+                  as int,
+        cast: null == cast
+            ? _value._cast
+            : cast // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        director: null == director
+            ? _value.director
+            : director // ignore: cast_nullable_to_non_nullable
+                  as String,
+        trailerKey: freezed == trailerKey
+            ? _value.trailerKey
+            : trailerKey // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        reason: freezed == reason
+            ? _value.reason
+            : reason // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        similarIds: null == similarIds
+            ? _value._similarIds
+            : similarIds // ignore: cast_nullable_to_non_nullable
+                  as List<int>,
+        isLiked: null == isLiked
+            ? _value.isLiked
+            : isLiked // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        isDisliked: null == isDisliked
+            ? _value.isDisliked
+            : isDisliked // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        isSuperLiked: null == isSuperLiked
+            ? _value.isSuperLiked
+            : isSuperLiked // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        isWatched: null == isWatched
+            ? _value.isWatched
+            : isWatched // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        likedAt: freezed == likedAt
+            ? _value.likedAt
+            : likedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        watchedAt: freezed == watchedAt
+            ? _value.watchedAt
+            : watchedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MovieImpl implements _Movie {
-  const _$MovieImpl(
-      {required this.id,
-      required this.title,
-      required this.overview,
-      this.posterUrl,
-      this.backdropUrl,
-      final List<String> genres = const [],
-      this.releaseDate = '1970-01-01',
-      @JsonKey(name: 'vote_average') this.voteAverage = 0.0,
-      @JsonKey(name: 'vote_count') this.voteCount = 0,
-      this.runtime = 0,
-      final List<String> cast = const [],
-      this.director = '',
-      @JsonKey(name: 'trailer_key') this.trailerKey,
-      this.reason,
-      @JsonKey(name: 'similar_movies') final List<int> similarIds = const [],
-      @JsonKey(name: 'is_liked') this.isLiked = false,
-      @JsonKey(name: 'is_disliked') this.isDisliked = false,
-      @JsonKey(name: 'is_super_liked') this.isSuperLiked = false,
-      @JsonKey(name: 'is_watched') this.isWatched = false,
-      @JsonKey(name: 'liked_at') this.likedAt,
-      @JsonKey(name: 'watched_at') this.watchedAt})
-      : _genres = genres,
-        _cast = cast,
-        _similarIds = similarIds;
+  const _$MovieImpl({
+    required this.id,
+    required this.title,
+    required this.overview,
+    this.posterUrl,
+    this.backdropUrl,
+    final List<String> genres = const [],
+    this.releaseDate = '1970-01-01',
+    @JsonKey(name: 'vote_average') this.voteAverage = 0.0,
+    @JsonKey(name: 'vote_count') this.voteCount = 0,
+    this.runtime = 0,
+    final List<String> cast = const [],
+    this.director = '',
+    @JsonKey(name: 'trailer_key') this.trailerKey,
+    this.reason,
+    @JsonKey(name: 'similar_movies') final List<int> similarIds = const [],
+    @JsonKey(name: 'is_liked') this.isLiked = false,
+    @JsonKey(name: 'is_disliked') this.isDisliked = false,
+    @JsonKey(name: 'is_super_liked') this.isSuperLiked = false,
+    @JsonKey(name: 'is_watched') this.isWatched = false,
+    @JsonKey(name: 'liked_at') this.likedAt,
+    @JsonKey(name: 'watched_at') this.watchedAt,
+  }) : _genres = genres,
+       _cast = cast,
+       _similarIds = similarIds;
 
   factory _$MovieImpl.fromJson(Map<String, dynamic> json) =>
       _$$MovieImplFromJson(json);
@@ -444,9 +454,9 @@ class _$MovieImpl implements _Movie {
   final String? trailerKey;
   @override
   final String? reason;
-// New field from Hybrid Hydra engine
+  // New field from Hybrid Hydra engine
   final List<int> _similarIds;
-// New field from Hybrid Hydra engine
+  // New field from Hybrid Hydra engine
   @override
   @JsonKey(name: 'similar_movies')
   List<int> get similarIds {
@@ -506,8 +516,10 @@ class _$MovieImpl implements _Movie {
             (identical(other.trailerKey, trailerKey) ||
                 other.trailerKey == trailerKey) &&
             (identical(other.reason, reason) || other.reason == reason) &&
-            const DeepCollectionEquality()
-                .equals(other._similarIds, _similarIds) &&
+            const DeepCollectionEquality().equals(
+              other._similarIds,
+              _similarIds,
+            ) &&
             (identical(other.isLiked, isLiked) || other.isLiked == isLiked) &&
             (identical(other.isDisliked, isDisliked) ||
                 other.isDisliked == isDisliked) &&
@@ -523,29 +535,29 @@ class _$MovieImpl implements _Movie {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
-        runtimeType,
-        id,
-        title,
-        overview,
-        posterUrl,
-        backdropUrl,
-        const DeepCollectionEquality().hash(_genres),
-        releaseDate,
-        voteAverage,
-        voteCount,
-        runtime,
-        const DeepCollectionEquality().hash(_cast),
-        director,
-        trailerKey,
-        reason,
-        const DeepCollectionEquality().hash(_similarIds),
-        isLiked,
-        isDisliked,
-        isSuperLiked,
-        isWatched,
-        likedAt,
-        watchedAt
-      ]);
+    runtimeType,
+    id,
+    title,
+    overview,
+    posterUrl,
+    backdropUrl,
+    const DeepCollectionEquality().hash(_genres),
+    releaseDate,
+    voteAverage,
+    voteCount,
+    runtime,
+    const DeepCollectionEquality().hash(_cast),
+    director,
+    trailerKey,
+    reason,
+    const DeepCollectionEquality().hash(_similarIds),
+    isLiked,
+    isDisliked,
+    isSuperLiked,
+    isWatched,
+    likedAt,
+    watchedAt,
+  ]);
 
   @JsonKey(ignore: true)
   @override
@@ -555,35 +567,34 @@ class _$MovieImpl implements _Movie {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MovieImplToJson(
-      this,
-    );
+    return _$$MovieImplToJson(this);
   }
 }
 
 abstract class _Movie implements Movie {
-  const factory _Movie(
-      {required final int id,
-      required final String title,
-      required final String overview,
-      final String? posterUrl,
-      final String? backdropUrl,
-      final List<String> genres,
-      final String releaseDate,
-      @JsonKey(name: 'vote_average') final double voteAverage,
-      @JsonKey(name: 'vote_count') final int voteCount,
-      final int runtime,
-      final List<String> cast,
-      final String director,
-      @JsonKey(name: 'trailer_key') final String? trailerKey,
-      final String? reason,
-      @JsonKey(name: 'similar_movies') final List<int> similarIds,
-      @JsonKey(name: 'is_liked') final bool isLiked,
-      @JsonKey(name: 'is_disliked') final bool isDisliked,
-      @JsonKey(name: 'is_super_liked') final bool isSuperLiked,
-      @JsonKey(name: 'is_watched') final bool isWatched,
-      @JsonKey(name: 'liked_at') final DateTime? likedAt,
-      @JsonKey(name: 'watched_at') final DateTime? watchedAt}) = _$MovieImpl;
+  const factory _Movie({
+    required final int id,
+    required final String title,
+    required final String overview,
+    final String? posterUrl,
+    final String? backdropUrl,
+    final List<String> genres,
+    final String releaseDate,
+    @JsonKey(name: 'vote_average') final double voteAverage,
+    @JsonKey(name: 'vote_count') final int voteCount,
+    final int runtime,
+    final List<String> cast,
+    final String director,
+    @JsonKey(name: 'trailer_key') final String? trailerKey,
+    final String? reason,
+    @JsonKey(name: 'similar_movies') final List<int> similarIds,
+    @JsonKey(name: 'is_liked') final bool isLiked,
+    @JsonKey(name: 'is_disliked') final bool isDisliked,
+    @JsonKey(name: 'is_super_liked') final bool isSuperLiked,
+    @JsonKey(name: 'is_watched') final bool isWatched,
+    @JsonKey(name: 'liked_at') final DateTime? likedAt,
+    @JsonKey(name: 'watched_at') final DateTime? watchedAt,
+  }) = _$MovieImpl;
 
   factory _Movie.fromJson(Map<String, dynamic> json) = _$MovieImpl.fromJson;
 
