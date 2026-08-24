@@ -169,6 +169,54 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                       const SizedBox(height: 24),
 
+                      // Most visitors here are evaluating the project rather
+                      // than returning to an account, so the demo login is the
+                      // primary action: filled, full width, and above the
+                      // credential form instead of tucked underneath it.
+                      if (ref.watch(appConfigProvider).hasDemoAccount) ...[
+                        SizedBox(
+                          width: double.infinity,
+                          height: 56,
+                          child: ElevatedButton.icon(
+                            onPressed: authState.isLoading
+                                ? null
+                                : _handleDemoLogin,
+                            icon: const Icon(
+                              Icons.play_arrow_rounded,
+                              size: 22,
+                            ),
+                            label: Text(
+                              'Try the Demo Account',
+                              style: AppTextStyles.labelSmall.copyWith(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.tertiary,
+                              foregroundColor: AppColors.onTertiary,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'No sign-up needed \u2014 explore the full app instantly',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.onSurfaceVariant.withValues(
+                              alpha: 0.8,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        const AuthDivider(text: 'or sign in with your account'),
+                        const SizedBox(height: 24),
+                      ],
+
                       AutofillGroup(
                         child: Column(
                           children: [
@@ -265,35 +313,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         onPressed: _handleLogin,
                         isLoading: authState.isLoading,
                       ),
-
-                      if (ref.watch(appConfigProvider).hasDemoAccount) ...[
-                        const SizedBox(height: 12),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: OutlinedButton.icon(
-                            onPressed: authState.isLoading
-                                ? null
-                                : _handleDemoLogin,
-                            icon: const Icon(
-                              Icons.visibility_outlined,
-                              size: 18,
-                            ),
-                            label: const Text('Continue with Demo Account'),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: AppColors.tertiary,
-                              side: BorderSide(
-                                color: AppColors.tertiary.withValues(
-                                  alpha: 0.4,
-                                ),
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
 
                       if (authState.error != null) ...[
                         const SizedBox(height: 16),
