@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/constants/app_constants.dart';
-import '../../../core/config/app_config.dart';
 import '../../../shared/widgets/loading_overlay.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/auth_text_field.dart';
@@ -55,17 +54,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         context.go('/home');
       }
     }
-  }
-
-  /// Fills in the shared demo credentials (configured per-deployment via
-  /// [AppConfig.demoEmail]/[demoPassword]) and signs in immediately, so a
-  /// recruiter/visitor can try the app without registering their own account.
-  Future<void> _handleDemoLogin() async {
-    final config = ref.read(appConfigProvider);
-    if (!config.hasDemoAccount) return;
-    _emailController.text = config.demoEmail;
-    _passwordController.text = config.demoPassword;
-    await _handleLogin();
   }
 
   void _handleForgotPassword() {
@@ -168,54 +156,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const PrivateProjectBanner(),
 
                       const SizedBox(height: 24),
-
-                      // Most visitors here are evaluating the project rather
-                      // than returning to an account, so the demo login is the
-                      // primary action: filled, full width, and above the
-                      // credential form instead of tucked underneath it.
-                      if (ref.watch(appConfigProvider).hasDemoAccount) ...[
-                        SizedBox(
-                          width: double.infinity,
-                          height: 56,
-                          child: ElevatedButton.icon(
-                            onPressed: authState.isLoading
-                                ? null
-                                : _handleDemoLogin,
-                            icon: const Icon(
-                              Icons.play_arrow_rounded,
-                              size: 22,
-                            ),
-                            label: Text(
-                              'Try the Demo Account',
-                              style: AppTextStyles.labelSmall.copyWith(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.tertiary,
-                              foregroundColor: AppColors.onTertiary,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'No sign-up needed \u2014 explore the full app instantly',
-                          textAlign: TextAlign.center,
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.onSurfaceVariant.withValues(
-                              alpha: 0.8,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        const AuthDivider(text: 'or sign in with your account'),
-                        const SizedBox(height: 24),
-                      ],
 
                       AutofillGroup(
                         child: Column(

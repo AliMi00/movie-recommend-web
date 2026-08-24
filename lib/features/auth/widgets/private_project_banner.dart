@@ -39,8 +39,7 @@ class PrivateProjectBanner extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'A live demo backed by a real API — use test data only. '
-                  'Try the demo account on the sign-in screen, or register your own.',
+                  'A live demo backed by a real API — please use test data only.',
                   style: AppTextStyles.bodySmall.copyWith(
                     color: AppColors.onSurfaceVariant,
                     height: 1.4,
