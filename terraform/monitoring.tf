@@ -1,9 +1,16 @@
+# Every resource below is gated on var.deploy_monitoring: a host that
+# already runs a shared Prometheus/Grafana (this repo does not know, and
+# should not assume, it's the only app on the box) sets that to false and
+# scrapes this app's metrics endpoints from the existing stack instead.
+
 resource "docker_image" "prometheus" {
+  count        = var.deploy_monitoring ? 1 : 0
   name         = "prom/prometheus:v3.1.0"
   keep_locally = true
 }
 
 resource "docker_image" "grafana" {
+  count        = var.deploy_monitoring ? 1 : 0
   name         = "grafana/grafana:11.5.1"
   keep_locally = true
 }
@@ -12,23 +19,26 @@ resource "docker_image" "grafana" {
 # directories provisioned outside Terraform, and Docker-managed volumes
 # survive container replacement, so a redeploy does not discard history.
 resource "docker_volume" "prometheus_data" {
-  name = "cinejo-prometheus-data"
+  count = var.deploy_monitoring ? 1 : 0
+  name  = "cinejo-prometheus-data"
 }
 
 resource "docker_volume" "grafana_data" {
-  name = "cinejo-grafana-data"
+  count = var.deploy_monitoring ? 1 : 0
+  name  = "cinejo-grafana-data"
 }
 
 resource "docker_container" "prometheus" {
+  count    = var.deploy_monitoring ? 1 : 0
   name     = "cinejo-prometheus"
-  image    = docker_image.prometheus.image_id
+  image    = docker_image.prometheus[0].image_id
   restart  = "unless-stopped"
   must_run = true
 
   command = [
     "--config.file=/etc/prometheus/prometheus.yml",
     "--storage.tsdb.path=/prometheus",
-    # A homelab dashboard does not need a year of history, and an unbounded
+    # A single-app dashboard does not need a year of history, and an unbounded
     # TSDB on a small host eventually becomes the outage.
     "--storage.tsdb.retention.time=15d",
     "--web.enable-lifecycle",
@@ -40,7 +50,7 @@ resource "docker_container" "prometheus" {
   }
 
   volumes {
-    volume_name    = docker_volume.prometheus_data.name
+    volume_name    = docker_volume.prometheus_data[0].name
     container_path = "/prometheus"
   }
 
@@ -62,9 +72,11 @@ resource "docker_container" "prometheus" {
   depends_on = [docker_container.traefik, docker_container.metrics]
 }
 
+
 resource "docker_container" "grafana" {
+  count    = var.deploy_monitoring ? 1 : 0
   name     = "cinejo-grafana"
-  image    = docker_image.grafana.image_id
+  image    = docker_image.grafana[0].image_id
   restart  = "unless-stopped"
   must_run = true
 
@@ -96,7 +108,7 @@ resource "docker_container" "grafana" {
   }
 
   volumes {
-    volume_name    = docker_volume.grafana_data.name
+    volume_name    = docker_volume.grafana_data[0].name
     container_path = "/var/lib/grafana"
   }
 
