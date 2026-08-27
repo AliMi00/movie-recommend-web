@@ -60,7 +60,7 @@ resource "docker_container" "metrics" {
     "--nginx.scrape-uri=http://${docker_container.web.name}:9113/stub_status",
   ]
 
-  # Published so Prometheus can scrape it from elsewhere on the homelab.
+  # Published so Prometheus can scrape it from elsewhere on this host or tailnet.
   # Not routed through Traefik: metrics should not be reachable from the
   # public entrypoint.
   ports {

@@ -51,11 +51,11 @@ locals {
   })
 }
 
-# Edge router for the stack. TLS is deliberately NOT handled here: the VPS
-# in front already terminates HTTPS and forwards over Tailscale, so a second
-# certificate would be redundant and would need the homelab reachable from
-# the public internet. Traefik's job here is routing and the request/latency
-# metrics the nginx stub_status page cannot provide.
+# Edge router for the stack. TLS is deliberately NOT handled here: Caddy
+# (whether on this same host or reached over Tailscale from another one)
+# already terminates HTTPS and forwards to var.http_port, so a second
+# certificate here would be redundant. Traefik's job is routing and the
+# request/latency metrics the nginx stub_status page cannot provide.
 resource "docker_container" "traefik" {
   name     = "cinejo-traefik"
   image    = docker_image.traefik.image_id
@@ -91,6 +91,7 @@ resource "docker_container" "traefik" {
   ports {
     internal = 80
     external = var.http_port
+    ip       = var.traefik_bind_ip
   }
 
   ports {

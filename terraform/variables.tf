@@ -27,11 +27,43 @@ variable "public_domain" {
 
 variable "http_port" {
   description = <<-EOT
-    Host port Traefik listens on. The upstream reverse proxy (Caddy on the
-    VPS, reached over Tailscale) forwards to this port.
+    Host port Traefik listens on. The upstream reverse proxy (Caddy)
+    forwards to this port.
   EOT
   type        = number
   default     = 8060
+}
+
+variable "traefik_bind_ip" {
+  description = <<-EOT
+    Interface Traefik's HTTP entrypoint binds to on the host. Two real
+    topologies use this repo:
+      - Caddy runs on a *different* machine and reaches this host over
+        Tailscale (the original homelab setup) -> bind "0.0.0.0" so the
+        tailnet interface is reachable. The OS firewall on that host has no
+        public inbound rule at all, so this is not exposed to the internet.
+      - Caddy runs locally on this same host (e.g. a VPS with 80/443 open
+        to the public) -> bind "127.0.0.1" so the app port is reachable
+        only from the same machine, never from the network, regardless of
+        what the firewall allows.
+    Pick the one that matches where Caddy actually runs.
+  EOT
+  type        = string
+  default     = "0.0.0.0"
+}
+
+variable "deploy_monitoring" {
+  description = <<-EOT
+    Whether this Terraform config should run its own Prometheus + Grafana.
+    Set to false on a host that already runs a shared monitoring stack —
+    scrape this app's metrics endpoints (nginx_metrics_endpoint,
+    traefik_metrics_endpoint in outputs.tf) from that stack instead, and
+    import monitoring/grafana/dashboards/cinejo-web.json into its Grafana
+    by hand. Running a second Prometheus/Grafana per app does not scale
+    and duplicates data a shared instance already has.
+  EOT
+  type        = bool
+  default     = true
 }
 
 variable "metrics_port" {

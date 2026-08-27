@@ -9,7 +9,7 @@ terraform {
   }
 }
 
-# Talks to the homelab's Docker daemon over SSH rather than exposing the
+# Talks to the deployment host's Docker daemon over SSH rather than exposing the
 # daemon on a TCP port. The daemon socket is the root-equivalent control
 # plane for the host, so tunnelling it through SSH — authenticated by an
 # existing key, encrypted, no new listener — is the difference between a

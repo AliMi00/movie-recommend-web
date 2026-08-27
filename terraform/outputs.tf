@@ -10,22 +10,22 @@ output "traefik_entrypoint" {
 
 output "nginx_metrics_endpoint" {
   description = "Prometheus scrape target for nginx connection/request metrics."
-  value       = "http://<homelab-host>:${var.metrics_port}/metrics"
+  value       = "http://<this-host>:${var.metrics_port}/metrics"
 }
 
 output "traefik_metrics_endpoint" {
   description = "Prometheus scrape target for Traefik request rate and latency."
-  value       = "http://<homelab-host>:${var.traefik_metrics_port}/metrics"
+  value       = "http://<this-host>:${var.traefik_metrics_port}/metrics"
 }
 
 output "prometheus_url" {
-  description = "Prometheus UI, on the private network only."
-  value       = "http://<homelab-host>:${var.prometheus_port}"
+  description = "Prometheus UI, on the private network only. Null when deploy_monitoring=false (no instance was created here)."
+  value       = var.deploy_monitoring ? "http://<this-host>:${var.prometheus_port}" : null
 }
 
 output "grafana_url" {
-  description = "Grafana UI (dashboard 'CineJo Web'), on the private network only."
-  value       = "http://<homelab-host>:${var.grafana_port}/d/cinejo-web"
+  description = "Grafana UI (dashboard 'CineJo Web'), on the private network only. Null when deploy_monitoring=false — import monitoring/grafana/dashboards/cinejo-web.json into the shared Grafana instead."
+  value       = var.deploy_monitoring ? "http://<this-host>:${var.grafana_port}/d/cinejo-web" : null
 }
 
 output "deployed_image" {
