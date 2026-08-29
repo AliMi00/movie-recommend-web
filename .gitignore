@@ -47,6 +47,13 @@ docker-compose.override.yml
 *.jks
 *.keystore
 
+# Android signing & Firebase config — these must never reach a public repo.
+# android/.gitignore covers most of it; these are belt-and-braces at the root
+# so a file created outside that directory is still caught.
+key.properties
+google-services.json
+android/local.properties
+
 # Terraform
 **/.terraform/*
 *.tfstate
