@@ -46,11 +46,25 @@ CSP_CONNECT="${API_ORIGIN}"
 CSP_SCRIPT=""
 if [ -n "${POSTHOG_API_KEY}" ]; then
   POSTHOG_ORIGIN=$(echo "${POSTHOG_HOST}" | sed -E 's|^(https?://[^/]+).*|\1|')
+
+  # PostHog Cloud serves its JS bundle and per-project remote config from a
+  # SECOND host: <region>.i.posthog.com ingests events, while
+  # <region>-assets.i.posthog.com serves array.js's follow-up config.js.
+  # Allowing only the ingestion host gets you a loaded snippet that then
+  # silently fails its config fetch. Self-hosted PostHog uses a single host,
+  # where this pattern does not match and nothing extra is added.
+  POSTHOG_ASSETS=$(echo "${POSTHOG_ORIGIN}" | sed -E 's|://([a-z0-9]+)\.i\.posthog\.com|://\1-assets.i.posthog.com|')
+
   CSP_CONNECT="${CSP_CONNECT} ${POSTHOG_ORIGIN}"
   # posthog-js bootstraps by injecting <script src="<host>/static/array.js">,
   # which script-src governs. Allowing it only under connect-src blocks the
   # loader outright, so no events are ever captured.
   CSP_SCRIPT="${POSTHOG_ORIGIN}"
+
+  if [ "${POSTHOG_ASSETS}" != "${POSTHOG_ORIGIN}" ]; then
+    CSP_CONNECT="${CSP_CONNECT} ${POSTHOG_ASSETS}"
+    CSP_SCRIPT="${CSP_SCRIPT} ${POSTHOG_ASSETS}"
+  fi
 fi
 subst "__CSP_CONNECT_SRC__" "${CSP_CONNECT}" "${SECURITY_HEADERS}"
 subst "__CSP_SCRIPT_SRC__" "${CSP_SCRIPT}" "${SECURITY_HEADERS}"
