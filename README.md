@@ -1,4 +1,4 @@
-# CineJo Web
+# Cinreco Web
 
 A Flutter Web client for a movie recommendation API, containerised and
 deployed to a self-hosted homelab with Terraform, Traefik, GitHub Actions
@@ -41,7 +41,7 @@ account is offered on the sign-in screen, or register your own.
                        browser calls   │  (direct, not proxied)
                                        ▼
                     ┌────────────────────────────────────────────┐
-                    │  CineJo API — api.gozaga.xyz               │
+                    │  Cinreco API — api.gozaga.xyz               │
                     │    ┌────────────────────────────────────┐  │
                     │    │  Recommendation engine             │  │
                     │    │  PRIVATE — not part of this repo   │  │
@@ -206,7 +206,7 @@ environment-specific comes from `terraform.tfvars` or `TF_VAR_*`.
 | `:8062/metrics` | nginx connection and request counters. |
 | `:8063/metrics` | Traefik request rate, status codes, latency histograms. |
 | `:8064` | Prometheus. |
-| `:8065/d/cinejo-web` | Grafana — the **CineJo Web** dashboard, auto-provisioned. |
+| `:8065/d/cinejo-web` | Grafana — the **Cinreco Web** dashboard, auto-provisioned. |
 
 Metrics ports are bound to the private network and are deliberately not
 routed through Traefik.
@@ -281,6 +281,6 @@ For anyone reviewing this as work product:
 
 ## Licence
 
-Application code © Ali Mobini. Movie metadata is supplied via the CineJo API
+Application code © Ali Mobini. Movie metadata is supplied via the Cinreco API
 from [TMDb](https://www.themoviedb.org/); this product is not endorsed or
 certified by TMDb.
