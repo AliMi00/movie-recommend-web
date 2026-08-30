@@ -1,5 +1,5 @@
 [Unit]
-Description=CineJo Web pull-based deployment agent
+Description=Cinreco Web pull-based deployment agent
 Documentation=https://github.com/AliMi00/movie-recommend-web
 # Both are needed before the agent can do anything useful.
 After=network-online.target docker.service

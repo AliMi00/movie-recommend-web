@@ -1,8 +1,8 @@
 {
   "uid": "cinejo-web",
-  "title": "CineJo Web",
-  "description": "Edge and web-tier health for the CineJo Web deployment. Traefik supplies status codes and latency; the nginx exporter supplies connection state.",
-  "tags": ["cinejo", "traefik", "nginx"],
+  "title": "Cinreco Web",
+  "description": "Edge and web-tier health for the Cinreco Web deployment. Traefik supplies status codes and latency; the nginx exporter supplies connection state.",
+  "tags": ["cinreco", "traefik", "nginx"],
   "timezone": "browser",
   "schemaVersion": 39,
   "version": 1,

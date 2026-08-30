@@ -44,7 +44,7 @@ class AppConfig {
 
 final appConfigProvider = Provider<AppConfig>((ref) {
   // Allow overriding via --dart-define at build/run time. Defaults point at
-  // the live public CineJo API — this is a public repo, so no private
+  // the live public Cinreco API — this is a public repo, so no private
   // network address belongs here.
   const envBaseUrlRaw = String.fromEnvironment(
     'CINEJO_API_BASE_URL',

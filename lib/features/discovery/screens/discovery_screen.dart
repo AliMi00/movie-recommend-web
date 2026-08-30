@@ -57,7 +57,7 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
         elevation: 0,
         centerTitle: false,
         title: Text(
-          'CINEJO',
+          'CINRECO',
           style: AppTextStyles.displaySmall.copyWith(
             letterSpacing: 2,
             fontWeight: FontWeight.w900,

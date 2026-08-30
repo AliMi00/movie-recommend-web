@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-08-18
 
-CineJo Web is a personal portfolio project: a Flutter Web client for a
+Cinreco Web is a personal portfolio project: a Flutter Web client for a
 movie-recommendation API, built to demonstrate application and
 infrastructure engineering. It is provided "as is," with no uptime,
 support, or data-retention guarantees, and may be taken offline or

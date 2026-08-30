@@ -253,7 +253,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     Text(
                                       user?.fullName ??
                                           user?.username ??
-                                          'CineJo User',
+                                          'Cinreco User',
                                       style: AppTextStyles.titleMedium.copyWith(
                                         fontSize: 22,
                                         fontWeight: FontWeight.bold,
@@ -535,7 +535,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'CINEJO PREFERENCES',
+                              'CINRECO PREFERENCES',
                               style: AppTextStyles.labelSmall.copyWith(
                                 color: AppColors.onSurfaceVariant.withValues(
                                   alpha: 0.8,

@@ -147,7 +147,7 @@ class _GroupSessionDashboardScreenState
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Set the mood or vibe for your group (optional). CineJo will curate consensual matches based on this prompt!',
+                  'Set the mood or vibe for your group (optional). Cinreco will curate consensual matches based on this prompt!',
                   style: AppTextStyles.bodySmall.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),

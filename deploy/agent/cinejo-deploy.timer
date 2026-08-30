@@ -1,5 +1,5 @@
 [Unit]
-Description=Poll GHCR for new CineJo Web images
+Description=Poll GHCR for new Cinreco Web images
 Documentation=https://github.com/AliMi00/movie-recommend-web
 
 [Timer]
