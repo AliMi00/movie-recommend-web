@@ -112,13 +112,17 @@ jobs:
           API_BASE_URL: ${{ vars.API_BASE_URL }}
           DEMO_EMAIL: ${{ secrets.DEMO_EMAIL }}
           DEMO_PASSWORD: ${{ secrets.DEMO_PASSWORD }}
+          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+          POSTHOG_HOST: ${{ vars.POSTHOG_HOST }}
         run: |
           flutter build apk --release \
             --build-name="${{ steps.version.outputs.name }}" \
             --build-number="${{ steps.version.outputs.code }}" \
             --dart-define=CINEJO_API_BASE_URL="${API_BASE_URL:-https://api.gozaga.xyz/v1}" \
             --dart-define=CINEJO_DEMO_EMAIL="${DEMO_EMAIL}" \
-            --dart-define=CINEJO_DEMO_PASSWORD="${DEMO_PASSWORD}"
+            --dart-define=CINEJO_DEMO_PASSWORD="${DEMO_PASSWORD}" \
+            --dart-define=POSTHOG_API_KEY="${POSTHOG_API_KEY}" \
+            --dart-define=POSTHOG_HOST="${POSTHOG_HOST:-https://eu.i.posthog.com}"
 
       - name: Build AAB
         if: github.event_name != 'workflow_dispatch' || inputs.build_aab
@@ -126,13 +130,17 @@ jobs:
           API_BASE_URL: ${{ vars.API_BASE_URL }}
           DEMO_EMAIL: ${{ secrets.DEMO_EMAIL }}
           DEMO_PASSWORD: ${{ secrets.DEMO_PASSWORD }}
+          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+          POSTHOG_HOST: ${{ vars.POSTHOG_HOST }}
         run: |
           flutter build appbundle --release \
             --build-name="${{ steps.version.outputs.name }}" \
             --build-number="${{ steps.version.outputs.code }}" \
             --dart-define=CINEJO_API_BASE_URL="${API_BASE_URL:-https://api.gozaga.xyz/v1}" \
             --dart-define=CINEJO_DEMO_EMAIL="${DEMO_EMAIL}" \
-            --dart-define=CINEJO_DEMO_PASSWORD="${DEMO_PASSWORD}"
+            --dart-define=CINEJO_DEMO_PASSWORD="${DEMO_PASSWORD}" \
+            --dart-define=POSTHOG_API_KEY="${POSTHOG_API_KEY}" \
+            --dart-define=POSTHOG_HOST="${POSTHOG_HOST:-https://eu.i.posthog.com}"
 
       # Give the files versioned names so a downloaded artifact is
       # identifiable months later rather than being another "app-release.apk".

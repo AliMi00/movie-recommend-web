@@ -9,35 +9,27 @@ external JSString? get _runtimeDemoEmail;
 @JS('CINEJO_DEMO_PASSWORD')
 external JSString? get _runtimeDemoPassword;
 
-String? getRuntimeApiBaseUrl() {
+@JS('POSTHOG_API_KEY')
+external JSString? get _runtimePosthogKey;
+
+@JS('POSTHOG_HOST')
+external JSString? get _runtimePosthogHost;
+
+/// Reads a value the container entrypoint substituted into index.html at
+/// startup. An un-substituted placeholder still looks like `__NAME__`, which
+/// is treated as "not configured" rather than passed on as a literal.
+String? _read(JSString? value) {
   try {
-    final val = _runtimeApiBaseUrl;
-    if (val != null) {
-      final s = val.toDart;
+    if (value != null) {
+      final s = value.toDart;
       if (s.isNotEmpty && !s.startsWith('__')) return s;
     }
   } catch (_) {}
   return null;
 }
 
-String? getRuntimeDemoEmail() {
-  try {
-    final val = _runtimeDemoEmail;
-    if (val != null) {
-      final s = val.toDart;
-      if (s.isNotEmpty && !s.startsWith('__')) return s;
-    }
-  } catch (_) {}
-  return null;
-}
-
-String? getRuntimeDemoPassword() {
-  try {
-    final val = _runtimeDemoPassword;
-    if (val != null) {
-      final s = val.toDart;
-      if (s.isNotEmpty && !s.startsWith('__')) return s;
-    }
-  } catch (_) {}
-  return null;
-}
+String? getRuntimeApiBaseUrl() => _read(_runtimeApiBaseUrl);
+String? getRuntimeDemoEmail() => _read(_runtimeDemoEmail);
+String? getRuntimeDemoPassword() => _read(_runtimeDemoPassword);
+String? getRuntimePosthogKey() => _read(_runtimePosthogKey);
+String? getRuntimePosthogHost() => _read(_runtimePosthogHost);
