@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 import '../../data/services/local_storage_service.dart';
+import '../config/web_config_stub.dart'
+    if (dart.library.html) '../config/web_config_real.dart';
 
 class AnalyticsService {
   static final Posthog _posthog = Posthog();
@@ -9,15 +11,27 @@ class AnalyticsService {
   // PostHog project tokens (phc_...) are safe to embed in client code — they
   // only allow writing events, unlike PostHog's secret personal API keys.
   // No default is baked in here: this is a public repo, so analytics stay
-  // off unless a deployer supplies their own POSTHOG_API_KEY at runtime.
-  static const String _apiKey = String.fromEnvironment(
+  // off unless a deployer supplies their own key.
+  //
+  // Compile-time fallback, used by the mobile builds. Web must NOT rely on
+  // this: the Docker image is built once and configured at container start,
+  // so a --dart-define baked at build time would always be empty there.
+  static const String _compileTimeKey = String.fromEnvironment(
     'POSTHOG_API_KEY',
     defaultValue: '',
   );
-  static const String _host = String.fromEnvironment(
+  static const String _compileTimeHost = String.fromEnvironment(
     'POSTHOG_HOST',
     defaultValue: 'https://eu.i.posthog.com',
   );
+
+  // Runtime value (injected into index.html by docker-entrypoint.sh) wins on
+  // web, falling back to the compile-time define elsewhere. Without this the
+  // Dart SDK never initialises on web, and every explicit event —
+  // login_success, onboarding steps, PosthogObserver screen views — is
+  // silently dropped even while posthog-js is happily autocapturing.
+  static String get _apiKey => getRuntimePosthogKey() ?? _compileTimeKey;
+  static String get _host => getRuntimePosthogHost() ?? _compileTimeHost;
 
   /// Helper to convert `Map<String, dynamic>?` into `Map<String, Object>?` safely.
   /// This removes null values because 'Object' in Dart is non-nullable.
