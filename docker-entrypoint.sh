@@ -43,12 +43,19 @@ subst "__POSTHOG_API_HOST__"     "${POSTHOG_HOST}"         "${HTML_DIR}/index.ht
 # origin (scheme://host[:port]) from the base URL by dropping the path.
 API_ORIGIN=$(echo "${CINEJO_API_BASE_URL}" | sed -E 's|^(https?://[^/]+).*|\1|')
 CSP_CONNECT="${API_ORIGIN}"
+CSP_SCRIPT=""
 if [ -n "${POSTHOG_API_KEY}" ]; then
   POSTHOG_ORIGIN=$(echo "${POSTHOG_HOST}" | sed -E 's|^(https?://[^/]+).*|\1|')
   CSP_CONNECT="${CSP_CONNECT} ${POSTHOG_ORIGIN}"
+  # posthog-js bootstraps by injecting <script src="<host>/static/array.js">,
+  # which script-src governs. Allowing it only under connect-src blocks the
+  # loader outright, so no events are ever captured.
+  CSP_SCRIPT="${POSTHOG_ORIGIN}"
 fi
 subst "__CSP_CONNECT_SRC__" "${CSP_CONNECT}" "${SECURITY_HEADERS}"
+subst "__CSP_SCRIPT_SRC__" "${CSP_SCRIPT}" "${SECURITY_HEADERS}"
 echo "[entrypoint] CSP connect-src: 'self' ${CSP_CONNECT}"
+echo "[entrypoint] CSP script-src extra: '${CSP_SCRIPT:-none}'"
 
 echo "[entrypoint] starting nginx"
 exec nginx -g 'daemon off;'
