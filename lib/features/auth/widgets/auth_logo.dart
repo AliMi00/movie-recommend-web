@@ -55,7 +55,7 @@ class AuthLogo extends StatelessWidget {
 
           // App name
           Text(
-            'CINEJO',
+            'CINRECO',
             style: AppTextStyles.displaySmall.copyWith(
               color: AppColors.onSurface,
               fontWeight: FontWeight.w900,

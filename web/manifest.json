@@ -1,11 +1,11 @@
 {
-    "name": "CineJo",
-    "short_name": "CineJo",
+    "name": "Cinreco",
+    "short_name": "Cinreco",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#eaf1fc",
     "theme_color": "#1d4ed8",
-    "description": "CineJo - a movie recommendation web app.",
+    "description": "Cinreco - a movie recommendation web app.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

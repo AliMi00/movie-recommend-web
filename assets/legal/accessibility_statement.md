@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-08-18
 
-CineJo Web is a personal portfolio project. It's built with Flutter,
+Cinreco Web is a personal portfolio project. It's built with Flutter,
 which provides platform-native accessibility support (screen reader
 labels, dynamic text sizing, keyboard/focus navigation) by default for
 standard UI components. This statement covers the custom controls

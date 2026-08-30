@@ -1,7 +1,7 @@
 /// Application constants for Movie Tinder
 class AppConstants {
   // App Information
-  static const String appName = 'CineJo';
+  static const String appName = 'Cinreco';
   static const String appVersion = '1.0.0';
   static const String appDescription =
       'A movie recommendation web app — swipe, discover, and get personalized picks';
