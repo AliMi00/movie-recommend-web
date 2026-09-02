@@ -39,24 +39,24 @@ Requires Docker and Terraform.
 
 ```bash
 # 1. Config (holds credentials — root-only)
-sudo install -d -m 700 /etc/cinejo-web
-sudo install -m 600 deploy/agent/deploy.env.example /etc/cinejo-web/deploy.env
-sudo "$EDITOR" /etc/cinejo-web/deploy.env
+sudo install -d -m 700 /etc/cinreco-web
+sudo install -m 600 deploy/agent/deploy.env.example /etc/cinreco-web/deploy.env
+sudo "$EDITOR" /etc/cinreco-web/deploy.env
 
 # 2. Agent
-sudo install -m 755 deploy/agent/cinejo-deploy.sh /usr/local/bin/cinejo-deploy.sh
+sudo install -m 755 deploy/agent/cinreco-deploy.sh /usr/local/bin/cinreco-deploy.sh
 
 # 3. Timer
-sudo install -m 644 deploy/agent/cinejo-deploy.service /etc/systemd/system/
-sudo install -m 644 deploy/agent/cinejo-deploy.timer   /etc/systemd/system/
+sudo install -m 644 deploy/agent/cinreco-deploy.service /etc/systemd/system/
+sudo install -m 644 deploy/agent/cinreco-deploy.timer   /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable --now cinejo-deploy.timer
+sudo systemctl enable --now cinreco-deploy.timer
 ```
 
 ### Terraform state ownership
 
 The agent runs `terraform apply` against the host's local Docker socket, so
-**the state file must live on the host** — `/opt/cinejo-web/terraform/`.
+**the state file must live on the host** — `/opt/cinreco-web/terraform/`.
 
 If the stack was first applied from a workstation (over `ssh://`), that
 state is on the workstation. Two state files describing the same containers
@@ -66,7 +66,7 @@ timer:
 
 ```bash
 # on the workstation, from terraform/
-scp terraform.tfstate <host>:/opt/cinejo-web/terraform/terraform.tfstate
+scp terraform.tfstate <host>:/opt/cinreco-web/terraform/terraform.tfstate
 mv terraform.tfstate terraform.tfstate.handed-over   # keep as a backup
 ```
 
@@ -76,16 +76,16 @@ it.
 
 For a multi-operator setup this is where a shared remote backend (S3 +
 DynamoDB, Terraform Cloud, or a Postgres backend) would replace the local
-file. A single-operator homelab does not need the extra moving part, and
+file. A single-operator deployment does not need the extra moving part, and
 local state keeps the whole deployment path dependency-free.
 
 ## Operating it
 
 ```bash
-systemctl status cinejo-deploy.timer      # is it scheduled
-systemctl list-timers cinejo-deploy       # when does it next run
-journalctl -u cinejo-deploy -f            # deployment history
-sudo systemctl start cinejo-deploy        # deploy now, don't wait
+systemctl status cinreco-deploy.timer      # is it scheduled
+systemctl list-timers cinreco-deploy       # when does it next run
+journalctl -u cinreco-deploy -f            # deployment history
+sudo systemctl start cinreco-deploy        # deploy now, don't wait
 ```
 
 A tick with no new image logs `already running <id> — nothing to do` and
@@ -96,8 +96,8 @@ exits 0, so a short interval is cheap.
 Pin the previous image and deploy it:
 
 ```bash
-sudo sed -i 's/^IMAGE_TAG=.*/IMAGE_TAG=<older-sha>/' /etc/cinejo-web/deploy.env
-sudo systemctl start cinejo-deploy
+sudo sed -i 's/^IMAGE_TAG=.*/IMAGE_TAG=<older-sha>/' /etc/cinreco-web/deploy.env
+sudo systemctl start cinreco-deploy
 ```
 
 Every release is tagged with its commit SHA, so a rollback is choosing a

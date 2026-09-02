@@ -1,0 +1,112 @@
+CinReco Source-Available Licence
+Copyright (c) 2026 Ali Mobini. All rights reserved.
+
+This software is source-available, not open source. The source is published
+so that it can be read, evaluated and run. It is NOT placed in the public
+domain, and no permission is granted beyond what Section 2 sets out below.
+
+
+1. DEFINITIONS
+
+   "The Software" means the contents of this repository, including source
+   code, configuration, build files, documentation and assets, in whole or
+   in part.
+
+   "The Author" means Ali Mobini, the copyright holder.
+
+   "You" means the individual or entity exercising the permissions granted
+   by this Licence.
+
+   "Commercial Use" means any use intended for or directed toward commercial
+   advantage or monetary compensation, including use within a business,
+   inside a commercial product or service, or in the delivery of paid work.
+
+
+2. WHAT YOU MAY DO
+
+   Subject to Section 3, the Author grants You a personal, non-exclusive,
+   non-transferable, revocable licence, free of charge, to:
+
+   (a) download, store and read the Software;
+
+   (b) compile, build and run the Software for Your own private, personal,
+       non-commercial purposes, including evaluation and study; and
+
+   (c) make the configuration changes that running it requires — supplying
+       environment variables, endpoints, credentials and equivalent settings
+       — and keep private local copies for that purpose.
+
+   Permission (c) exists only so that the Software can actually be run under
+   permission (b). It is not a general right to modify the Software, and it
+   does not extend to any of the reserved rights in Section 3.
+
+
+3. WHAT IS RESERVED
+
+   All rights not expressly granted in Section 2 are reserved to the Author.
+   Without the Author's prior written permission, You may NOT:
+
+   (a) use the Software, in whole or in part, for any Commercial Use;
+
+   (b) modify the Software or create derivative works from it, except as
+       narrowly permitted by Section 2(c);
+
+   (c) distribute, publish, sublicense, sell, rent, lease, host as a service,
+       or otherwise make the Software or any derivative of it available to
+       any third party, whether modified or unmodified, and whether for a
+       fee or free of charge;
+
+   (d) incorporate the Software, or any portion of it, into another work or
+       product; or
+
+   (e) remove, obscure or alter any copyright, licence or attribution notice
+       contained in the Software.
+
+   The rights to modify, to create derivative works, and to distribute the
+   Software are held solely by the Author.
+
+
+4. CONTRIBUTIONS
+
+   If You submit a contribution to the Software (for example by pull request
+   or patch), You assign to the Author all right, title and interest in that
+   contribution, and confirm that You are entitled to do so. Contributions
+   become part of the Software and are covered by this Licence. You retain no
+   separate rights in them beyond those granted to everyone in Section 2.
+
+
+5. THIRD-PARTY COMPONENTS
+
+   The Software depends on third-party packages that are distributed under
+   their own licences. Those licences govern those components, and nothing
+   in this Licence alters them. Movie metadata reached through the CinReco
+   API originates from TMDb; this product is neither endorsed nor certified
+   by TMDb, and TMDb's own terms apply to that data.
+
+
+6. NO WARRANTY
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+
+7. LIMITATION OF LIABILITY
+
+   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+
+8. TERMINATION
+
+   This Licence terminates automatically if You breach any of its terms. On
+   termination You must stop using the Software and destroy all copies in
+   Your possession. Sections 4 through 7 survive termination.
+
+
+9. COMMERCIAL AND OTHER PERMISSIONS
+
+   Licences for Commercial Use, modification, or redistribution are available
+   from the Author on request. Enquiries: info@mail.mobini.nl

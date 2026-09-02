@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:cinejo_frontend/data/models/movie_model.dart';
-import 'package:cinejo_frontend/features/discovery/widgets/swipe_action_buttons.dart';
+import 'package:cinreco/data/models/movie_model.dart';
+import 'package:cinreco/features/discovery/widgets/swipe_action_buttons.dart';
 
 void main() {
   testWidgets('Like/Dislike/Super Like buttons expose real semantic labels', (

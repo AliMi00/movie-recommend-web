@@ -42,32 +42,55 @@ class AppConfig {
   }
 }
 
+// Build-time configuration, supplied with --dart-define.
+//
+// The app was renamed from Cinejo to CinReco, so each setting is read from
+// its CINRECO_ name first and falls back to the old CINEJO_ name. The
+// fallback exists because a build pipeline or deployment can still be
+// passing the old names: dropping them outright would silently substitute
+// defaults for the demo account and analytics rather than failing loudly.
+// Remove the legacy reads once nothing supplies them.
+const _baseUrlNew = String.fromEnvironment('CINRECO_API_BASE_URL');
+const _baseUrlOld = String.fromEnvironment('CINEJO_API_BASE_URL');
+const _demoEmailNew = String.fromEnvironment('CINRECO_DEMO_EMAIL');
+const _demoEmailOld = String.fromEnvironment('CINEJO_DEMO_EMAIL');
+const _demoPasswordNew = String.fromEnvironment('CINRECO_DEMO_PASSWORD');
+const _demoPasswordOld = String.fromEnvironment('CINEJO_DEMO_PASSWORD');
+const _cookieAuthNew = String.fromEnvironment('CINRECO_USE_COOKIE_AUTH');
+const _cookieAuthOld = String.fromEnvironment('CINEJO_USE_COOKIE_AUTH');
+
+/// First non-empty of the new name, the legacy name, then the default.
+String _pick(String preferred, String legacy, String fallback) {
+  if (preferred.isNotEmpty) return preferred;
+  if (legacy.isNotEmpty) return legacy;
+  return fallback;
+}
+
 final appConfigProvider = Provider<AppConfig>((ref) {
-  // Allow overriding via --dart-define at build/run time. Defaults point at
-  // the live public Cinreco API — this is a public repo, so no private
-  // network address belongs here.
-  const envBaseUrlRaw = String.fromEnvironment(
-    'CINEJO_API_BASE_URL',
-    defaultValue: 'https://api.gozaga.xyz/v1',
+  // Defaults point at the live public CinReco API — this is a public repo,
+  // so no private network address belongs here.
+  final envBaseUrlRaw = _pick(
+    _baseUrlNew,
+    _baseUrlOld,
+    'https://api.gozaga.xyz/v1',
   );
-  const envUseApi = bool.fromEnvironment('CINEJO_USE_API', defaultValue: true);
-  // Use string to support tri-state: 'true'/'false'/'auto'
-  const envCookieRaw = String.fromEnvironment(
-    'CINEJO_USE_COOKIE_AUTH',
-    defaultValue: 'false',
+  // Nested fromEnvironment is itself a const expression, so the legacy name
+  // supplies the default when the new one was never defined.
+  const envUseApi = bool.fromEnvironment(
+    'CINRECO_USE_API',
+    defaultValue: bool.fromEnvironment('CINEJO_USE_API', defaultValue: true),
   );
   const envPageSize = int.fromEnvironment(
-    'CINEJO_DEFAULT_PAGE_SIZE',
-    defaultValue: 20,
+    'CINRECO_DEFAULT_PAGE_SIZE',
+    defaultValue: int.fromEnvironment(
+      'CINEJO_DEFAULT_PAGE_SIZE',
+      defaultValue: 20,
+    ),
   );
-  const envDemoEmailRaw = String.fromEnvironment(
-    'CINEJO_DEMO_EMAIL',
-    defaultValue: '',
-  );
-  const envDemoPasswordRaw = String.fromEnvironment(
-    'CINEJO_DEMO_PASSWORD',
-    defaultValue: '',
-  );
+  // String rather than bool to support tri-state: 'true'/'false'/'auto'.
+  final envCookieRaw = _pick(_cookieAuthNew, _cookieAuthOld, 'false');
+  final envDemoEmailRaw = _pick(_demoEmailNew, _demoEmailOld, '');
+  final envDemoPasswordRaw = _pick(_demoPasswordNew, _demoPasswordOld, '');
 
   // Resolve base URL: runtime JS global (web) takes priority over dart-define
   String resolvedBase = getRuntimeApiBaseUrl() ?? envBaseUrlRaw;

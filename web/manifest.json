@@ -1,11 +1,11 @@
 {
-    "name": "Cinreco",
-    "short_name": "Cinreco",
+    "name": "CinReco",
+    "short_name": "CinReco",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#eaf1fc",
     "theme_color": "#1d4ed8",
-    "description": "Cinreco - a movie recommendation web app.",
+    "description": "CinReco - a movie recommendation web app.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

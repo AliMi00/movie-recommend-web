@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:cinejo_frontend/core/constants/app_constants.dart';
-import 'package:cinejo_frontend/data/services/local_storage_service.dart';
-import 'package:cinejo_frontend/features/onboarding/screens/onboarding_screen.dart';
+import 'package:cinreco/core/constants/app_constants.dart';
+import 'package:cinreco/data/services/local_storage_service.dart';
+import 'package:cinreco/features/onboarding/screens/onboarding_screen.dart';
 
 /// Minimal two-route harness: the intro finishes by navigating to the welcome
 /// route, so the test needs a real router to observe that it happened.

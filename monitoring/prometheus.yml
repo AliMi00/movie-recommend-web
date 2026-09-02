@@ -2,7 +2,7 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    stack: cinejo-web
+    stack: cinreco-web
 
 scrape_configs:
   # Request rate, status codes and latency histograms. Traefik sees every
@@ -11,7 +11,7 @@ scrape_configs:
   # the backend was down.
   - job_name: traefik
     static_configs:
-      - targets: ["cinejo-traefik:8082"]
+      - targets: ["cinreco-traefik:8082"]
         labels:
           component: edge
 
@@ -21,7 +21,7 @@ scrape_configs:
   # source.
   - job_name: nginx
     static_configs:
-      - targets: ["cinejo-web-metrics:9113"]
+      - targets: ["cinreco-web-metrics:9113"]
         labels:
           component: web
 

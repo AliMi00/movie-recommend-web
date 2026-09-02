@@ -3,7 +3,7 @@ name: Release
 # Publishes the container image to GHCR. That is deliberately where this
 # pipeline stops — it does not deploy.
 #
-# The deployment target is a homelab whose SSH is reachable only over a
+# The deployment target is a server whose SSH is reachable only over a
 # private tailnet. Pushing from CI would mean handing GitHub either an SSH
 # key plus a route into that network, or a self-hosted runner — and a
 # self-hosted runner on a public repository lets a fork's pull request run
@@ -11,7 +11,7 @@ name: Release
 # home network.
 #
 # So the model is inverted: CI publishes an artifact, and an agent running
-# *on* the homelab polls the registry and rolls it out (see deploy/agent/).
+# *on* the server polls the registry and rolls it out (see deploy/agent/).
 # The result is zero inbound exposure — no firewall rule, no credential
 # held by a third party, and nothing to revoke if this repository is
 # compromised.
@@ -64,7 +64,7 @@ jobs:
 
       # Two tags: an immutable SHA tag so every release traces back to a
       # commit and a rollback is just pinning an older one, plus :latest,
-      # which is what the homelab agent watches.
+      # which is what the deploy agent watches.
       - name: Build and push
         id: push
         uses: docker/build-push-action@v6
@@ -89,5 +89,5 @@ jobs:
             echo ""
             echo "Digest: \`${{ steps.push.outputs.digest }}\`"
             echo ""
-            echo "The homelab agent polls \`:latest\` and rolls this out on its next tick."
+            echo "The deploy agent polls \`:latest\` and rolls this out on its next tick."
           } >> "$GITHUB_STEP_SUMMARY"

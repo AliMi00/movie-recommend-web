@@ -8,7 +8,7 @@ data "docker_image" "app" {
 }
 
 resource "docker_container" "web" {
-  name     = "cinejo-web"
+  name     = "cinreco-web"
   image    = data.docker_image.app.id
   restart  = "unless-stopped"
   must_run = true
@@ -17,15 +17,15 @@ resource "docker_container" "web" {
   # private network, so nothing binds a host port.
 
   env = [
-    "CINEJO_API_BASE_URL=${var.api_base_url}",
-    "CINEJO_DEMO_EMAIL=${var.demo_email}",
-    "CINEJO_DEMO_PASSWORD=${var.demo_password}",
+    "CINRECO_API_BASE_URL=${var.api_base_url}",
+    "CINRECO_DEMO_EMAIL=${var.demo_email}",
+    "CINRECO_DEMO_PASSWORD=${var.demo_password}",
     "POSTHOG_API_KEY=${var.posthog_api_key}",
     "POSTHOG_HOST=${var.posthog_host}",
   ]
 
   networks_advanced {
-    name = docker_network.cinejo.name
+    name = docker_network.cinreco.name
   }
 
   # No Traefik labels here: routing is declared in the file provider config
@@ -51,7 +51,7 @@ resource "docker_image" "nginx_exporter" {
 }
 
 resource "docker_container" "metrics" {
-  name     = "cinejo-web-metrics"
+  name     = "cinreco-web-metrics"
   image    = docker_image.nginx_exporter.image_id
   restart  = "unless-stopped"
   must_run = true
@@ -69,7 +69,7 @@ resource "docker_container" "metrics" {
   }
 
   networks_advanced {
-    name = docker_network.cinejo.name
+    name = docker_network.cinreco.name
   }
 
   security_opts = ["no-new-privileges:true"]

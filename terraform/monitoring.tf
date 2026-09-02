@@ -20,17 +20,17 @@ resource "docker_image" "grafana" {
 # survive container replacement, so a redeploy does not discard history.
 resource "docker_volume" "prometheus_data" {
   count = var.deploy_monitoring ? 1 : 0
-  name  = "cinejo-prometheus-data"
+  name  = "cinreco-prometheus-data"
 }
 
 resource "docker_volume" "grafana_data" {
   count = var.deploy_monitoring ? 1 : 0
-  name  = "cinejo-grafana-data"
+  name  = "cinreco-grafana-data"
 }
 
 resource "docker_container" "prometheus" {
   count    = var.deploy_monitoring ? 1 : 0
-  name     = "cinejo-prometheus"
+  name     = "cinreco-prometheus"
   image    = docker_image.prometheus[0].image_id
   restart  = "unless-stopped"
   must_run = true
@@ -63,7 +63,7 @@ resource "docker_container" "prometheus" {
   }
 
   networks_advanced {
-    name = docker_network.cinejo.name
+    name = docker_network.cinreco.name
   }
 
   security_opts = ["no-new-privileges:true"]
@@ -75,7 +75,7 @@ resource "docker_container" "prometheus" {
 
 resource "docker_container" "grafana" {
   count    = var.deploy_monitoring ? 1 : 0
-  name     = "cinejo-grafana"
+  name     = "cinreco-grafana"
   image    = docker_image.grafana[0].image_id
   restart  = "unless-stopped"
   must_run = true
@@ -103,8 +103,8 @@ resource "docker_container" "grafana" {
   }
 
   upload {
-    file    = "/var/lib/grafana/dashboards/cinejo-web.json"
-    content = file("${path.module}/../monitoring/grafana/dashboards/cinejo-web.json")
+    file    = "/var/lib/grafana/dashboards/cinreco-web.json"
+    content = file("${path.module}/../monitoring/grafana/dashboards/cinreco-web.json")
   }
 
   volumes {
@@ -118,7 +118,7 @@ resource "docker_container" "grafana" {
   }
 
   networks_advanced {
-    name = docker_network.cinejo.name
+    name = docker_network.cinreco.name
   }
 
   security_opts = ["no-new-privileges:true"]

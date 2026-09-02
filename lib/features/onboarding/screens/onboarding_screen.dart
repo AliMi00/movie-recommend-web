@@ -41,7 +41,7 @@ const List<OnboardingPageData> kOnboardingPages = <OnboardingPageData>[
     accent: AppColors.tertiary,
     title: 'Settle it,\ntogether.',
     body:
-        'Start a group session and everyone swipes at once. Cinreco blends '
+        'Start a group session and everyone swipes at once. CinReco blends '
         'your tastes and surfaces the films the whole room agrees on.',
   ),
   OnboardingPageData(

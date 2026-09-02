@@ -1,5 +1,5 @@
 [Unit]
-Description=Poll GHCR for new Cinreco Web images
+Description=Poll GHCR for new CinReco Web images
 Documentation=https://github.com/AliMi00/movie-recommend-web
 
 [Timer]
@@ -8,7 +8,7 @@ Documentation=https://github.com/AliMi00/movie-recommend-web
 OnBootSec=2min
 OnUnitActiveSec=5min
 
-# Without this every homelab running this agent would hit the registry on
+# Without this every host running this agent would hit the registry on
 # the same wall-clock boundary; the jitter also avoids racing a release
 # that is still pushing layers.
 RandomizedDelaySec=60

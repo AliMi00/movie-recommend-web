@@ -253,7 +253,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     Text(
                                       user?.fullName ??
                                           user?.username ??
-                                          'Cinreco User',
+                                          'CinReco User',
                                       style: AppTextStyles.titleMedium.copyWith(
                                         fontSize: 22,
                                         fontWeight: FontWeight.bold,

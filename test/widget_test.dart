@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:cinejo_frontend/main.dart';
+import 'package:cinreco/main.dart';
 
 void main() {
   testWidgets('App loads without crashing', (WidgetTester tester) async {
@@ -18,11 +18,11 @@ void main() {
     // Marking the intro as seen keeps this test on the pre-onboarding path.
     SharedPreferences.setMockInitialValues({'onboarding_intro_seen': true});
 
-    await tester.pumpWidget(const ProviderScope(child: CinejoApp()));
+    await tester.pumpWidget(const ProviderScope(child: CinRecoApp()));
     await tester.pump(const Duration(seconds: 3));
     await tester.pumpAndSettle();
 
     // Verify that the app loads without crashing
-    expect(find.byType(CinejoApp), findsOneWidget);
+    expect(find.byType(CinRecoApp), findsOneWidget);
   });
 }

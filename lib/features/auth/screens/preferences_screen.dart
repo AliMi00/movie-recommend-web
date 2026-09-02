@@ -14,7 +14,7 @@ import '../widgets/genre_chip.dart';
 /// PostHog feature flag key driving the onboarding A/B test between the
 /// full form (control) and a genres-only flow (streamlined). See the
 /// "Streamlined onboarding (genres-only) vs full preferences form"
-/// experiment in the cinejo PostHog project.
+/// experiment in the CinReco PostHog project.
 const String _onboardingFlagKey = 'onboarding-variant';
 const String _onboardingControlVariant = 'control';
 

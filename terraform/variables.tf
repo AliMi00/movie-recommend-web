@@ -12,7 +12,7 @@ variable "docker_host" {
 variable "app_image" {
   description = <<-EOT
     Fully-qualified image reference to deploy, e.g.
-    "ghcr.io/<owner>/cinejo-web:<sha>". The image must already be present on
+    "ghcr.io/<owner>/cinreco-web:<sha>". The image must already be present on
     the target daemon — CI pulls it before running Terraform. Pinning to an
     immutable tag (a commit SHA) rather than :latest is what makes a rollback
     a one-line variable change.
@@ -58,7 +58,7 @@ variable "deploy_monitoring" {
     Set to false on a host that already runs a shared monitoring stack —
     scrape this app's metrics endpoints (nginx_metrics_endpoint,
     traefik_metrics_endpoint in outputs.tf) from that stack instead, and
-    import monitoring/grafana/dashboards/cinejo-web.json into its Grafana
+    import monitoring/grafana/dashboards/cinreco-web.json into its Grafana
     by hand. Running a second Prometheus/Grafana per app does not scale
     and duplicates data a shared instance already has.
   EOT
@@ -107,7 +107,7 @@ variable "grafana_admin_password" {
 }
 
 variable "api_base_url" {
-  description = "Base URL of the CineJo API the browser client calls."
+  description = "Base URL of the CinReco API the browser client calls."
   type        = string
   default     = "https://api.gozaga.xyz/v1"
 }

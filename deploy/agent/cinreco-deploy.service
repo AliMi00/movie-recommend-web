@@ -1,5 +1,5 @@
 [Unit]
-Description=Cinreco Web pull-based deployment agent
+Description=CinReco Web pull-based deployment agent
 Documentation=https://github.com/AliMi00/movie-recommend-web
 # Both are needed before the agent can do anything useful.
 After=network-online.target docker.service
@@ -8,14 +8,14 @@ Requires=docker.service
 
 [Service]
 Type=oneshot
-EnvironmentFile=/etc/cinejo-web/deploy.env
-ExecStart=/usr/local/bin/cinejo-deploy.sh
+EnvironmentFile=/etc/cinreco-web/deploy.env
+ExecStart=/usr/local/bin/cinreco-deploy.sh
 
 # A stuck pull or a hung terraform apply should not wedge the timer,
 # and the next tick will retry anyway.
 TimeoutStartSec=900
 
-# Journald captures stdout/stderr: `journalctl -u cinejo-deploy` is the
+# Journald captures stdout/stderr: `journalctl -u cinreco-deploy` is the
 # deployment history.
 StandardOutput=journal
 StandardError=journal
@@ -26,7 +26,7 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=full
 ProtectHome=true
-ReadWritePaths=/opt/cinejo-web
+ReadWritePaths=/opt/cinreco-web
 
 [Install]
 WantedBy=multi-user.target
