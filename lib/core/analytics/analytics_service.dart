@@ -6,6 +6,11 @@ import '../config/web_config_stub.dart'
 
 class AnalyticsService {
   static final Posthog _posthog = Posthog();
+  // Deliberately still 'cinejo_' after the rename to CinReco. This is a key
+  // in the visitor's own browser storage, not an internal identifier: change
+  // it and every existing visitor's stored consent choice becomes
+  // unreadable, so they are re-prompted and their previous decision is lost.
+  // The user-visible name is set by the UI copy, not by this string.
   static const String _cookieConsentKey = 'cinejo_cookie_consent';
 
   // PostHog project tokens (phc_...) are safe to embed in client code — they

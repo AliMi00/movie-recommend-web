@@ -50,7 +50,7 @@ class ApiAuthRepository implements AuthRepository {
   User _mapUser(Map<String, dynamic> u) {
     return User(
       id: (u['id'] ?? u['userId'] ?? 'me').toString(),
-      email: (u['email'] ?? 'user@cinejo').toString(),
+      email: (u['email'] ?? 'user@cinreco').toString(),
       username: u['username'] as String?,
       fullName: u['fullName'] as String? ?? u['full_name'] as String?,
       avatarUrl: u['avatarUrl'] as String? ?? u['avatar_url'] as String?,

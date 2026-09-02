@@ -62,7 +62,7 @@ class _CookieConsentBannerState extends State<CookieConsentBanner> {
                       ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 480),
                         child: const Text(
-                          'We use cookies for basic analytics to improve Cinreco. You can accept or decline — this doesn\'t affect core app functionality.',
+                          'We use cookies for basic analytics to improve CinReco. You can accept or decline — this doesn\'t affect core app functionality.',
                           style: TextStyle(
                             color: AppColors.onSurfaceVariant,
                             fontSize: 13,

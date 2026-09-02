@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// App color palette for the "Soft Clay" design system — a light, tactile
-/// white-and-blue surface language matching the cinejo marketing site.
+/// white-and-blue surface language matching the CinReco marketing site.
 ///
 /// Claymorphism builds depth from paired shadows rather than borders or blur:
 /// a soft blue-grey shadow at bottom-right, a white highlight at top-left, so

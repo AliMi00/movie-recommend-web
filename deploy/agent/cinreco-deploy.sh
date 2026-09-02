@@ -2,7 +2,7 @@
 #
 # Pull-based deployment agent.
 #
-# Runs ON the homelab (via systemd timer) rather than in CI, so the machine
+# Runs ON the deployment host (via systemd timer) rather than in CI, so the machine
 # needs no inbound access at all: it reaches out to GitHub and GHCR, and
 # nothing reaches in. CI's job ends at publishing an image; this decides
 # when to adopt it.
@@ -17,17 +17,17 @@
 # timer interval is cheap.
 set -euo pipefail
 
-CONFIG_FILE=${CONFIG_FILE:-/etc/cinejo-web/deploy.env}
+CONFIG_FILE=${CONFIG_FILE:-/etc/cinreco-web/deploy.env}
 if [[ -f "$CONFIG_FILE" ]]; then
   # shellcheck disable=SC1090
   source "$CONFIG_FILE"
 fi
 
 : "${REPO_URL:?REPO_URL must be set}"
-: "${REPO_DIR:=/opt/cinejo-web}"
+: "${REPO_DIR:=/opt/cinreco-web}"
 : "${IMAGE_REPO:?IMAGE_REPO must be set}"
 : "${IMAGE_TAG:=latest}"
-: "${CONTAINER_NAME:=cinejo-web}"
+: "${CONTAINER_NAME:=cinreco-web}"
 : "${HEALTH_URL:=http://localhost:8060/healthz}"
 : "${HEALTH_HOST_HEADER:=}"
 : "${TF_DIR:=$REPO_DIR/terraform}"

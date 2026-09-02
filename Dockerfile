@@ -34,13 +34,13 @@ RUN apk add --no-cache curl
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY nginx/security-headers.conf /etc/nginx/security-headers.conf
 COPY --from=build /app/build/web /usr/share/nginx/html
-COPY docker-entrypoint.sh /docker-entrypoint.d/cinejo-entrypoint.sh
+COPY docker-entrypoint.sh /docker-entrypoint.d/cinreco-entrypoint.sh
 
 # The entrypoint rewrites index.html and nginx.conf in place at startup,
 # so the nginx user needs write access to both.
-RUN chmod +x /docker-entrypoint.d/cinejo-entrypoint.sh \
+RUN chmod +x /docker-entrypoint.d/cinreco-entrypoint.sh \
     && chown -R nginx:nginx /usr/share/nginx/html /etc/nginx \
-    && chown nginx:nginx /docker-entrypoint.d/cinejo-entrypoint.sh
+    && chown nginx:nginx /docker-entrypoint.d/cinreco-entrypoint.sh
 
 # Drop privileges: a container breakout from a root-run nginx is a far
 # worse outcome than one from an unprivileged process.
@@ -52,4 +52,4 @@ EXPOSE 8080 9113
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -fsS http://localhost:8080/healthz || exit 1
 
-ENTRYPOINT ["/docker-entrypoint.d/cinejo-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.d/cinreco-entrypoint.sh"]

@@ -27,14 +27,14 @@ locals {
   traefik_dynamic_config = yamlencode({
     http = {
       routers = {
-        cinejo = {
+        cinreco = {
           rule        = "Host(`${var.public_domain}`)"
           entryPoints = ["web"]
-          service     = "cinejo"
+          service     = "cinreco"
         }
       }
       services = {
-        cinejo = {
+        cinreco = {
           loadBalancer = {
             servers = [{ url = "http://${docker_container.web.name}:8080" }]
             # Takes the backend out of rotation when it stops serving,
@@ -57,7 +57,7 @@ locals {
 # certificate here would be redundant. Traefik's job is routing and the
 # request/latency metrics the nginx stub_status page cannot provide.
 resource "docker_container" "traefik" {
-  name     = "cinejo-traefik"
+  name     = "cinreco-traefik"
   image    = docker_image.traefik.image_id
   restart  = "unless-stopped"
   must_run = true
@@ -84,7 +84,7 @@ resource "docker_container" "traefik" {
   # mount to provision separately and the routing table is versioned here
   # with the rest of the infrastructure.
   upload {
-    file    = "/etc/traefik/dynamic/cinejo.yml"
+    file    = "/etc/traefik/dynamic/cinreco.yml"
     content = local.traefik_dynamic_config
   }
 
@@ -100,7 +100,7 @@ resource "docker_container" "traefik" {
   }
 
   networks_advanced {
-    name = docker_network.cinejo.name
+    name = docker_network.cinreco.name
   }
 
   # Probes /ping over HTTP rather than using `traefik healthcheck`. That

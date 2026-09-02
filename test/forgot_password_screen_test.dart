@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:cinejo_frontend/data/models/user_model.dart';
-import 'package:cinejo_frontend/data/repositories/auth_repository.dart';
-import 'package:cinejo_frontend/features/auth/providers/auth_provider.dart';
-import 'package:cinejo_frontend/features/auth/screens/forgot_password_screen.dart';
+import 'package:cinreco/data/models/user_model.dart';
+import 'package:cinreco/data/repositories/auth_repository.dart';
+import 'package:cinreco/features/auth/providers/auth_provider.dart';
+import 'package:cinreco/features/auth/screens/forgot_password_screen.dart';
 
 /// Records exactly what was asked of it and returns a scripted result —
 /// enough to prove the screen calls the real auth flow instead of the old

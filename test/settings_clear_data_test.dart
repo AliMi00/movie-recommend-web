@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:cinejo_frontend/core/constants/app_constants.dart';
-import 'package:cinejo_frontend/data/services/local_storage_service.dart';
-import 'package:cinejo_frontend/features/settings/screens/settings_screen.dart';
+import 'package:cinreco/core/constants/app_constants.dart';
+import 'package:cinreco/data/services/local_storage_service.dart';
+import 'package:cinreco/features/settings/screens/settings_screen.dart';
 
 Widget _harness() =>
     const ProviderScope(child: MaterialApp(home: SettingsScreen()));

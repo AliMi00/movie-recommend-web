@@ -1,14 +1,14 @@
 openapi: 3.0.3
 info:
-  title: Cinejo API
+  title: CinReco API
   version: 0.1.0-draft
   description: |
-    Draft external API specification for Cinejo (Week 8-9 deliverable)
+    Draft external API specification for CinReco (Week 8-9 deliverable)
     Status: validation constraints + security/performance notes added.
 servers:
-  - url: https://api.cinejo.example.com/v1
+  - url: https://api.cinreco.example.com/v1
     description: Production (placeholder)
-  - url: https://staging-api.cinejo.example.com/v1
+  - url: https://staging-api.cinreco.example.com/v1
     description: Staging (placeholder)
 components:
   securitySchemes:

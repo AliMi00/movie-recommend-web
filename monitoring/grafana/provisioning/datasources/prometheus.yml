@@ -8,8 +8,8 @@ datasources:
     # datasource by name rather than by a uid Grafana generates at runtime
     # (which would differ on every fresh install and leave every panel
     # pointing at nothing).
-    uid: cinejo-prometheus
-    url: http://cinejo-prometheus:9090
+    uid: cinreco-prometheus
+    url: http://cinreco-prometheus:9090
     isDefault: true
     editable: false
     jsonData:

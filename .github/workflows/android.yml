@@ -118,9 +118,9 @@ jobs:
           flutter build apk --release \
             --build-name="${{ steps.version.outputs.name }}" \
             --build-number="${{ steps.version.outputs.code }}" \
-            --dart-define=CINEJO_API_BASE_URL="${API_BASE_URL:-https://api.gozaga.xyz/v1}" \
-            --dart-define=CINEJO_DEMO_EMAIL="${DEMO_EMAIL}" \
-            --dart-define=CINEJO_DEMO_PASSWORD="${DEMO_PASSWORD}" \
+            --dart-define=CINRECO_API_BASE_URL="${API_BASE_URL:-https://api.gozaga.xyz/v1}" \
+            --dart-define=CINRECO_DEMO_EMAIL="${DEMO_EMAIL}" \
+            --dart-define=CINRECO_DEMO_PASSWORD="${DEMO_PASSWORD}" \
             --dart-define=POSTHOG_API_KEY="${POSTHOG_API_KEY}" \
             --dart-define=POSTHOG_HOST="${POSTHOG_HOST:-https://eu.i.posthog.com}"
 
@@ -136,9 +136,9 @@ jobs:
           flutter build appbundle --release \
             --build-name="${{ steps.version.outputs.name }}" \
             --build-number="${{ steps.version.outputs.code }}" \
-            --dart-define=CINEJO_API_BASE_URL="${API_BASE_URL:-https://api.gozaga.xyz/v1}" \
-            --dart-define=CINEJO_DEMO_EMAIL="${DEMO_EMAIL}" \
-            --dart-define=CINEJO_DEMO_PASSWORD="${DEMO_PASSWORD}" \
+            --dart-define=CINRECO_API_BASE_URL="${API_BASE_URL:-https://api.gozaga.xyz/v1}" \
+            --dart-define=CINRECO_DEMO_EMAIL="${DEMO_EMAIL}" \
+            --dart-define=CINRECO_DEMO_PASSWORD="${DEMO_PASSWORD}" \
             --dart-define=POSTHOG_API_KEY="${POSTHOG_API_KEY}" \
             --dart-define=POSTHOG_HOST="${POSTHOG_HOST:-https://eu.i.posthog.com}"
 
@@ -148,9 +148,9 @@ jobs:
         run: |
           mkdir -p dist
           v="${{ steps.version.outputs.name }}+${{ steps.version.outputs.code }}"
-          cp build/app/outputs/flutter-apk/app-release.apk "dist/cinejo-${v}.apk"
+          cp build/app/outputs/flutter-apk/app-release.apk "dist/cinreco-${v}.apk"
           if [ -f build/app/outputs/bundle/release/app-release.aab ]; then
-            cp build/app/outputs/bundle/release/app-release.aab "dist/cinejo-${v}.aab"
+            cp build/app/outputs/bundle/release/app-release.aab "dist/cinreco-${v}.aab"
           fi
           ls -lh dist/
 

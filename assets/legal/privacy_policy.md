@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-08-18
 
-Cinreco Web is a personal portfolio project demonstrating a Flutter Web
+CinReco Web is a personal portfolio project demonstrating a Flutter Web
 client against a live backend API. It is not a commercial product, and
 this notice is intentionally short rather than a formal GDPR/CCPA
 privacy policy.

@@ -6,18 +6,23 @@
 # where the Dart side reads them back via JS interop (see web_config_real.dart).
 set -eu
 
+# The app was renamed from Cinejo to CinReco. Each variable is read from its
+# CINRECO_ name first and falls back to the old CINEJO_ name, so a container
+# still started with the pre-rename environment keeps its configuration
+# instead of silently dropping to defaults. Drop the CINEJO_ fallbacks once
+# no deployment supplies them.
 HTML_DIR=/usr/share/nginx/html
 SECURITY_HEADERS=/etc/nginx/security-headers.conf
 
-CINEJO_API_BASE_URL="${CINEJO_API_BASE_URL:-https://api.gozaga.xyz/v1}"
-CINEJO_DEMO_EMAIL="${CINEJO_DEMO_EMAIL:-}"
-CINEJO_DEMO_PASSWORD="${CINEJO_DEMO_PASSWORD:-}"
+CINRECO_API_BASE_URL="${CINRECO_API_BASE_URL:-${CINEJO_API_BASE_URL:-https://api.gozaga.xyz/v1}}"
+CINRECO_DEMO_EMAIL="${CINRECO_DEMO_EMAIL:-${CINEJO_DEMO_EMAIL:-}}"
+CINRECO_DEMO_PASSWORD="${CINRECO_DEMO_PASSWORD:-${CINEJO_DEMO_PASSWORD:-}}"
 POSTHOG_API_KEY="${POSTHOG_API_KEY:-}"
 POSTHOG_HOST="${POSTHOG_HOST:-https://eu.i.posthog.com}"
 
-echo "[entrypoint] API base URL: ${CINEJO_API_BASE_URL}"
-if [ -n "${CINEJO_DEMO_EMAIL}" ]; then
-  echo "[entrypoint] demo account: enabled (${CINEJO_DEMO_EMAIL})"
+echo "[entrypoint] API base URL: ${CINRECO_API_BASE_URL}"
+if [ -n "${CINRECO_DEMO_EMAIL}" ]; then
+  echo "[entrypoint] demo account: enabled (${CINRECO_DEMO_EMAIL})"
 else
   echo "[entrypoint] demo account: disabled"
 fi
@@ -32,16 +37,16 @@ subst() {
   sed -i "s|$1|$2|g" "$3"
 }
 
-subst "__CINEJO_API_BASE_URL__"  "${CINEJO_API_BASE_URL}"  "${HTML_DIR}/index.html"
-subst "__CINEJO_DEMO_EMAIL__"    "${CINEJO_DEMO_EMAIL}"    "${HTML_DIR}/index.html"
-subst "__CINEJO_DEMO_PASSWORD__" "${CINEJO_DEMO_PASSWORD}" "${HTML_DIR}/index.html"
+subst "__CINRECO_API_BASE_URL__"  "${CINRECO_API_BASE_URL}"  "${HTML_DIR}/index.html"
+subst "__CINRECO_DEMO_EMAIL__"    "${CINRECO_DEMO_EMAIL}"    "${HTML_DIR}/index.html"
+subst "__CINRECO_DEMO_PASSWORD__" "${CINRECO_DEMO_PASSWORD}" "${HTML_DIR}/index.html"
 subst "__POSTHOG_API_KEY__"      "${POSTHOG_API_KEY}"      "${HTML_DIR}/index.html"
 subst "__POSTHOG_API_HOST__"     "${POSTHOG_HOST}"         "${HTML_DIR}/index.html"
 
 # The CSP must allow XHR to whichever API origin was just injected,
 # otherwise the browser blocks every request the app makes. Derive the
 # origin (scheme://host[:port]) from the base URL by dropping the path.
-API_ORIGIN=$(echo "${CINEJO_API_BASE_URL}" | sed -E 's|^(https?://[^/]+).*|\1|')
+API_ORIGIN=$(echo "${CINRECO_API_BASE_URL}" | sed -E 's|^(https?://[^/]+).*|\1|')
 CSP_CONNECT="${API_ORIGIN}"
 CSP_SCRIPT=""
 if [ -n "${POSTHOG_API_KEY}" ]; then

@@ -23,13 +23,13 @@ void main() async {
   runApp(
     DevicePreview(
       enabled: kDebugMode,
-      builder: (context) => const ProviderScope(child: CinejoApp()),
+      builder: (context) => const ProviderScope(child: CinRecoApp()),
     ),
   );
 }
 
-class CinejoApp extends ConsumerWidget {
-  const CinejoApp({super.key});
+class CinRecoApp extends ConsumerWidget {
+  const CinRecoApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

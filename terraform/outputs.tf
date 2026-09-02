@@ -24,8 +24,8 @@ output "prometheus_url" {
 }
 
 output "grafana_url" {
-  description = "Grafana UI (dashboard 'CineJo Web'), on the private network only. Null when deploy_monitoring=false — import monitoring/grafana/dashboards/cinejo-web.json into the shared Grafana instead."
-  value       = var.deploy_monitoring ? "http://<this-host>:${var.grafana_port}/d/cinejo-web" : null
+  description = "Grafana UI (dashboard 'CinReco Web'), on the private network only. Null when deploy_monitoring=false — import monitoring/grafana/dashboards/cinreco-web.json into the shared Grafana instead."
+  value       = var.deploy_monitoring ? "http://<this-host>:${var.grafana_port}/d/cinreco-web" : null
 }
 
 output "deployed_image" {

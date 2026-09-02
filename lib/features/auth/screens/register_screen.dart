@@ -166,7 +166,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       const SizedBox(height: 8),
 
                       Text(
-                        'Join Cinreco and start discovering',
+                        'Join CinReco and start discovering',
                         style: AppTextStyles.bodyMedium.copyWith(
                           color: AppColors.onSurfaceVariant.withValues(
                             alpha: 0.7,

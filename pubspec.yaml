@@ -1,5 +1,5 @@
-name: cinejo_frontend
-description: "Cinreco Web - a movie recommendation web app (Flutter Web client for the Cinreco API)"
+name: cinreco
+description: "CinReco Web - a movie recommendation web app (Flutter Web client for the CinReco API)"
 publish_to: 'none'
 
 version: 1.0.0+1

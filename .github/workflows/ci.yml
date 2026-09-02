@@ -64,9 +64,9 @@ jobs:
           push: false
           # Without load, buildx leaves the result in its own cache and
           # never puts it in the daemon's image store, so the smoke test
-          # below fails with "Unable to find image cinejo-web:ci locally".
+          # below fails with "Unable to find image cinreco-web:ci locally".
           load: true
-          tags: cinejo-web:ci
+          tags: cinreco-web:ci
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -77,8 +77,8 @@ jobs:
       - name: Smoke test
         run: |
           docker run -d --name smoke -p 8080:8080 \
-            -e CINEJO_API_BASE_URL=https://api.gozaga.xyz/v1 \
-            cinejo-web:ci
+            -e CINRECO_API_BASE_URL=https://api.gozaga.xyz/v1 \
+            cinreco-web:ci
           for i in $(seq 1 30); do
             if curl -fsS http://localhost:8080/healthz >/dev/null 2>&1; then
               echo "container is serving"; break

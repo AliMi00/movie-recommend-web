@@ -1,7 +1,7 @@
 {
-  "uid": "cinejo-web",
-  "title": "Cinreco Web",
-  "description": "Edge and web-tier health for the Cinreco Web deployment. Traefik supplies status codes and latency; the nginx exporter supplies connection state.",
+  "uid": "cinreco-web",
+  "title": "CinReco Web",
+  "description": "Edge and web-tier health for the CinReco Web deployment. Traefik supplies status codes and latency; the nginx exporter supplies connection state.",
   "tags": ["cinreco", "traefik", "nginx"],
   "timezone": "browser",
   "schemaVersion": 39,
@@ -15,12 +15,12 @@
         "name": "service",
         "label": "Traefik service",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": "cinejo-prometheus" },
+        "datasource": { "type": "prometheus", "uid": "cinreco-prometheus" },
         "query": "label_values(traefik_service_requests_total, service)",
         "refresh": 1,
         "includeAll": false,
         "multi": false,
-        "current": { "text": "cinejo@file", "value": "cinejo@file" }
+        "current": { "text": "cinreco@file", "value": "cinreco@file" }
       }
     ]
   },
@@ -38,7 +38,7 @@
       "type": "stat",
       "title": "Backend availability",
       "description": "Traefik's own health check against /healthz. UP means the edge is currently willing to route to the app.",
-      "datasource": { "type": "prometheus", "uid": "cinejo-prometheus" },
+      "datasource": { "type": "prometheus", "uid": "cinreco-prometheus" },
       "gridPos": { "h": 5, "w": 6, "x": 0, "y": 1 },
       "targets": [
         {
@@ -76,7 +76,7 @@
       "type": "stat",
       "title": "Request rate",
       "description": "Requests per second reaching the app through Traefik, averaged over 5 minutes.",
-      "datasource": { "type": "prometheus", "uid": "cinejo-prometheus" },
+      "datasource": { "type": "prometheus", "uid": "cinreco-prometheus" },
       "gridPos": { "h": 5, "w": 6, "x": 6, "y": 1 },
       "targets": [
         {
@@ -105,7 +105,7 @@
       "type": "stat",
       "title": "p95 latency",
       "description": "95th percentile time to serve a request, from Traefik's histogram. Static assets dominate, so this should sit in the low milliseconds.",
-      "datasource": { "type": "prometheus", "uid": "cinejo-prometheus" },
+      "datasource": { "type": "prometheus", "uid": "cinreco-prometheus" },
       "gridPos": { "h": 5, "w": 6, "x": 12, "y": 1 },
       "targets": [
         {
@@ -141,7 +141,7 @@
       "type": "stat",
       "title": "5xx error ratio",
       "description": "Share of responses that were server errors. Deliberately a ratio rather than a count: a raw count looks alarming under high traffic and harmless under low. The 'or vector(0)' keeps this reading 0% when there are no 5xx at all — without it the selector matches no series and the panel shows 'No data' exactly when the service is healthiest, which is indistinguishable from a broken dashboard.",
-      "datasource": { "type": "prometheus", "uid": "cinejo-prometheus" },
+      "datasource": { "type": "prometheus", "uid": "cinreco-prometheus" },
       "gridPos": { "h": 5, "w": 6, "x": 18, "y": 1 },
       "targets": [
         {
@@ -187,7 +187,7 @@
       "type": "timeseries",
       "title": "Request rate by status code",
       "description": "Split by response code so a rise in 4xx/5xx is visible against overall traffic instead of hidden inside a single total line.",
-      "datasource": { "type": "prometheus", "uid": "cinejo-prometheus" },
+      "datasource": { "type": "prometheus", "uid": "cinreco-prometheus" },
       "gridPos": { "h": 9, "w": 12, "x": 0, "y": 7 },
       "targets": [
         {
@@ -235,7 +235,7 @@
       "type": "timeseries",
       "title": "Latency percentiles",
       "description": "p50 / p90 / p99 from the same histogram. Percentiles rather than an average, because an average hides the tail that users actually notice.",
-      "datasource": { "type": "prometheus", "uid": "cinejo-prometheus" },
+      "datasource": { "type": "prometheus", "uid": "cinreco-prometheus" },
       "gridPos": { "h": 9, "w": 12, "x": 12, "y": 7 },
       "targets": [
         {
@@ -289,7 +289,7 @@
       "type": "timeseries",
       "title": "nginx connections by state",
       "description": "Active connections broken down by what they are doing. A growing 'waiting' pool is normal keep-alive; growing 'reading'/'writing' under flat traffic suggests saturation.",
-      "datasource": { "type": "prometheus", "uid": "cinejo-prometheus" },
+      "datasource": { "type": "prometheus", "uid": "cinreco-prometheus" },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 17 },
       "targets": [
         { "refId": "A", "expr": "nginx_connections_active", "legendFormat": "active" },
@@ -323,7 +323,7 @@
       "type": "timeseries",
       "title": "Requests handled by nginx",
       "description": "Counter rate straight from stub_status. Compare against the Traefik rate above: a persistent gap means requests are being answered or rejected at the edge before reaching nginx.",
-      "datasource": { "type": "prometheus", "uid": "cinejo-prometheus" },
+      "datasource": { "type": "prometheus", "uid": "cinreco-prometheus" },
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 17 },
       "targets": [
         { "refId": "A", "expr": "rate(nginx_http_requests_total[5m])", "legendFormat": "nginx" },
