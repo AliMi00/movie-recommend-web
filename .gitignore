@@ -59,6 +59,8 @@ android/local.properties
 *.tfstate
 *.tfstate.*
 *.tfvars
+# Saved plans embed the variable values, secrets included.
+*.tfplan
 !*.tfvars.example
 crash.log
 crash.*.log
