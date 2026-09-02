@@ -1,7 +1,7 @@
-# Cinreco Web
+# CinReco Web
 
 A Flutter Web client for a movie recommendation API, containerised and
-deployed to a self-hosted homelab with Terraform, Traefik, GitHub Actions
+deployed to a single Hetzner VPS with Terraform, Traefik, GitHub Actions
 and a Prometheus/Grafana stack.
 
 **Live demo: [demo1.mobini.nl](https://demo1.mobini.nl)** — a shared demo
@@ -17,37 +17,44 @@ account is offered on the sign-in screen, or register your own.
 ## Architecture
 
 ```
-                    ┌────────────────────────────────────────────┐
-   Browser ────────▶│  VPS (public edge)                         │
-   HTTPS            │    Caddy — TLS termination                 │
-                    └──────────────────┬─────────────────────────┘
-                                       │ Tailscale (private mesh)
-                                       ▼
-                    ┌────────────────────────────────────────────┐
-                    │  Homelab host — Docker                     │
-                    │                                            │
-                    │   Traefik :8060 ──────┐                    │
-                    │     routing, metrics  │                    │
-                    │                       ▼                    │
-                    │   nginx  :8080  (Flutter Web static build) │
-                    │     ├── /healthz                           │
-                    │     └── :9113 stub_status                  │
-                    │              │                             │
-                    │   nginx-exporter :8062                     │
-                    │   Prometheus     :8064 ◀── scrapes both    │
-                    │   Grafana        :8065                     │
-                    └──────────────────┬─────────────────────────┘
-                                       │
-                       browser calls   │  (direct, not proxied)
-                                       ▼
-                    ┌────────────────────────────────────────────┐
-                    │  Cinreco API — api.gozaga.xyz               │
-                    │    ┌────────────────────────────────────┐  │
-                    │    │  Recommendation engine             │  │
-                    │    │  PRIVATE — not part of this repo   │  │
-                    │    └────────────────────────────────────┘  │
-                    └────────────────────────────────────────────┘
+   Browser
+     │  demo1.mobini.nl                    api.gozaga.xyz
+     │  (this repo)                        (direct, not proxied)
+     ▼                                              │
+  ┌─────────────────────────────────────────────────┼──────────────┐
+  │  Cloudflare                                     │              │
+  └────────────────────┬────────────────────────────┼──────────────┘
+                       ▼                            ▼
+  ┌──────────────────────────────────────────────────────────────────┐
+  │  main-server (Hetzner) — SSH reachable from the tailnet only     │
+  │                                                                  │
+  │    Caddy :443 — TLS termination, certificates renewed in place   │
+  │      ├── demo1.mobini.nl ──▶ 127.0.0.1:8060                      │
+  │      └── api.gozaga.xyz  ──▶ 127.0.0.1:8000                      │
+  │                    │                            │                │
+  │   ┌────────────────▼──────────────────────┐     │                │
+  │   │  Traefik :8060  routing, metrics      │     │                │
+  │   │    └──▶ nginx :8080  (Flutter Web)    │     │                │
+  │   │           ├── /healthz                │     │                │
+  │   │           └── :9113 stub_status       │     │                │
+  │   │  nginx-exporter :8062                 │     │                │
+  │   │  Prometheus     :8064 ◀── scrapes both│     │                │
+  │   │  Grafana        :8065                 │     │                │
+  │   └───────────────────────────────────────┘     │                │
+  │                                                 ▼                │
+  │                              ┌────────────────────────────────┐  │
+  │                              │  CinReco API :8000             │  │
+  │                              │  Recommendation engine         │  │
+  │                              │  PRIVATE — not part of this    │  │
+  │                              │  repository                    │  │
+  │                              └────────────────────────────────┘  │
+  └──────────────────────────────────────────────────────────────────┘
 ```
+
+The API happens to run on the same host, but nothing in this repository
+depends on that: the client only ever sees `api.gozaga.xyz` as a public
+origin, and moving the API elsewhere would need no change here beyond the
+injected base URL.
 
 The browser talks to the API **directly** rather than through this app's
 nginx. The client is a static bundle; proxying API traffic through it would
@@ -65,7 +72,7 @@ push to main ──▶ CI ── format, analyze, test, build image, smoke-test 
                                     │
                     poll every 5m   │   outbound only — nothing reaches in
                                     ▼
-                        deploy agent on the homelab
+                        deploy agent on the server   
                           pull → digest changed? → terraform apply → verify
 ```
 
@@ -103,9 +110,11 @@ root-equivalent control of the host. (It also sidesteps a real incompatibility:
 Traefik's Docker provider negotiates API version 1.24, which Docker 25+
 daemons reject.)
 
-**TLS at the VPS, not at Traefik.** The homelab has no public ingress; a VPS
-terminates HTTPS and forwards over Tailscale. A second certificate at Traefik
-would be redundant and would require exposing the homelab directly.
+**TLS at Caddy, not at Traefik.** Caddy already terminates HTTPS for every
+service on this host and renews the certificates itself. Traefik binds to
+127.0.0.1:8060 and is never reachable from outside, so a second certificate
+there would protect a hop that does not cross the network, and would add
+another renewal to forget about.
 
 **GitHub Actions for CI, a pull agent for CD.** See below — this is the most
 deliberate decision in the project.
@@ -118,17 +127,17 @@ it is reproducible rather than hand-built in a UI.
 
 ### The deployment direction
 
-The homelab accepts SSH only from a private tailnet. Deploying *from* CI
+The server accepts SSH only from a private tailnet. Deploying *from* CI
 would require one of:
 
-- an SSH key plus tailnet access stored in GitHub secrets — a credentialed
-  route into a home network, held by a third party; or
+- an SSH key plus tailnet access stored in GitHub secrets, which is a
+  credentialed route onto the host, held by a third party; or
 - a self-hosted runner — worse on a **public** repository, where a pull
   request from a fork can execute arbitrary code on the runner, inside the
   network.
 
 Inverting the direction removes the problem instead of mitigating it. CI's
-responsibility ends at publishing an image. A systemd timer on the homelab
+responsibility ends at publishing an image. A systemd timer on the server
 polls GHCR, compares the pulled digest against what is running, and applies
 only when they differ. There is no inbound firewall rule, no long-lived
 credential outside the host, and nothing to revoke if this repository is
@@ -157,7 +166,7 @@ To work on the app with hot reload instead, you need the Flutter SDK
 
 ```bash
 flutter pub get
-flutter run -d chrome --dart-define=CINEJO_API_BASE_URL=https://api.gozaga.xyz/v1
+flutter run -d chrome --dart-define=CINRECO_API_BASE_URL=https://api.gozaga.xyz/v1
 ```
 
 ### Checks
@@ -179,12 +188,12 @@ Full setup, Terraform state ownership and rollback: **[deploy/README.md](deploy/
 Short version — on the deployment host:
 
 ```bash
-sudo install -d -m 700 /etc/cinejo-web
-sudo install -m 600 deploy/agent/deploy.env.example /etc/cinejo-web/deploy.env
-sudo "$EDITOR" /etc/cinejo-web/deploy.env
-sudo install -m 755 deploy/agent/cinejo-deploy.sh /usr/local/bin/cinejo-deploy.sh
-sudo install -m 644 deploy/agent/cinejo-deploy.{service,timer} /etc/systemd/system/
-sudo systemctl enable --now cinejo-deploy.timer
+sudo install -d -m 700 /etc/cinreco-web
+sudo install -m 600 deploy/agent/deploy.env.example /etc/cinreco-web/deploy.env
+sudo "$EDITOR" /etc/cinreco-web/deploy.env
+sudo install -m 755 deploy/agent/cinreco-deploy.sh /usr/local/bin/cinreco-deploy.sh
+sudo install -m 644 deploy/agent/cinreco-deploy.{service,timer} /etc/systemd/system/
+sudo systemctl enable --now cinreco-deploy.timer
 ```
 
 Terraform can also be applied directly for the initial bootstrap:
@@ -206,7 +215,7 @@ environment-specific comes from `terraform.tfvars` or `TF_VAR_*`.
 | `:8062/metrics` | nginx connection and request counters. |
 | `:8063/metrics` | Traefik request rate, status codes, latency histograms. |
 | `:8064` | Prometheus. |
-| `:8065/d/cinejo-web` | Grafana — the **Cinreco Web** dashboard, auto-provisioned. |
+| `:8065/d/cinreco-web` | Grafana — the **CinReco Web** dashboard, auto-provisioned. |
 
 Metrics ports are bound to the private network and are deliberately not
 routed through Traefik.
@@ -281,6 +290,12 @@ For anyone reviewing this as work product:
 
 ## Licence
 
-Application code © Ali Mobini. Movie metadata is supplied via the Cinreco API
-from [TMDb](https://www.themoviedb.org/); this product is not endorsed or
-certified by TMDb.
+Source-available, not open source — see **[LICENSE](LICENSE)**.
+
+You may read, build and run this for your own private, non-commercial use.
+Commercial use, modification and redistribution are reserved to the author.
+If you want any of those, ask: info@mail.mobini.nl
+
+Application code © 2026 Ali Mobini. Movie metadata is supplied via the
+CinReco API from [TMDb](https://www.themoviedb.org/); this product is not
+endorsed or certified by TMDb.
