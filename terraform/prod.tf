@@ -42,6 +42,13 @@ resource "docker_container" "web_prod" {
   }
 
   security_opts = ["no-new-privileges:true"]
+
+  # See docker_container.web in app.tf: the daemon's default log_opts and
+  # ulimit get read back into state and would otherwise force a replace on
+  # the very next plan.
+  lifecycle {
+    ignore_changes = [ulimit, log_opts]
+  }
 }
 
 resource "docker_container" "metrics_prod" {
@@ -66,6 +73,10 @@ resource "docker_container" "metrics_prod" {
   }
 
   security_opts = ["no-new-privileges:true"]
+
+  lifecycle {
+    ignore_changes = [ulimit, log_opts]
+  }
 }
 
 # Own Traefik instance rather than a second router bolted onto the demo's
@@ -150,6 +161,10 @@ resource "docker_container" "traefik_prod" {
   }
 
   security_opts = ["no-new-privileges:true"]
+
+  lifecycle {
+    ignore_changes = [ulimit, log_opts]
+  }
 }
 
 output "prod_public_url" {

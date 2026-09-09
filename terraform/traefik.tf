@@ -116,4 +116,9 @@ resource "docker_container" "traefik" {
   }
 
   security_opts = ["no-new-privileges:true"]
+
+  # See docker_container.web in app.tf for why.
+  lifecycle {
+    ignore_changes = [ulimit, log_opts]
+  }
 }
