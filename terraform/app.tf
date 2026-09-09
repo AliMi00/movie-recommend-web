@@ -40,6 +40,20 @@ resource "docker_container" "web" {
 
   # A container breakout should not be able to acquire new privileges.
   security_opts = ["no-new-privileges:true"]
+
+  # The daemon on this host sets default log rotation (log_opts) and a
+  # default nofile ulimit that every container inherits without either
+  # being declared here. Terraform reads them back into state and, since
+  # its own config declares neither, wants to remove them on the next
+  # plan — which the docker provider can only do by replacing the
+  # container (both are ForceNew). Verified: a plan with no other change
+  # at all showed "must be replaced" for this reason alone. Ignoring both
+  # is correct either way this drifts — a daemon-default change should
+  # roll out via a deliberate recreate, not accidentally alongside an
+  # unrelated image bump.
+  lifecycle {
+    ignore_changes = [ulimit, log_opts]
+  }
 }
 
 # Turns nginx's stub_status page into Prometheus metrics. Runs as a sidecar
@@ -73,4 +87,9 @@ resource "docker_container" "metrics" {
   }
 
   security_opts = ["no-new-privileges:true"]
+
+  # See docker_container.web above for why.
+  lifecycle {
+    ignore_changes = [ulimit, log_opts]
+  }
 }
