@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
+import '../analytics/analytics_service.dart';
 import '../theme/app_colors.dart';
 import '../constants/app_constants.dart';
 import '../../features/group_session/providers/group_session_providers.dart';
@@ -54,7 +55,9 @@ class PlaceholderScreen extends StatelessWidget {
 /// Application router configuration using GoRouter
 final GoRouter appRouter = GoRouter(
   initialLocation: AppConstants.splashRoute,
-  observers: [PosthogObserver()],
+  // Skipped entirely when no PostHog key is configured — see
+  // AnalyticsService.isEnabled for why this isn't just a no-op otherwise.
+  observers: [if (AnalyticsService.isEnabled) PosthogObserver()],
   routes: [
     // Splash/Welcome Route
     GoRoute(
