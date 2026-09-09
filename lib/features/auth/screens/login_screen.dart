@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/config/app_config.dart';
 import '../../../shared/widgets/loading_overlay.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/auth_text_field.dart';
@@ -69,6 +70,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
+    final showDemoBanner = ref.watch(appConfigProvider).showDemoBanner;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -152,8 +154,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         textAlign: TextAlign.center,
                       ),
 
-                      const SizedBox(height: 16),
-                      const PrivateProjectBanner(),
+                      if (showDemoBanner) ...[
+                        const SizedBox(height: 16),
+                        const PrivateProjectBanner(),
+                      ],
 
                       const SizedBox(height: 24),
 

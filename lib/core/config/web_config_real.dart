@@ -15,6 +15,9 @@ external JSString? get _runtimePosthogKey;
 @JS('POSTHOG_HOST')
 external JSString? get _runtimePosthogHost;
 
+@JS('CINRECO_SHOW_DEMO_BANNER')
+external JSString? get _runtimeShowDemoBanner;
+
 /// Reads a value the container entrypoint substituted into index.html at
 /// startup. An un-substituted placeholder still looks like `__NAME__`, which
 /// is treated as "not configured" rather than passed on as a literal.
@@ -33,3 +36,4 @@ String? getRuntimeDemoEmail() => _read(_runtimeDemoEmail);
 String? getRuntimeDemoPassword() => _read(_runtimeDemoPassword);
 String? getRuntimePosthogKey() => _read(_runtimePosthogKey);
 String? getRuntimePosthogHost() => _read(_runtimePosthogHost);
+String? getRuntimeShowDemoBanner() => _read(_runtimeShowDemoBanner);

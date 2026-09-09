@@ -6,3 +6,4 @@ String? getRuntimeDemoPassword() => null;
 // always fall back to the compile-time --dart-define values.
 String? getRuntimePosthogKey() => null;
 String? getRuntimePosthogHost() => null;
+String? getRuntimeShowDemoBanner() => null;

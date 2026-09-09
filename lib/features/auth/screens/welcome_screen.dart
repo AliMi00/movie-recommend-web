@@ -50,7 +50,8 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final hasDemo = ref.watch(appConfigProvider).hasDemoAccount;
+    final appConfig = ref.watch(appConfigProvider);
+    final hasDemo = appConfig.hasDemoAccount;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -127,8 +128,10 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                                 ),
                               ),
 
-                              const SizedBox(height: 24),
-                              const PrivateProjectBanner(),
+                              if (appConfig.showDemoBanner) ...[
+                                const SizedBox(height: 24),
+                                const PrivateProjectBanner(),
+                              ],
 
                               const Spacer(flex: 2),
 
