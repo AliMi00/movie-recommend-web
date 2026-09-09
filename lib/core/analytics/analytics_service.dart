@@ -41,13 +41,15 @@ class AnalyticsService {
   /// Whether a PostHog key is configured for this deployment. On web, the
   /// index.html snippet only calls `posthog.init(...)` when a key is
   /// present (see docker-entrypoint.sh) — without it, `window.posthog` stays
-  /// a bare queueing stub that isn't fully wired to the real library.
-  /// PosthogObserver (posthog_flutter's route-change auto-capture) calls
-  /// into it regardless of whether [initialize] ran, so app_router.dart
-  /// uses this to skip registering the observer entirely on a deployment
-  /// with no key — otherwise every navigation throws an uncaught JS
-  /// TypeError from the incomplete stub (found live on app.cinreco.com,
-  /// which deliberately ships with no PostHog key configured).
+  /// a bare queueing stub that isn't fully wired to the real library. Every
+  /// method below that calls into `_posthog` guards on this first: on
+  /// mobile, calling capture()/identify() before the native SDK is set up
+  /// is a documented safe no-op, but that assumption doesn't hold on web —
+  /// the incomplete JS stub throws instead. app_router.dart also uses this
+  /// to skip registering PosthogObserver entirely on a disabled deployment.
+  /// Found live on app.cinreco.com, which deliberately ships with no
+  /// PostHog key: every onboarding event and every navigation was throwing
+  /// an uncaught JS TypeError.
   static bool get isEnabled => _apiKey.isNotEmpty;
 
   /// Helper to convert `Map<String, dynamic>?` into `Map<String, Object>?` safely.
@@ -113,6 +115,11 @@ class AnalyticsService {
       _cookieConsentKey,
       accepted ? 'accepted' : 'declined',
     );
+    // The consent banner itself is a generic cookie disclosure shown
+    // regardless of whether analytics is configured for this deployment
+    // (see CookieConsentBanner) — the choice is still recorded above even
+    // when there's no PostHog to enable/disable.
+    if (!isEnabled) return;
     try {
       if (accepted) {
         await _posthog.enable();
@@ -134,6 +141,7 @@ class AnalyticsService {
     String key, {
     required String defaultValue,
   }) async {
+    if (!isEnabled) return defaultValue;
     try {
       final result = await _posthog.getFeatureFlag(key);
       if (result is String && result.isNotEmpty) return result;
@@ -148,6 +156,7 @@ class AnalyticsService {
 
   /// Track custom events with optional properties
   static void trackEvent(String eventName, {Map<String, dynamic>? properties}) {
+    if (!isEnabled) return;
     try {
       if (kDebugMode) {
         debugPrint(
@@ -168,6 +177,7 @@ class AnalyticsService {
     String userId, {
     Map<String, dynamic>? userProperties,
   }) {
+    if (!isEnabled) return;
     try {
       if (kDebugMode) {
         debugPrint(
@@ -185,6 +195,7 @@ class AnalyticsService {
 
   /// Reset session / clear user identity upon logout
   static void reset() {
+    if (!isEnabled) return;
     try {
       if (kDebugMode) {
         debugPrint('AnalyticsService: Reset User Identity');
@@ -199,6 +210,7 @@ class AnalyticsService {
 
   /// Explicitly track screen views
   static void trackScreen(String screenName) {
+    if (!isEnabled) return;
     try {
       if (kDebugMode) {
         debugPrint('AnalyticsService: Track Screen "$screenName"');
