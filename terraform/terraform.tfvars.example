@@ -26,3 +26,15 @@ posthog_api_key = ""
 # Grafana admin password. Required — there is no default, so a deployment
 # cannot accidentally ship with a well-known one.
 grafana_admin_password = ""
+
+# ---------------------------------------------------------------------------
+# Production (see prod.tf) — a second, independent deployment of the same
+# image, no demo login, its own Traefik/ports. All of these have defaults
+# in variables.tf; override here only to change them.
+# ---------------------------------------------------------------------------
+# prod_domain               = "app.cinreco.com"
+# prod_api_base_url         = "https://api.cinreco.com/v1"
+# prod_http_port            = 8066
+# prod_metrics_port         = 8067
+# prod_traefik_metrics_port = 8068
+# prod_posthog_api_key      = ""

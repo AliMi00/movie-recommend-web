@@ -19,6 +19,10 @@ CINRECO_DEMO_EMAIL="${CINRECO_DEMO_EMAIL:-${CINEJO_DEMO_EMAIL:-}}"
 CINRECO_DEMO_PASSWORD="${CINRECO_DEMO_PASSWORD:-${CINEJO_DEMO_PASSWORD:-}}"
 POSTHOG_API_KEY="${POSTHOG_API_KEY:-}"
 POSTHOG_HOST="${POSTHOG_HOST:-https://eu.i.posthog.com}"
+# Defaults to true: the existing demo deployment doesn't set this var and
+# must keep showing the "Portfolio Demo Project" banner unchanged. A
+# production deployment sets CINRECO_SHOW_DEMO_BANNER=false explicitly.
+CINRECO_SHOW_DEMO_BANNER="${CINRECO_SHOW_DEMO_BANNER:-${CINEJO_SHOW_DEMO_BANNER:-true}}"
 
 echo "[entrypoint] API base URL: ${CINRECO_API_BASE_URL}"
 if [ -n "${CINRECO_DEMO_EMAIL}" ]; then
@@ -26,6 +30,7 @@ if [ -n "${CINRECO_DEMO_EMAIL}" ]; then
 else
   echo "[entrypoint] demo account: disabled"
 fi
+echo "[entrypoint] demo banner: ${CINRECO_SHOW_DEMO_BANNER}"
 if [ -n "${POSTHOG_API_KEY}" ]; then
   echo "[entrypoint] analytics: enabled"
 else
@@ -42,6 +47,7 @@ subst "__CINRECO_DEMO_EMAIL__"    "${CINRECO_DEMO_EMAIL}"    "${HTML_DIR}/index.
 subst "__CINRECO_DEMO_PASSWORD__" "${CINRECO_DEMO_PASSWORD}" "${HTML_DIR}/index.html"
 subst "__POSTHOG_API_KEY__"      "${POSTHOG_API_KEY}"      "${HTML_DIR}/index.html"
 subst "__POSTHOG_API_HOST__"     "${POSTHOG_HOST}"         "${HTML_DIR}/index.html"
+subst "__CINRECO_SHOW_DEMO_BANNER__" "${CINRECO_SHOW_DEMO_BANNER}" "${HTML_DIR}/index.html"
 
 # The CSP must allow XHR to whichever API origin was just injected,
 # otherwise the browser blocks every request the app makes. Derive the

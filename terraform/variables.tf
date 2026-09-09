@@ -140,3 +140,67 @@ variable "posthog_host" {
   type        = string
   default     = "https://eu.i.posthog.com"
 }
+
+# ---------------------------------------------------------------------------
+# Production deployment (app.cinreco.com) — a second, fully independent
+# stack in prod.tf: its own Traefik, its own container, its own ports.
+# Deliberately does not touch or share any resource with the demo (web,
+# traefik, metrics above) other than the already-pulled app image and the
+# bridge network, so applying this cannot recreate or disturb the live demo.
+# No demo_email/demo_password equivalent here on purpose — production has no
+# shared login, ever.
+# ---------------------------------------------------------------------------
+
+variable "prod_domain" {
+  description = "Hostname the production app is served on, becomes the prod Traefik router rule."
+  type        = string
+  default     = "app.cinreco.com"
+}
+
+variable "prod_api_base_url" {
+  description = "Base URL of the CinReco API the production browser client calls."
+  type        = string
+  default     = "https://api.cinreco.com/v1"
+}
+
+variable "prod_http_port" {
+  description = "Host port the production Traefik listens on. The upstream reverse proxy (Caddy) forwards to this port."
+  type        = number
+  default     = 8066
+}
+
+variable "prod_traefik_bind_ip" {
+  description = "Interface the production Traefik's HTTP entrypoint binds to. See traefik_bind_ip for the two-topology explanation; same host as the demo, so this defaults to loopback-only too."
+  type        = string
+  default     = "127.0.0.1"
+}
+
+variable "prod_metrics_port" {
+  description = "Host port exposing the production nginx Prometheus exporter."
+  type        = number
+  default     = 8067
+}
+
+variable "prod_traefik_metrics_port" {
+  description = "Host port exposing the production Traefik's own Prometheus metrics."
+  type        = number
+  default     = 8068
+}
+
+variable "prod_posthog_api_key" {
+  description = <<-EOT
+    Optional PostHog project key for production. Deliberately a separate
+    variable from posthog_api_key rather than reused: mixing real user
+    events with demo/portfolio-visitor events in the same PostHog project
+    would corrupt both datasets. Empty disables analytics entirely.
+  EOT
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "prod_posthog_host" {
+  description = "PostHog ingestion host for the production deployment."
+  type        = string
+  default     = "https://eu.i.posthog.com"
+}

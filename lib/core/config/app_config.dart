@@ -13,6 +13,11 @@ class AppConfig {
   // welcome/login screens. Empty when not configured for this deployment.
   final String demoEmail;
   final String demoPassword;
+  // "Portfolio Demo Project" banner on the welcome/login/register screens.
+  // Defaults to true so the existing demo deployment (which doesn't set
+  // this var) keeps showing it unchanged; a production deployment sets it
+  // to false via CINRECO_SHOW_DEMO_BANNER.
+  final bool showDemoBanner;
 
   const AppConfig({
     required this.baseUrl,
@@ -21,6 +26,7 @@ class AppConfig {
     this.defaultPageSize = 20,
     this.demoEmail = '',
     this.demoPassword = '',
+    this.showDemoBanner = true,
   });
 
   bool get hasDemoAccount => demoEmail.isNotEmpty && demoPassword.isNotEmpty;
@@ -38,6 +44,7 @@ class AppConfig {
       defaultPageSize: defaultPageSize ?? this.defaultPageSize,
       demoEmail: demoEmail,
       demoPassword: demoPassword,
+      showDemoBanner: showDemoBanner,
     );
   }
 }
@@ -58,6 +65,8 @@ const _demoPasswordNew = String.fromEnvironment('CINRECO_DEMO_PASSWORD');
 const _demoPasswordOld = String.fromEnvironment('CINEJO_DEMO_PASSWORD');
 const _cookieAuthNew = String.fromEnvironment('CINRECO_USE_COOKIE_AUTH');
 const _cookieAuthOld = String.fromEnvironment('CINEJO_USE_COOKIE_AUTH');
+const _showDemoBannerNew = String.fromEnvironment('CINRECO_SHOW_DEMO_BANNER');
+const _showDemoBannerOld = String.fromEnvironment('CINEJO_SHOW_DEMO_BANNER');
 
 /// First non-empty of the new name, the legacy name, then the default.
 String _pick(String preferred, String legacy, String fallback) {
@@ -91,6 +100,12 @@ final appConfigProvider = Provider<AppConfig>((ref) {
   final envCookieRaw = _pick(_cookieAuthNew, _cookieAuthOld, 'false');
   final envDemoEmailRaw = _pick(_demoEmailNew, _demoEmailOld, '');
   final envDemoPasswordRaw = _pick(_demoPasswordNew, _demoPasswordOld, '');
+  // Defaults to 'true': only an explicit "false" turns the banner off.
+  final envShowDemoBannerRaw = _pick(
+    _showDemoBannerNew,
+    _showDemoBannerOld,
+    'true',
+  );
 
   // Resolve base URL: runtime JS global (web) takes priority over dart-define
   String resolvedBase = getRuntimeApiBaseUrl() ?? envBaseUrlRaw;
@@ -110,6 +125,9 @@ final appConfigProvider = Provider<AppConfig>((ref) {
   // URL, so they can be set/rotated per-deployment without a rebuild.
   final resolvedDemoEmail = getRuntimeDemoEmail() ?? envDemoEmailRaw;
   final resolvedDemoPassword = getRuntimeDemoPassword() ?? envDemoPasswordRaw;
+  final resolvedShowDemoBanner =
+      (getRuntimeShowDemoBanner() ?? envShowDemoBannerRaw).toLowerCase() !=
+      'false';
 
   // Resolve cookie mode default: web=true, others=false when 'auto'
   bool cookieMode;
@@ -131,5 +149,6 @@ final appConfigProvider = Provider<AppConfig>((ref) {
     defaultPageSize: envPageSize,
     demoEmail: resolvedDemoEmail,
     demoPassword: resolvedDemoPassword,
+    showDemoBanner: resolvedShowDemoBanner,
   );
 });
