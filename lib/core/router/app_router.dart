@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 import '../analytics/analytics_service.dart';
+import '../../features/auth/providers/auth_provider.dart';
 import '../theme/app_colors.dart';
 import '../constants/app_constants.dart';
 import '../../features/group_session/providers/group_session_providers.dart';
@@ -11,6 +12,7 @@ import '../../features/auth/screens/register_screen.dart';
 import '../../features/auth/screens/preferences_screen.dart';
 import '../../features/auth/screens/splash_screen.dart';
 import '../../features/auth/screens/welcome_screen.dart';
+import '../../features/auth/screens/verify_email_screen.dart';
 import '../../features/auth/screens/forgot_password_screen.dart';
 import '../../features/discovery/screens/discovery_screen.dart';
 import '../../features/onboarding/screens/onboarding_screen.dart';
@@ -52,12 +54,69 @@ class PlaceholderScreen extends StatelessWidget {
   }
 }
 
+/// Routes an authenticated-but-unverified account may still reach.
+///
+/// Everything else bounces to the verify screen. The legal pages are in here
+/// deliberately: they're linked from cinreco.com and from the app stores, and
+/// must render for anyone, in any auth state. Splash is here so its own
+/// routing logic can run — whatever it picks next passes through this guard
+/// again anyway.
+const _routesAllowedWhileUnverified = <String>{
+  AppConstants.splashRoute,
+  AppConstants.welcomeRoute,
+  AppConstants.loginRoute,
+  AppConstants.registerRoute,
+  AppConstants.onboardingRoute,
+  AppConstants.verifyEmailRoute,
+  AppConstants.termsRoute,
+  AppConstants.privacyRoute,
+  AppConstants.accessibilityRoute,
+  '/forgot-password',
+};
+
+/// The guard's decision, as a pure function so it can be tested without
+/// standing up a router and a provider container. Returns the location to
+/// redirect to, or null to allow the navigation.
+String? verificationRedirect({
+  required bool isAuthenticated,
+  required bool emailVerified,
+  required String target,
+}) {
+  // Signed-out navigation is none of this guard's business — the existing
+  // splash/welcome flow already handles it.
+  if (!isAuthenticated) return null;
+
+  if (!emailVerified) {
+    return _routesAllowedWhileUnverified.contains(target)
+        ? null
+        : AppConstants.verifyEmailRoute;
+  }
+
+  // Verified users have no reason to sit on the verify screen — this is what
+  // moves them on when they land back on the app after clicking the link.
+  if (target == AppConstants.verifyEmailRoute) return AppConstants.homeRoute;
+  return null;
+}
+
 /// Application router configuration using GoRouter
 final GoRouter appRouter = GoRouter(
   initialLocation: AppConstants.splashRoute,
   // Skipped entirely when no PostHog key is configured — see
   // AnalyticsService.isEnabled for why this isn't just a no-op otherwise.
   observers: [if (AnalyticsService.isEnabled) PosthogObserver()],
+  // One guard rather than a check at each post-login context.go() call: there
+  // are half a dozen of those (login, register, demo login, two in splash),
+  // and on web none of them cover someone typing /home straight into the
+  // address bar. The backend rejects that request either way — this just
+  // makes the app say why instead of rendering broken panels.
+  redirect: (context, state) {
+    final auth = ProviderScope.containerOf(context).read(authProvider);
+    return verificationRedirect(
+      isAuthenticated: auth.isAuthenticated && auth.user != null,
+      emailVerified: auth.user?.emailVerified ?? true,
+      target: state.matchedLocation,
+    );
+  },
   routes: [
     // Splash/Welcome Route
     GoRoute(
@@ -145,6 +204,13 @@ final GoRouter appRouter = GoRouter(
       path: AppConstants.settingsRoute,
       name: 'settings',
       builder: (context, state) => const SettingsScreen(),
+    ),
+
+    // Email verification gate
+    GoRoute(
+      path: AppConstants.verifyEmailRoute,
+      name: 'verify-email',
+      builder: (context, state) => const VerifyEmailScreen(),
     ),
 
     // Terms of Service Route
