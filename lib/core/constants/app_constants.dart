@@ -132,6 +132,7 @@ class AppConstants {
   static const String watchHistoryRoute = '/watch-history';
   static const String movieDetailsRoute = '/movie-details';
   static const String trailerRoute = '/trailer';
+  static const String verifyEmailRoute = '/verify-email';
   static const String termsRoute = '/terms';
   static const String privacyRoute = '/privacy';
   static const String accessibilityRoute = '/accessibility';
