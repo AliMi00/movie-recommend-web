@@ -257,7 +257,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       _repository.forgotPassword(email);
 
   /// Requests a fresh verification email for the current account.
-  Future<bool> resendVerificationEmail(String email) =>
+  Future<String?> resendVerificationEmail(String email) =>
       _repository.resendVerificationEmail(email);
 
   /// Save user preferences (usually after onboarding)

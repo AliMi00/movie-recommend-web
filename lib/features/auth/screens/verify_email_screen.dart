@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -27,22 +29,54 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   bool _sending = false;
   bool _checking = false;
 
+  /// Seconds left before the resend button is usable again.
+  ///
+  /// The server allows 3 resends per hour per IP and answers 429 beyond that.
+  /// Without a cooldown here, an impatient tap-tap-tap burns the whole hour's
+  /// allowance in a couple of seconds and the person is then locked out of the
+  /// one action that unblocks them. This is a courtesy brake, not the control
+  /// — the server limit is what actually enforces it.
+  int _cooldown = 0;
+  Timer? _cooldownTimer;
+
+  static const _cooldownSeconds = 60;
+
+  @override
+  void dispose() {
+    _cooldownTimer?.cancel();
+    super.dispose();
+  }
+
+  void _startCooldown() {
+    _cooldownTimer?.cancel();
+    setState(() => _cooldown = _cooldownSeconds);
+    _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
+      setState(() => _cooldown -= 1);
+      if (_cooldown <= 0) t.cancel();
+    });
+  }
+
   Future<void> _resend() async {
     final email = ref.read(authProvider).user?.email;
-    if (email == null || _sending) return;
+    if (email == null || _sending || _cooldown > 0) return;
     setState(() => _sending = true);
-    final sent = await ref
+    final failure = await ref
         .read(authProvider.notifier)
         .resendVerificationEmail(email);
     if (!mounted) return;
     setState(() => _sending = false);
+
+    // Start the cooldown either way. A 429 especially must not be followed by
+    // an immediately-tappable button that can only produce another 429.
+    _startCooldown();
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          sent
-              ? 'Verification email sent — check your inbox.'
-              : 'Could not reach the server. Try again shortly.',
-        ),
+        content: Text(failure ?? 'Verification email sent — check your inbox.'),
       ),
     );
   }
@@ -124,11 +158,17 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                   ),
                   const SizedBox(height: 12),
                   TextButton(
-                    onPressed: _sending ? null : _resend,
+                    onPressed: (_sending || _cooldown > 0) ? null : _resend,
                     child: Text(
-                      _sending ? 'Sending…' : 'Resend the email',
+                      _sending
+                          ? 'Sending…'
+                          : _cooldown > 0
+                          ? 'Resend available in ${_cooldown}s'
+                          : 'Resend the email',
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.secondary,
+                        color: _cooldown > 0
+                            ? AppColors.onSurfaceVariant
+                            : AppColors.secondary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

@@ -24,7 +24,7 @@ class _FakeAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<bool> resendVerificationEmail(String email) async => true;
+  Future<String?> resendVerificationEmail(String email) async => null;
 
   @override
   Future<AuthResult> login(String email, String password) async =>

@@ -2,6 +2,7 @@ import '../../data/models/user_model.dart';
 import '../services/local_storage_service.dart';
 import 'package:dio/dio.dart';
 import '../../core/config/app_config.dart';
+import '../../core/errors/user_facing_error.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Result of an authentication operation
@@ -33,8 +34,15 @@ abstract class AuthRepository {
   /// case visible to the client).
   Future<bool> forgotPassword(String email);
 
-  /// Same no-enumeration shape as [forgotPassword].
-  Future<bool> resendVerificationEmail(String email);
+  /// Same no-enumeration shape as [forgotPassword]: the backend answers 202
+  /// whether or not the address is registered.
+  ///
+  /// Returns null when the request went through, or a user-facing message
+  /// when it genuinely failed. It returns the reason rather than a bool
+  /// because the most common failure here is the 3-per-hour rate limit, and
+  /// reporting that as "could not reach the server" sends people off
+  /// debugging their connection.
+  Future<String?> resendVerificationEmail(String email);
 }
 
 // ... (MockAuthRepository unchanged except adding getUserStats)
@@ -83,6 +91,20 @@ class ApiAuthRepository implements AuthRepository {
     );
   }
 
+  /// Stores the freshly issued tokens.
+  ///
+  /// Split out from [_persistAuth] so login can write the new credentials
+  /// *before* it asks the API who it is talking to — see the note in [login].
+  Future<void> _persistTokens({String? access, String? refresh}) async {
+    if (_config.useCookieAuth) return;
+    if (access != null && access.isNotEmpty) {
+      await _secureStorage.write(key: 'access_token', value: access);
+    }
+    if (refresh != null && refresh.isNotEmpty) {
+      await _secureStorage.write(key: 'refresh_token', value: refresh);
+    }
+  }
+
   Future<void> _persistAuth(
     User user, {
     String? access,
@@ -90,14 +112,7 @@ class ApiAuthRepository implements AuthRepository {
   }) async {
     final storage = await LocalStorageService.getInstance();
     await storage.saveAuthUser(user);
-    if (!_config.useCookieAuth) {
-      if (access != null && access.isNotEmpty) {
-        await _secureStorage.write(key: 'access_token', value: access);
-      }
-      if (refresh != null && refresh.isNotEmpty) {
-        await _secureStorage.write(key: 'refresh_token', value: refresh);
-      }
-    }
+    await _persistTokens(access: access, refresh: refresh);
   }
 
   @override
@@ -109,13 +124,27 @@ class ApiAuthRepository implements AuthRepository {
       );
 
       final data = res.data as Map<String, dynamic>;
+
+      // Write the new tokens BEFORE asking /users/me who this is. The request
+      // interceptor attaches whatever access token is in storage, so fetching
+      // the profile first sends the *previous* session's token: signing in as
+      // a second account on the same browser returned the first account's
+      // profile, and it was then saved alongside the second account's tokens.
+      // Reproduced exactly that way — registering a second account showed the
+      // first account's address on the confirm-your-email screen.
+      await _persistTokens(
+        access: data['accessToken'] as String?,
+        refresh: data['refreshToken'] as String?,
+      );
+
       final userMap = data['user'] as Map<String, dynamic>?;
 
       User user;
       if (userMap != null) {
         user = _mapUser(userMap);
       } else {
-        // Fallback: fetch me
+        // /auth/login returns only a token pair, so the profile — including
+        // emailVerified — has to be fetched separately.
         try {
           final me = await _dio.get('/users/me');
           user = _mapUser(me.data as Map<String, dynamic>);
@@ -257,12 +286,12 @@ class ApiAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<bool> resendVerificationEmail(String email) async {
+  Future<String?> resendVerificationEmail(String email) async {
     try {
       await _dio.post('/auth/resend-verification', data: {'email': email});
-      return true;
-    } catch (_) {
-      return false;
+      return null;
+    } catch (e) {
+      return userFacingError(e);
     }
   }
 
