@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../../../core/errors/user_facing_error.dart';
 import '../providers/watchlist_providers.dart';
 import '../../discovery/screens/movie_details_modal.dart';
 import '../../../core/theme/app_colors.dart';
@@ -337,7 +338,7 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
                       hasScrollBody: false,
                       child: Center(
                         child: ErrorEmptyState.error(
-                          message: 'Error: $e',
+                          message: userFacingError(e),
                           onRetry: () => ref
                               .read(watchlistProvider.notifier)
                               .loadWatchlist(),

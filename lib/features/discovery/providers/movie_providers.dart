@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../screens/discovery_screen.dart'
     show selectedGenresProvider, minRatingFilterProvider;
+import '../../../core/errors/user_facing_error.dart';
 import '../../../data/models/movie_model.dart';
 import '../../../data/repositories/movie_repository.dart';
 import '../../../data/services/local_storage_service.dart';
@@ -100,7 +101,10 @@ class MovieStackNotifier extends StateNotifier<MovieStackState> {
       );
       _ensureStackFilled();
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      // Not e.toString(): this string is rendered straight onto the discovery
+      // screen, and a DioException's toString() is a multi-line dump naming
+      // the exception class, the request options and an MDN link.
+      state = state.copyWith(isLoading: false, error: userFacingError(e));
     }
   }
 

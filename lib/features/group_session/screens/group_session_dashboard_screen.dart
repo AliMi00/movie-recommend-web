@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../../../core/errors/user_facing_error.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../shared/widgets/glass_container.dart';
@@ -50,7 +51,7 @@ class _GroupSessionDashboardScreenState
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Failed to create session: $e';
+        _errorMessage = 'Could not create the session. ${userFacingError(e)}';
       });
     } finally {
       if (mounted) {
@@ -910,7 +911,7 @@ class _GroupSessionDashboardScreenState
                       ),
                       error: (e, _) => SliverToBoxAdapter(
                         child: Text(
-                          'Error loading invites: $e',
+                          userFacingError(e),
                           style: TextStyle(color: Colors.redAccent.shade100),
                         ),
                       ),

@@ -61,15 +61,23 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     if (verified) {
       if (!mounted) return;
       context.go(AppConstants.homeRoute);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Still not verified. Click the link in the email, then try again.",
-          ),
-        ),
-      );
+      return;
     }
+
+    // Deliberately covers two cases with one message. Arriving here from
+    // registration means there is no session at all — /auth/register issues
+    // no tokens — so this re-check cannot confirm anything even if the link
+    // was clicked a moment ago, and signing in is the way forward. Arriving
+    // from login means there is a session and the link genuinely hasn't been
+    // clicked yet. Claiming "still not verified" outright would be wrong in
+    // the first case.
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          "Not confirmed yet. If you've just clicked the link, sign in to continue.",
+        ),
+      ),
+    );
   }
 
   @override
@@ -134,14 +142,19 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
+                  // "Sign in" rather than "Sign out": someone who just
+                  // registered was never signed in (register issues no
+                  // tokens), so this is the step that actually gets them into
+                  // the app once they've clicked the link. Clearing state
+                  // first keeps a half-registered session from lingering.
                   TextButton(
                     onPressed: () async {
                       await ref.read(authProvider.notifier).logout();
                       if (!context.mounted) return;
-                      context.go(AppConstants.welcomeRoute);
+                      context.go(AppConstants.loginRoute);
                     },
                     child: Text(
-                      'Sign out',
+                      'Back to sign in',
                       style: AppTextStyles.bodySmall.copyWith(
                         color: AppColors.onSurfaceVariant,
                       ),

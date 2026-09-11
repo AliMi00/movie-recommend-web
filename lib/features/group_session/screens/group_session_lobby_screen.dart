@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../../../core/errors/user_facing_error.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../shared/widgets/glass_container.dart';
@@ -60,7 +61,7 @@ class _GroupSessionLobbyScreenState
       });
     } catch (e) {
       setState(() {
-        _statusMessage = 'Failed to send invite: $e';
+        _statusMessage = 'Could not send the invite. ${userFacingError(e)}';
         _isSuccess = false;
       });
     } finally {
@@ -97,7 +98,7 @@ class _GroupSessionLobbyScreenState
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to update vibe: $e'),
+          content: Text('Could not update the vibe. ${userFacingError(e)}'),
           backgroundColor: AppColors.dislike,
         ),
       );

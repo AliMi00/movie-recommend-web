@@ -169,7 +169,10 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
                         padding: const EdgeInsets.all(16),
                         borderRadius: 16,
                         child: ErrorEmptyState.error(
-                          message: 'Connection issue: ${state.error}',
+                          // Already a human-readable sentence from
+                          // userFacingError(); prefixing "Connection issue:"
+                          // would be wrong for the half of these that aren't.
+                          message: state.error!,
                           onRetry: () =>
                               ref.read(movieStackProvider.notifier).loadMore(),
                         ),

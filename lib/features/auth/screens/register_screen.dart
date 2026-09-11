@@ -80,7 +80,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final success = await authNotifier.register(email, password, username);
 
     if (success && mounted) {
-      context.go('/preferences');
+      // Straight to the verify screen, not onboarding: a new account is
+      // unverified by definition, and every endpoint the onboarding flow
+      // needs is gated behind verification. Sending them to /preferences
+      // first produced a blank screen with nothing explaining why. The
+      // router guard would also redirect here, but doing it explicitly
+      // keeps the reason visible at the call site.
+      context.go(AppConstants.verifyEmailRoute);
     }
   }
 
