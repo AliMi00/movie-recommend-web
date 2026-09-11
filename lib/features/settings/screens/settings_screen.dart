@@ -96,17 +96,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Future<void> _resendVerification() async {
     final email = ref.read(authProvider).user?.email;
     if (email == null) return;
-    final sent = await ref
+    // null means it went through; anything else is already a user-facing
+    // sentence, including the 3-per-hour rate limit's "too many requests".
+    final failure = await ref
         .read(authProvider.notifier)
         .resendVerificationEmail(email);
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          sent
-              ? 'Verification email sent — check your inbox.'
-              : 'Could not reach the server. Try again shortly.',
-        ),
+        content: Text(failure ?? 'Verification email sent — check your inbox.'),
       ),
     );
   }
