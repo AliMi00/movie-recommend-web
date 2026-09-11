@@ -45,8 +45,10 @@ class MovieDetailsModal extends ConsumerWidget {
             }
             return _MovieDetailsContent(movie: m);
           },
-          error: (e, _) =>
-              SizedBox(height: 300, child: Center(child: Text(userFacingError(e)))),
+          error: (e, _) => SizedBox(
+            height: 300,
+            child: Center(child: Text(userFacingError(e))),
+          ),
           loading: () => const SizedBox(
             height: 300,
             child: Center(

@@ -24,11 +24,14 @@ void main() {
   group('never leaks exception-speak', () {
     test('no message contains DioException or stack-trace wording', () {
       final samples = <Object>[
-        dio(403, data: {
-          'detail': {
-            'error': {'code': 'EMAIL_NOT_VERIFIED', 'message': 'x'},
+        dio(
+          403,
+          data: {
+            'detail': {
+              'error': {'code': 'EMAIL_NOT_VERIFIED', 'message': 'x'},
+            },
           },
-        }),
+        ),
         dio(401),
         dio(404),
         dio(429),
@@ -54,11 +57,14 @@ void main() {
   group('maps the cases that matter', () {
     test('EMAIL_NOT_VERIFIED explains what to do', () {
       final msg = userFacingError(
-        dio(403, data: {
-          'detail': {
-            'error': {'code': 'EMAIL_NOT_VERIFIED', 'message': 'x'},
+        dio(
+          403,
+          data: {
+            'detail': {
+              'error': {'code': 'EMAIL_NOT_VERIFIED', 'message': 'x'},
+            },
           },
-        }),
+        ),
       );
       expect(msg.toLowerCase(), contains('confirm'));
       expect(msg.toLowerCase(), contains('email'));
