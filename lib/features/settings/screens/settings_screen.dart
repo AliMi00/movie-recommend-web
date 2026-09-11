@@ -90,7 +90,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final storage = await LocalStorageService.getInstance();
     await storage.saveBool(AppConstants.onboardingIntroSeenKey, false);
     if (!mounted) return;
-    context.push(AppConstants.onboardingRoute);
+    // The slides, not /onboarding: that route is now the full sign-up
+    // funnel, which makes no sense to replay to an existing account.
+    context.push(AppConstants.introSlidesRoute);
   }
 
   Future<void> _resendVerification() async {

@@ -53,6 +53,13 @@ class AppConstants {
   // needs the preferences setup flow — the intro is shown once per install,
   // before anyone has logged in, and survives logout.
   static const String onboardingIntroSeenKey = 'onboarding_intro_seen';
+
+  /// Genre/rating choices made during the intro, before an account exists.
+  ///
+  /// PUT /users/me/preferences is gated behind email verification, so these
+  /// can't be saved when they're picked. They're held here and pushed once
+  /// the account is verified and signed in — see PendingPreferences.
+  static const String pendingPreferencesKey = 'pending_onboarding_preferences';
   static const String authTokenKey = 'auth_token';
   static const String userDataKey = 'user_data';
 
@@ -122,6 +129,11 @@ class AppConstants {
   static const String splashRoute = '/';
   static const String welcomeRoute = '/welcome';
   static const String onboardingRoute = '/onboarding';
+
+  /// The original slide carousel, still reachable from
+  /// Settings > Replay Intro. /onboarding is now the full
+  /// sign-up flow, which is not what a replay should show.
+  static const String introSlidesRoute = '/intro-slides';
   static const String loginRoute = '/login';
   static const String registerRoute = '/register';
   static const String genreSelectionRoute = '/genre-selection';
