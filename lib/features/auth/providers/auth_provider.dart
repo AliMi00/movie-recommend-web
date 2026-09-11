@@ -4,6 +4,7 @@ import '../../../data/models/user_model.dart';
 import '../../../core/config/app_config.dart';
 import '../../../data/services/api_client.dart';
 import '../../../core/analytics/analytics_service.dart';
+import '../../onboarding/pending_preferences.dart';
 
 /// Auth repository provider
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
@@ -329,6 +330,37 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// Force refresh authentication state
   Future<void> refresh() async {
     await _checkAuthStatus();
+    await syncPendingPreferences();
+  }
+
+  /// Pushes the genre/rating answers given during the intro, once there is a
+  /// verified account to attach them to.
+  ///
+  /// The intro asks for these before sign-up — that's when someone is willing
+  /// to answer — but PUT /users/me/preferences requires a verified account,
+  /// which doesn't exist until two steps later. So they wait in local storage
+  /// and land here on the first authenticated, verified pass.
+  ///
+  /// Cleared only after the write succeeds: a failure here should leave the
+  /// answers parked for the next attempt rather than silently discarding
+  /// what the person told us.
+  Future<void> syncPendingPreferences() async {
+    final user = state.user;
+    if (!state.isAuthenticated || user == null || !user.emailVerified) return;
+
+    final pending = await PendingPreferences.load();
+    if (pending == null || pending.genres.isEmpty) return;
+
+    final ok = await saveUserPreferences(
+      pending.toUserPreferences(isDarkTheme: user.isDarkTheme),
+    );
+    if (ok) {
+      await PendingPreferences.clear();
+      AnalyticsService.trackEvent(
+        'intro_preferences_synced',
+        properties: {'genre_count': pending.genres.length},
+      );
+    }
   }
 }
 

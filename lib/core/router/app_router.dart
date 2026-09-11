@@ -16,6 +16,7 @@ import '../../features/auth/screens/verify_email_screen.dart';
 import '../../features/auth/screens/forgot_password_screen.dart';
 import '../../features/discovery/screens/discovery_screen.dart';
 import '../../features/onboarding/screens/onboarding_screen.dart';
+import '../../features/onboarding/screens/intro_flow_screen.dart';
 import '../../features/watchlist/screens/watchlist_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
 import '../../features/settings/screens/legal_policy_screen.dart';
@@ -133,9 +134,21 @@ final GoRouter appRouter = GoRouter(
     ),
 
     // Onboarding Routes
+    //
+    // The first-run intro is now IntroFlowScreen, which folds the old
+    // four-slide carousel, the genre/rating questions and a live discover
+    // demo into one flow that ends at sign-up. OnboardingScreen is kept
+    // reachable at /intro-slides because Settings > "Replay Intro" still
+    // points at the slides, and replaying a sign-up funnel to an existing
+    // user would make no sense.
     GoRoute(
       path: AppConstants.onboardingRoute,
       name: 'onboarding',
+      builder: (context, state) => const IntroFlowScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.introSlidesRoute,
+      name: 'intro-slides',
       builder: (context, state) => const OnboardingScreen(),
     ),
 

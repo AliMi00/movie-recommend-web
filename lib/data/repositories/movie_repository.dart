@@ -15,6 +15,14 @@ abstract class MovieRepository {
   });
   Future<Movie?> getMovieDetails(int movieId);
   Future<List<Movie>> searchMovies(String query);
+
+  /// Plain-language search that works without an account.
+  ///
+  /// Backed by GET /movies/discover, which exists for the onboarding
+  /// try-it step: /movies/recommendations needs a taste profile and sits
+  /// behind the verification gate, neither of which exists yet at that
+  /// point in the flow.
+  Future<List<Movie>> discoverMovies(String query, {int limit = 12});
   Future<List<Movie>> getMoviesByGenre(String genre);
   Future<List<Movie>> getLikedMovies();
   Future<List<Movie>> getWatchHistory();
@@ -169,6 +177,12 @@ class MockMovieRepository implements MovieRepository {
     } catch (e) {
       return null;
     }
+  }
+
+  @override
+  Future<List<Movie>> discoverMovies(String query, {int limit = 12}) async {
+    final results = await searchMovies(query);
+    return results.take(limit).toList();
   }
 
   @override
@@ -438,6 +452,16 @@ class ApiMovieRepository implements MovieRepository {
       }
     } catch (_) {}
     return null;
+  }
+
+  @override
+  Future<List<Movie>> discoverMovies(String query, {int limit = 12}) async {
+    final res = await _dio.get(
+      '/movies/discover',
+      queryParameters: {'q': query, 'limit': limit},
+    );
+    final data = res.data['data'] as List<dynamic>? ?? [];
+    return data.map((e) => Movie.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   @override
