@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../../../core/errors/user_facing_error.dart';
 import '../../../data/models/movie_model.dart';
 import '../providers/movie_providers.dart';
 import '../../history/providers/watch_history_providers.dart' as history;
@@ -45,7 +46,7 @@ class MovieDetailsModal extends ConsumerWidget {
             return _MovieDetailsContent(movie: m);
           },
           error: (e, _) =>
-              SizedBox(height: 300, child: Center(child: Text('Error: $e'))),
+              SizedBox(height: 300, child: Center(child: Text(userFacingError(e)))),
           loading: () => const SizedBox(
             height: 300,
             child: Center(

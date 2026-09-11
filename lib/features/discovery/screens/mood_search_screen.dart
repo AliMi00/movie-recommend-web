@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../../../core/errors/user_facing_error.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../shared/widgets/glass_container.dart';
@@ -441,7 +442,7 @@ class _MoodSearchScreenState extends ConsumerState<MoodSearchScreen> {
                             hasScrollBody: false,
                             child: Center(
                               child: ErrorEmptyState.error(
-                                message: 'Search failed: $e',
+                                message: userFacingError(e),
                                 onRetry: () =>
                                     ref.refresh(moodSearchResultsProvider),
                               ),
